@@ -1,3 +1,4 @@
+import { check, Match } from 'meteor/check'
 import set from 'lodash/set'
 
 export const createCollection = (name, doForbidClientSideUpdats = true) => {
@@ -36,9 +37,10 @@ export const createStandardPublications = (collection, plural, singular) => {
     const pluralName = plural || collection._name
     const singularName = singular || pluralName.substring(0, pluralName.length - 1)
     Meteor.publish(pluralName, () => collection.find())
-    Meteor.publish(singularName, (_id) => {
+    Meteor.publish(singularName, function(_id) {
         check([_id], [String])
-        if (!this.userId) return this.ready()
+        // TODO active when accounting works
+        // if (!this.userId) return this.ready()
         return collection.find({_id})
     })
 }        
