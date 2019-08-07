@@ -3,7 +3,8 @@ import React from 'react'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Queues } from '/imports/db/queues.js'
 
-const QueuesListItem = ({item}) => <li>{item.name} ({item._id})</li>
+const QueuesListItem = ({item}) => 
+    <li>{item.name} ({item._id})</li>
 const QueuesListWrapper = ({loading, queues}) => 
     <ul>
         {loading ? "Loading.." : queues.map(queueItem =>

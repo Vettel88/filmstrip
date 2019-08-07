@@ -24,7 +24,7 @@ export const createCollection = (name, doForbidClientSideUpdats = true) => {
     return collection
 }
 
-export const forbidClientSideUpdates = (collection) =>
+export const forbidClientSideUpdates = collection =>
     collection.deny({
         insert: () => true,
         update: () => true,
@@ -35,9 +35,7 @@ export const createStandardPublications = (collection, plural, singular) => {
     if (Meteor.isClient) return;
     const pluralName = plural || collection._name
     const singularName = singular || pluralName.substring(0, pluralName.length - 1)
-    Meteor.publish(pluralName, function() {
-        return collection.find()
-    })
+    Meteor.publish(pluralName, () => collection.find())
     Meteor.publish(singularName, (_id) => {
         check([_id], [String])
         if (!this.userId) return this.ready()

@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 // import Links from '/imports/api/links';
+import '/imports/ui/UIState.js'
 
 import { Queues } from '/imports/db/queues.js';
 import { Frames } from '/imports/db/frames.js';
