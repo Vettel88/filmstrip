@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import React, { Component } from 'react'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Queues } from '/imports/db/queues.js'
+import QueuesListItem from "./QueuesListItem";
 
 const Foo2 = () => {
     return <div>
@@ -66,8 +67,9 @@ export default class QueuesList extends Component {
         return (
             <div>
                 <ul>
-                    {/* {this.renderQueues()} */}
-                    {withTracker(this.getData)(MyComponent)}
+                    {this.props.loading ? "Loading.." : this.props.queues.map(queueItem => {
+                        return <QueuesListItem key={queueItem._id} item={queueItem} />
+                    })}
                 </ul>
             </div>
         );
