@@ -6,7 +6,7 @@ import { Queues } from '/imports/db/queues.js'
 const QueueItemContent = ({queue}) =>
     <div>
         Name: {queue.name}<br/>
-        ID: {queue && queue._id}
+        ID: {queue._id}
     </div>
 
 const QueuesItemWrapper = ({loading, queue}) => 

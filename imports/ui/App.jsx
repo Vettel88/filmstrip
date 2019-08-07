@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom"
+import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom"
 import 'materialize-css/dist/css/materialize.min.css'
 import { Row, Col } from 'react-materialize'
 import styled from 'styled-components'
@@ -9,13 +9,14 @@ import { QueuesList } from './components/QueuesList.jsx'
 
 export default App = () =>
     <Router>
-        <div>
-            <Header2 />
+        <Header2 />
+        <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/queueList" component={QueuesList} />
             <Route path="/frameList" component={FrameList} />
             <Route path="/frame" component={Frame} />
-        </div>
+            <Route component={NoMatch} />
+        </Switch>
     </Router>
 
 const Home = () => <h2>Home</h2>
@@ -53,3 +54,5 @@ const Header2 = () =>
             </div>
         </Col>
     </Row>
+
+const NoMatch = (a) => <div>404 - not your day</div>
