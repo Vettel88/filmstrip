@@ -1,7 +1,7 @@
 import React from 'react';
 import Hello from './components/Hello.jsx';
 import Info from './components/Info.jsx';
-import QueuesListContainer from './components/QueuesListContainer.jsx';
+import { QueuesListContainer } from './components/QueuesList.jsx';
 
 const App = () => (
   <div>
