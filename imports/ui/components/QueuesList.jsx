@@ -20,11 +20,9 @@ const QueuesListWrapper = ({isLoading, queues}) =>
     </div>
 
 export const QueuesList = withTracker(({ id }) => {
-    const queuesHandle = Meteor.subscribe('Queues')
+    const queuesHandle = Meteor.subscribe("Queues");
     return {
         isLoading: !queuesHandle.ready(),
-        // isLoading: true,
         queues: Queues.find().fetch()
-    }
-
-})(QueuesListWrapper)
+    };
+})(QueuesListWrapper);

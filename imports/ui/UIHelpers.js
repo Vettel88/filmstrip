@@ -1,5 +1,5 @@
 import React from 'react'
-import { Preloader } from 'react-materialize'
+import { CircularProgress } from 'rmwc'
 
 export const loadingWrapper = (isLoading, fn) =>
-    isLoading ? <Preloader size="small" />  : fn()
+    isLoading ? <CircularProgress size="small" />  : fn()
