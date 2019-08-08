@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { TextInput, Textarea } from 'react-materialize'
+import { TextField } from 'rmwc'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Queues } from '/imports/db/queues.js'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
@@ -10,8 +10,8 @@ const QueueItemContent = ({item}) =>
         {/* TODO: data-length provokes ReferenceError: M is not defined */}
         {/* <TextInput label="Title" value={item.value} data-length={50}/> */}
         {/* <Textarea label="Description" data-length={120}/> */}
-        <TextInput label="Title" value={item.title} onChange={(v) => console.log(v)}/>
-        <Textarea label="Description" value={item.description} onChange={(v) => console.log(v)}/>
+        <TextField label="Title" value={item.title} onChange={(v) => console.log(v)}/>
+        <TextField textarea label="Description" value={item.description} onChange={(v) => console.log(v)}/>
         
 
     </form>
