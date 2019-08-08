@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
-import { Grid as UnstyledGrid, Drawer, List, ListItem, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, GridInner, TopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
+import { Grid as UnstyledGrid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, GridInner, TopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
 import styled from 'styled-components'
 
 const Grid = styled(UnstyledGrid)`
@@ -14,14 +14,14 @@ const Header = () => {
         <TopAppBar fixed={false}>
             <TopAppBarRow>
                 <TopAppBarSection>
-                  <TopAppBarNavigationIcon icon="menu" onClick={() => setOpen(true)} />
+                    <TopAppBarNavigationIcon icon="menu" onClick={() => setOpen(true)} />
                 </TopAppBarSection>
                 <TopAppBarSection>
                     <TopAppBarTitle>
                         {UIState.name}
                     </TopAppBarTitle>
                 </TopAppBarSection>
-                <TopAppBarSection>
+                <TopAppBarSection alignEnd>
                     <div id="userInfo">
                         Userinfo
                     </div>
@@ -43,15 +43,17 @@ const SideNav = ({open, setOpen}) => {
               </DrawerHeader>
               <DrawerContent>
                   <List>
-                      <ListItem><Link to="/">Dashboard</Link></ListItem>
-                      <ListItem><Link to="/queueList">QueueList</Link></ListItem>
-                      <ListItem><Link to="/frameList">FrameList</Link></ListItem>
+                      <ListItem setOpen={setOpen}><Link to="/">Dashboard</Link></ListItem>
+                      <ListItem setOpen={setOpen}><Link to="/queueList">QueueList</Link></ListItem>
+                      <ListItem setOpen={setOpen}><Link to="/frameList">FrameList</Link></ListItem>
                   </List>
               </DrawerContent>
           </Drawer>
       </>
   );
 }
+
+const ListItem = ({setOpen, children}) => <LI onClick={() => setOpen(false)}>{children}</LI>
 
 export default class Layout extends Component {
     render() {
