@@ -6,15 +6,17 @@ import styled from 'styled-components'
 
 import UIState from './UIState.js'
 import { QueuesList } from './components/QueuesList.jsx'
+import { QueueItem } from './components/QueueItem.jsx'
 
 export default App = () =>
     <Router>
-        <Header2 />
+        <Header />
         <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/queueList" component={QueuesList} />
             <Route path="/frameList" component={FrameList} />
             <Route path="/frame" component={Frame} />
+            <Route path="/queueitem/:id" component={QueueItem} />
             <Route component={NoMatch} />
         </Switch>
     </Router>
@@ -36,7 +38,7 @@ const FrameList = ({ match }) =>
         />
     </div>
 
-const Header2 = () =>
+const Header = () =>
     <Row>
         <Col md="2">
             <ul id="hamburger">
@@ -55,4 +57,4 @@ const Header2 = () =>
         </Col>
     </Row>
 
-const NoMatch = (a) => <div>404 - not your day</div>
+const NoMatch = (props) => <div>404 - not your day</div>
