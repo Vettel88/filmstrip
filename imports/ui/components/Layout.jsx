@@ -13,7 +13,9 @@ const Header = () => {
     <>
         <TopAppBar fixed={false}>
             <TopAppBarRow>
-                <TopAppBarNavigationIcon icon="menu" onClick={() => setOpen(true)} />
+                <TopAppBarSection>
+                  <TopAppBarNavigationIcon icon="menu" onClick={() => setOpen(true)} />
+                </TopAppBarSection>
                 <TopAppBarSection>
                     <TopAppBarTitle>
                         {UIState.name}
