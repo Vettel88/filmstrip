@@ -8,15 +8,11 @@ const Grid = styled(UnstyledGrid)`
 `
 
 export default class AnswerLayout extends Component {
-  render() {
-    return (
-      <>
-        <Grid>
-            <GridCell>
+    render() {
+        return (
+            <>
                 {this.props.children}
-            </GridCell>
-        </Grid>
-      </>
-    )
-  }
+            </>
+        )
+    }
 }

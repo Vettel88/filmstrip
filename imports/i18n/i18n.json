@@ -1,7 +1,9 @@
 {
   "en": {
     "translation": {
-      "AnswerLandingHelp": "You will use your camera and microphone to record your answers. Please make sure you are in a quiet location and have 5-10 minutes of free time."
+      "AnswerLandingHelp": "You will use your camera and microphone to record your answers. Please make sure you are in a quiet location and have 5-10 minutes of free time.",
+      "AnswerLandingTypeEmail": "Please type in your e-mail address to start.",
+      "AnswerLandingContact": "You will be contacted back at this address."
     }
   }
 }

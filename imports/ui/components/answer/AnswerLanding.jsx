@@ -8,17 +8,18 @@ import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next';
 
 const AnswerHome = ({ item, email, t }) =>
-    <div>
-        <img src="/icons8-short_hair_girl_question_mark.svg" />
-        <h1><Typography use="headline1">{item.title}</Typography></h1>
-        <h5><Typography use="headline5">{item.description}</Typography></h5>
-        <p><Typography use="body1">{t('AnswerLandingHelp')}</Typography></p>
+    <div className="centered AnswerLanding">
+        <img src="/icons8-short_hair_girl_question_mark.svg" className="topIcon centered" />
+        <h4><Typography use="headline4">{item.title}</Typography></h4>
+        <p><Typography use="body1">{item.description}</Typography></p>
+        <h6><Typography use="body2">{t('AnswerLandingHelp')}</Typography></h6>
         <form>
             {/* TODO: data-length provokes ReferenceError: M is not defined */}
             {/* <TextInput label="Title" value={item.value} data-length={50}/> */}
             {/* <Textarea label="Description" data-length={120}/> */}
-            <TextField label="Type in your e-mail address to start." value={email} onChange={(v) => console.log(v)}/>
-            <Button label="Start" raised />
+            <TextField label={t('AnswerLandingTypeEmail')} value={email} onChange={(v) => console.log(v)} className="solitary" outlined pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" />
+            <p className="smallHelp"><Typography use="caption">{t('AnswerLandingContact')}</Typography></p>
+            <Button label="Start" raised className="big" disabled={email ? false : true} />
         </form>
     </div>
 
