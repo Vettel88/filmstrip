@@ -8,23 +8,33 @@ import { QueueItem } from './components/QueueItem.jsx'
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
 import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
 
+import AnswerLayout from '/imports/ui/components/answer/AnswerLayout.jsx'
+import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
+
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
 
+const AppRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) => (
+    <Route {...rest} render={props => (
+        <RouteLayout>
+            <RouteComponent {...props} />
+        </RouteLayout>
+    )} />
+)
+
 export default App = () =>
     <Router>
-        <Layout>
-            <Switch>
-                <Route exact path="/" component={Home} />
-                <Route path="/queueList" component={QueuesList} />
-                <Route path="/frameList" component={FrameList} />
-                <Route path="/frame" component={Frame} />
-                <Route path="/signUp" component={SignUp} />
-                <Route path="/signIn" component={SignIn} />
-                <Route path="/queueitem/:id" component={QueueItem} />
-                <Route component={NoMatch} />
-            </Switch>
-        </Layout>
+        <Switch>
+            <AppRoute exact path="/" component={Home} layout={Layout} />
+            <AppRoute exact path="/queueList" component={QueuesList} layout={Layout} />
+            <AppRoute exact path="/frameList" component={FrameList} layout={Layout} />
+            <AppRoute exact path="/frame" component={Frame} layout={Layout} />
+            <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
+            <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
+            <AppRoute exact path="/queueitem/:id" component={QueueItem} layout={Layout} />
+            <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
+            <AppRoute component={NoMatch} layout={Layout} />
+        </Switch>
     </Router>
 
 const Home = () => <h2>Home</h2>
