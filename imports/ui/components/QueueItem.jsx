@@ -27,7 +27,6 @@ export const QueueItem = withTracker(({ match }) => {
     const handle = Meteor.subscribe('Queue', match.params.id)
     return {
         isLoading: !handle.ready(),
-        // isLoading: true,
         item: Queues.findOne()
     }
 })(QueuesItemWrapper)

@@ -5,6 +5,8 @@ import Layout from './components/Layout'
 import UIState from './UIState.js'
 import { QueuesList } from './components/QueuesList.jsx'
 import { QueueItem } from './components/QueueItem.jsx'
+import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
+import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
@@ -17,6 +19,8 @@ export default App = () =>
                 <Route path="/queueList" component={QueuesList} />
                 <Route path="/frameList" component={FrameList} />
                 <Route path="/frame" component={Frame} />
+                <Route path="/signUp" component={SignUp} />
+                <Route path="/signIn" component={SignIn} />
                 <Route path="/queueitem/:id" component={QueueItem} />
                 <Route component={NoMatch} />
             </Switch>
