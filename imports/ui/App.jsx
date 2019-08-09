@@ -10,6 +10,7 @@ import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
 
 import AnswerLayout from '/imports/ui/components/answer/AnswerLayout.jsx'
 import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
+import { AnswerQuestionnaire } from '/imports/ui/components/answer/AnswerQuestionnaire.jsx'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
@@ -33,6 +34,8 @@ export default App = () =>
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
             <AppRoute exact path="/queueitem/:id" component={QueueItem} layout={Layout} />
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
+            <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
+            <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>
     </Router>
