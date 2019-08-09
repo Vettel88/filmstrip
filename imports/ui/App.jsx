@@ -1,5 +1,8 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom"
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
+import { Button } from '@rmwc/button'
+import { List, ListItem } from '@rmwc/list'
+import ReactFilestack from 'filestack-react'
 import Layout from './components/Layout'
 
 import UIState from './UIState.js'
@@ -38,14 +41,25 @@ export default App = () =>
     </Router>
 
 const Home = () => <h2>Home</h2>
-const Frame = ({ match }) => <h3>Requested Param: {match.params.id}</h3>
+const Frame = ({ match }) => 
+    <>
+        <h3>Requested Param: {match.params.id}</h3>
+        <ReactFilestack
+            apikey={'Aqp34KkGdTvCthMIbNKTYz'}
+            onSuccess={(res) => console.log(match)}
+            render={({ onPick }) => (
+                <Button label='+ Upload File' onClick={onPick} />
+            )}
+        />
+    </>
 const FrameList = ({ match }) =>
     <>
         <h2>FrameList</h2>
-        <ul>
-            <li><Link to={`${match.url}/frame1`}>Frame1</Link></li>
-            <li><Link to={`${match.url}/frame2`}>Frame2</Link></li>
-        </ul>
+        <List>
+            <ListItem><Link to={`${match.url}/frame1`}>Frame1</Link></ListItem>
+            <ListItem><Link to={`${match.url}/frame2`}>Frame2</Link></ListItem>
+        </List>
+
         <Route path={`${match.path}/:id`} component={Frame} />
         <Route
             exact
