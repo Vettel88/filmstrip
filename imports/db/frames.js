@@ -1,7 +1,10 @@
-import { createCollection, createStandardPublications } from './collectionHelpers.js'
+import {
+  createCollection,
+  createStandardPublications
+} from './collectionHelpers.js';
 
-export const Frames = createCollection('Frames')
-createStandardPublications(Frames)
+export const Frames = createCollection('Frames');
+createStandardPublications(Frames);
 
 // # Frames / Slides
 // Required fields:
@@ -11,4 +14,4 @@ createStandardPublications(Frames)
 // Optional Fields
 // Desc - String
 // Link - String
-// File (path to file) 
+// File - Array of Url/Filename Objects
