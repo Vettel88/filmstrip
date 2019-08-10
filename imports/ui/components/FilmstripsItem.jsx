@@ -6,10 +6,16 @@ import { withTracker } from 'meteor/react-meteor-data'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 
-const FrameSelectorItem = ({item, setNo}) =>
-    <Button raised data-no={item.no} onClick={event => setNo(event.currentTarget.dataset.no)}>
+const FrameSelectorItem = ({item, setNo}) => {
+    const clickHandler = (event) => {
+        document.querySelectorAll('form.formFrame').forEach(form => form.style.display = 'none')
+        document.querySelector(`#${CSS.escape(event.currentTarget.dataset.no)}`).style.display = 'block'
+        setNo(event.currentTarget.dataset.no)
+    }
+    return (<Button raised data-no={item.no} onClick={clickHandler}>
         <Icon icon="camera" /> {item.no}
-    </Button>
+    </Button>)
+}
 
 const FrameSelector = ({frames, setNo}) => <>
     {frames.map(frame => <FrameSelectorItem key={frame.no} item={frame} setNo={setNo}/>)}
@@ -17,23 +23,24 @@ const FrameSelector = ({frames, setNo}) => <>
 
 // The dummyHandler is necessary, otherwise we get this warning:
 // Warning: Failed prop type: You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
-// const noop = (event) => {
-//     console.log(event.target.name, event.target.value)
-// }
-// const setter = (item, name) => (event) => {
-//     console.log(item[name])
-//     console.log(event.target.name, event.target.value)
-//     item[name] = event.target.value
-// }
+const noop = (event) => {
+    console.log(event.target.name, event.target.value)
+}
 
-const FrameItem = ({item, no}) => {
-    const frame = item.frames.find(i => i.no === no)
-    console.log(frame)
-    const title = document.querySelector['[name="title"]']
-    console.log(title)
+const setter = (set) => (event) => set(event.target.value)
+
+const FrameItem = ({frame, no}) => {
+    // const currentFrame = item.frames.find(i => i.no === no)
+    // console.log('currentFrame', currentFrame)
+    // const [lastNo, setLastNo] = React.useState(no)
+    // const [frame, setFrame] = React.useState(frame)
+    const [title, setTitle] = React.useState(frame.title)
+
+    const getStyle = no => ({ display: no === 1 ? 'inline' : 'none' })
+    
     return (<>
-        <form>
-            <TextField label="Frame Title" name="title" defaultValue={frame.title} maxLength={50} characterCount/>
+        <form className="formFrame" id={no} style={getStyle(no)}>
+            <TextField label="Frame Title" name="title" value={title} onChange={setter(setTitle)} maxLength={50} characterCount/>
             <TextField
                 textarea
                 outlined
@@ -42,9 +49,10 @@ const FrameItem = ({item, no}) => {
                 rows={3}
                 maxLength={120}
                 characterCount
-                defaultValue={frame.description}
+                value={frame.description}
+                onChange={noop}
             />
-            <TextField textarea label="Link"/>
+            <TextField textarea label="Link" defaultValue={frame.link}/>
             <h3>Files</h3>
 
             // TODO move apikey to setttings file
@@ -57,10 +65,10 @@ const FrameItem = ({item, no}) => {
                 )}
             />
 
-            {/* <List>
+            <List>
                 <ListItem>Ho</ListItem>
-                {frame.files && frame.files.map(file => <FileItem key={file.filename} file={file} />)}
-            </List> */}
+                {frame.files && frame.files.map((file, i) => <FileItem key={i} file={file} />)}
+            </List>
 
             {/* <h2>{frame.files.length}</h2> */}
             {/* <Card>
@@ -81,6 +89,7 @@ const FrameItem = ({item, no}) => {
 
 const FileItem = ({file}) => {
     console.log(file)
+    console.log(file.filename)
     return (
         <ListItem key={file.filename}>{file.filename}</ListItem>
     )
@@ -88,11 +97,24 @@ const FileItem = ({file}) => {
 
 const FilmstripContent = ({item}) => {
     const [no, setNo] = React.useState(item.frames[0].no)
+    // const frame = item.frames.find(i => i.no === no)
+    // const findFrame = (no) => {
+    //     console.log('findFrame', no, typeof no)
+    //     const i = item.frames.find(i => i.no === no)
+    //     console.log(i)
+    //     return i
+    // }
+    // const [frame, setFrame] = React.useState(findFrame(+no))
+    // setFrame(item.frames[no])
+    // setTitle(currentFrame.title)
+    // console.log('title', title)
+
 
     return (<>
         <h1>Frames</h1>
         <FrameSelector frames={item.frames} setNo={setNo}/>
-        <FrameItem item={item} no={+no}/>
+        {/* <FrameItem item={item} no={+no}/> */}
+        {item.frames && item.frames.map((frame, i) => <FrameItem key={i} frame={frame} no={frame.no}/>)}
     </>)
 }
 

@@ -22,6 +22,9 @@ const ListWrapper = ({isLoading, items}) =>
 export const FilmstripsList = withTracker(() => {
     const handle = Meteor.subscribe('Filmstrips')
     // console.log(Frames.find().count())
+    const s = Filmstrips.find().fetch()
+    console.log(JSON.stringify(s, null, 2))
+  
     return {
         isLoading: !handle.ready(),
         items: Filmstrips.find().fetch()

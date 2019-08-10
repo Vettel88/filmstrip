@@ -7,7 +7,9 @@ Meteor.methods({
         check(frameNo, Number)
         check(filesUploaded, [Object])
         console.log(filmstripId, frameNo, filesUploaded)
-        Filmstrips.update({_id: filmstripId, 'frames.no': frameNo}, {$addToSet: {'frames.$.files': filesUploaded}})
+        filesUploaded.forEach(file =>
+            Filmstrips.update({_id: filmstripId, 'frames.no': frameNo}, {$addToSet: {'frames.$.files': file}})
+        )
     }
 });
   
