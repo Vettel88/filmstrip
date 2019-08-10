@@ -5,7 +5,6 @@ import Layout from './components/Layout'
 
 import UIState from './UIState.js'
 import { Filmstrip } from './components/Filmstrip.jsx'
-import { Hello } from './components/Hello.jsx'
 import { QueuesList } from './components/QueuesList.jsx'
 import { QueueItem } from './components/QueueItem.jsx'
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
@@ -30,9 +29,7 @@ export default App = () =>
         <Switch>
             <AppRoute exact path="/" component={Home} layout={Layout} />
             <AppRoute exact path="/queueList" component={QueuesList} layout={Layout} />
-            <AppRoute exact path="/frameList" component={FrameList} layout={Layout} />
             <AppRoute exact path="/filmstrip" component={Filmstrip} layout={Layout} />
-            <AppRoute exact path="/frame" component={Frame} layout={Layout} />
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
             <AppRoute exact path="/queueitem/:id" component={QueueItem} layout={Layout} />
