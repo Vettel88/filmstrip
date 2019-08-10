@@ -12,8 +12,6 @@ const QueueItemContent = ({item}) =>
         {/* <Textarea label="Description" data-length={120}/> */}
         <TextField label="Title" value={item.title} onChange={(v) => console.log(v)}/>
         <TextField textarea label="Description" value={item.description} onChange={(v) => console.log(v)}/>
-        
-
     </form>
 
 const QueuesItemWrapper = ({isLoading, item}) => 

@@ -6,15 +6,13 @@ import { Queues } from '/imports/db/queues.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
-import { AnswerQuestion } from './AnswerQuestion.jsx';
 
-class AnswerQuestionnaireContainer extends React.Component {
+export class AnswerQuestion extends React.Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            email: props.email,
-            currentFrameNumber: 0
+            email: props.email ? props.email : ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -34,26 +32,8 @@ class AnswerQuestionnaireContainer extends React.Component {
         return (
             <div className='centered AnswerLanding'>
                 <h5><Typography use='headline5'>{this.props.item.title}</Typography></h5>
-                <AnswerQuestion item={this.props.item} frame={this.state.currentFrameNumber} />
             </div>
         )
     }
 
 }
-
-const AnswerWrapper = ({ isLoading, queueItem, email, t }) =>
-    <div>
-        {loadingWrapper(isLoading, () =>
-            <AnswerQuestionnaireContainer key={queueItem._id} item={queueItem} email={email} t={t} />
-        )}
-    </div>
-
-export const AnswerQuestionnaire = withTranslation()(withTracker(({ match }) => {
-    const id = match.params.id
-    const handle = Meteor.subscribe('Queue', id)
-    return {
-        isLoading: !handle.ready(),
-        queueItem: Queues.findOne(),
-        email: atob(match.params.emailBase64)
-    }
-})(AnswerWrapper))
