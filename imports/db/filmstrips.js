@@ -1,4 +1,7 @@
-import { createCollection, createStandardPublications } from './collectionHelpers.js'
+import {
+  createCollection,
+  createStandardPublications
+} from './collectionHelpers.js';
 
 export const Filmstrips = createCollection('Filmstrips')
 createStandardPublications(Filmstrips)
@@ -11,4 +14,4 @@ createStandardPublications(Filmstrips)
 // Optional Fields
 // Desc - String
 // Link - String
-// File (path to file) 
+// File - Array of Url/Filename Objects

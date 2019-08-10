@@ -29,6 +29,8 @@ const FrameSelector = ({frames, setNo}) => <>
 const FrameItem = ({item, no}) => {
     const frame = item.frames.find(i => i.no === no)
     console.log(frame)
+    const title = document.querySelector['[name="title"]']
+    console.log(title)
     return (<>
         <form>
             <TextField label="Frame Title" name="title" defaultValue={frame.title} maxLength={50} characterCount/>
