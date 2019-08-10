@@ -1,8 +1,10 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom"
+import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
+import { List, ListItem } from '@rmwc/list'
 import Layout from './components/Layout'
 
 import UIState from './UIState.js'
+import { Filmstrip } from './components/Filmstrip.jsx'
 import { QueuesList } from './components/QueuesList.jsx'
 import { QueueItem } from './components/QueueItem.jsx'
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
@@ -28,8 +30,7 @@ export default App = () =>
         <Switch>
             <AppRoute exact path="/" component={Home} layout={Layout} />
             <AppRoute exact path="/queueList" component={QueuesList} layout={Layout} />
-            <AppRoute exact path="/frameList" component={FrameList} layout={Layout} />
-            <AppRoute exact path="/frame" component={Frame} layout={Layout} />
+            <AppRoute exact path="/filmstrip" component={Filmstrip} layout={Layout} />
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
             <AppRoute exact path="/queueitem/:id" component={QueueItem} layout={Layout} />
@@ -41,20 +42,5 @@ export default App = () =>
     </Router>
 
 const Home = () => <h2>Home</h2>
-const Frame = ({ match }) => <h3>Requested Param: {match.params.id}</h3>
-const FrameList = ({ match }) =>
-    <>
-        <h2>FrameList</h2>
-        <ul>
-            <li><Link to={`${match.url}/frame1`}>Frame1</Link></li>
-            <li><Link to={`${match.url}/frame2`}>Frame2</Link></li>
-        </ul>
-        <Route path={`${match.path}/:id`} component={Frame} />
-        <Route
-            exact
-            path={match.path}
-            render={() => <h3>Please select a frame.</h3>}
-        />
-    </>
 
 const NoMatch = (props) => <div>404 - not your day</div>
