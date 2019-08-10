@@ -1,7 +1,7 @@
 import { createCollection, createStandardPublications } from './collectionHelpers.js'
 
-export const Frames = createCollection('Frames')
-createStandardPublications(Frames)
+export const Filmstrips = createCollection('Filmstrips')
+createStandardPublications(Filmstrips)
 
 // # Frames / Slides
 // Required fields:
