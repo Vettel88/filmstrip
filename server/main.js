@@ -1,22 +1,24 @@
 import { Meteor } from 'meteor/meteor';
-// import Links from '/imports/api/links';
 import '/imports/ui/UIState.js'
+import './methods.js'
 
-import { Queues } from '/imports/db/queues.js';
-import { Frames } from '/imports/db/frames.js';
-import { Invitees } from '/imports/db/invitees.js';
+import { Filmstrips } from '/imports/db/filmstrips.js';
 
-const insertQueue = o => Queues.insert(o);
+const insertFilmstrip = o => Filmstrips.insert(o);
 
 Meteor.startup(() => {
   // bootstrap
-  Queues.remove({})
-  console.log(Queues.find().count())
-  if (Queues.find().count() === 0) {
-    insertQueue({_id: 'LffAHLNevvBoM2KrZ', title: 'Queue1', description: 'Description 1' });
-    insertQueue({_id: 'owF5a7SmZBp9PmaDH', title: 'Queue2', description: 'Description 2' });
-    insertQueue({_id: 'MAdMtP2gaJ4cpcaXe', title: 'Queue3', description: 'Description 3' });
+  // Filmstrips.remove({})
+  if (Filmstrips.find().count() === 0) {
+    insertFilmstrip({
+      _id: '1',
+      name: 'Filmstrip 1',
+      description: 'Description of Filmstrip 1',
+      frames: [
+        {no: 1, title: 'Frame1', description: 'Description 1', link: 'https://filmstrip.com' },
+        {no: 2, title: 'Frame2', description: 'Description 2', link: 'https://filmstrip.com/2' },
+      ],
+    })
   }
-  console.log(Queues.find().fetch())
 });
 

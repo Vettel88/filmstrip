@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { Grid as UnstyledGrid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, GridInner, TopAppBar as UnstyledTopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
 import styled from 'styled-components'
 import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
+import '/imports/ui/UIState.js'
 
 const Grid = styled(UnstyledGrid)`
   padding-top: 100px !important;
@@ -47,8 +48,7 @@ const SideNav = ({open, setOpen}) => {
               <DrawerContent>
                   <List>
                       <ListItem setOpen={setOpen}><Link to="/">Dashboard</Link></ListItem>
-                      <ListItem setOpen={setOpen}><Link to="/queueList">QueueList</Link></ListItem>
-                      <ListItem setOpen={setOpen}><Link to="/frameList">FrameList</Link></ListItem>
+                      <ListItem setOpen={setOpen}><Link to="/filmstrips">Filmstrips</Link></ListItem>
                   </List>
               </DrawerContent>
           </Drawer>
