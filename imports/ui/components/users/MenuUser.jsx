@@ -19,6 +19,7 @@ const loggedIn = () => {
                 history.push('/signIn' )
             }
             
+            // console.log(Meteor.user())
             return (
                 <MenuSurfaceAnchor>
                     <Menu open={open}onClose={evt => setOpen(false)}>
