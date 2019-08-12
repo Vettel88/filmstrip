@@ -1,0 +1,6 @@
+{
+  "public": {
+    "CLOUDINARY_UPLOAD_PRESET": "filmstrip_1",
+    "CLOUDINARY_CLOUD_NAME": "incnition"
+  }
+}

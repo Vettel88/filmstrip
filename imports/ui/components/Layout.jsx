@@ -6,11 +6,11 @@ import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
 import '/imports/ui/UIState.js'
 
 const Grid = styled(UnstyledGrid)`
-  padding-top: 100px !important;
+    padding-top: 100px !important;
 `
 
 const TopAppBar = styled(UnstyledTopAppBar)`
-  background-color: #25455b !important;
+    background-color: #25455b !important;
 `
 
 const Header = () => {
@@ -49,6 +49,7 @@ const SideNav = ({open, setOpen}) => {
                   <List>
                       <ListItem setOpen={setOpen}><Link to="/">Dashboard</Link></ListItem>
                       <ListItem setOpen={setOpen}><Link to="/filmstrips">Filmstrips</Link></ListItem>
+                      <ListItem setOpen={setOpen}><Link to="/videoRecorder">VideoRecorder</Link></ListItem>
                   </List>
               </DrawerContent>
           </Drawer>

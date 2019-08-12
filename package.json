@@ -9,16 +9,19 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.3.4",
+    "cloudinary-core": "^2.7.3",
+    "cloudinary-react": "^1.1.4",
     "css-reset-and-normalize": "^2.1.0",
     "filestack-react": "^3.1.0",
     "i18next": "^17.0.10",
     "lodash": "^4.17.15",
-    "meteor-node-stubs": "^0.4.1",
     "react": "^16.8.6",
+    "react-device-detect": "^1.7.5",
     "react-dom": "^16.8.6",
     "react-i18next": "^10.11.5",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
+    "react-video-recorder": "^3.10.0",
     "rmwc": "^5.6.0",
     "styled-components": "^4.3.2"
   },
@@ -40,6 +43,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "jest": "^24.8.0",
-    "meteor-jest-stubs": "^2.0.0"
+    "meteor-jest-stubs": "^2.0.0",
+    "meteor-node-stubs": "^0.4.1"
   }
 }
