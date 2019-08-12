@@ -1,7 +1,9 @@
 {
     "public": {
         "filestack": {
-            "apikey": "Aqp34KkGdTvCthMIbNKTYz"
+            "apikey": "Aqp34KkGdTvCthMIbNKTYz",
+            "cloudinaryUploadPreset": "filmstrip_1",
+            "cloudinaryCloudName": "incnition"
         }
     }
 }

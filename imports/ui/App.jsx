@@ -4,7 +4,6 @@ import Layout from './components/Layout'
 
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
 import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
-import { VideoRecorder } from '/imports/ui/components/VideoRecorder.jsx'
 
 import AnswerLayout from '/imports/ui/components/answer/AnswerLayout.jsx'
 import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
@@ -37,7 +36,6 @@ export default App = () =>
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
-            <AppRoute path="/videoRecorder" component={VideoRecorder} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>
     </Router>
