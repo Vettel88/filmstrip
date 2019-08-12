@@ -6,7 +6,7 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
-import { AnswerQuestion } from './AnswerQuestion.jsx'
+import { AnswerFrame } from './AnswerFrame.jsx'
 
 class AnswerQuestionnaireContainer extends React.Component {
 
@@ -14,10 +14,13 @@ class AnswerQuestionnaireContainer extends React.Component {
         super(props)
         this.state = {
             email: props.email,
-            currentFrameNumber: 0
+            currentFrameIndex: 0,
+            answers: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.prevQuestion = this.prevQuestion.bind(this)
+        this.nextQuestion = this.nextQuestion.bind(this)
     }
 
     handleChange(event) {
@@ -27,24 +30,51 @@ class AnswerQuestionnaireContainer extends React.Component {
         event.preventDefault()
     }
 
+    prevQuestion(event) {
+        event.preventDefault()
+        this.setState({
+            currentFrameIndex: this.state.currentFrameIndex - 1
+        })
+    }
+
+    nextQuestion(event) {
+        this.setState({
+            currentFrameIndex: this.state.currentFrameIndex + 1
+        })
+    }
+
     render() {
         
         const t = this.props.t
+        const currentFrame = this.props.filmstrip.frames[this.state.currentFrameIndex];
+        const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
 
         return (
-            <div className='centered AnswerLanding'>
-                <h5><Typography use='headline5'>{this.props.item.name}</Typography></h5>
-                <AnswerQuestion item={this.props.item} frame={this.state.currentFrameNumber} />
+            <div className='centered AnswerQuestionnaireContainer'>
+                <h5><Typography use='headline5'>{this.props.filmstrip.name}</Typography></h5>
+                <AnswerFrame key={currentFrame._id} frame={currentFrame} t={t} filmstrip={this.props.filmstrip} currentFrameIndex={this.state.currentFrameIndex} />
+                <div className='AnswerNavigationButtons'>
+                    <a onClick={this.prevQuestion} className={prevQuestionClass}>
+                        <Typography use='button'>
+                            { t('AnswerPrevQuestion') }
+                        </Typography>
+                    </a>
+                    <a onClick={this.nextQuestion}>
+                        <Typography use='button'>
+                            { this.state.currentFrameIndex + 1 === this.props.filmstrip.frames.length ? t('AnswerFinish') : t('AnswerNextQuestion') }
+                        </Typography>
+                    </a>
+                </div>
             </div>
         )
     }
 
 }
 
-const AnswerWrapper = ({ isLoading, queueItem, email, t }) =>
+const AnswerWrapper = ({ isLoading, filmstrip, email, t }) =>
     <div>
         {loadingWrapper(isLoading, () =>
-            <AnswerQuestionnaireContainer key={queueItem._id} item={queueItem} email={email} t={t} />
+            <AnswerQuestionnaireContainer key={filmstrip._id} filmstrip={filmstrip} email={email} t={t} />
         )}
     </div>
 
@@ -53,50 +83,7 @@ export const AnswerQuestionnaire = withTranslation()(withTracker(({ match }) => 
     const handle = Meteor.subscribe('Filmstrip', id)
     return {
         isLoading: !handle.ready(),
-        queueItem: Filmstrips.findOne(),
-        email: atob(match.params.emailBase64),
-        frames: [
-            {
-                "_id": "1",
-                "name": "Filmstrip 1",
-                "description": "Description of Filmstrip 1",
-                "frames": [
-                    {
-                        "no": 1,
-                        "title": "Frame1",
-                        "description": "Description 1",
-                        "link": "https://filmstrip.com",
-                        "files": [
-                            {
-                                "filename": "a1498d35-5092-4c85-9895-a52aab24eddc.jpeg",
-                                "handle": "SU8Lk6RlQXqa7zya6NN6",
-                                "mimetype": "image/jpeg",
-                                "originalPath": "a1498d35-5092-4c85-9895-a52aab24eddc.jpeg",
-                                "size": 276444,
-                                "source": "local_file_system",
-                                "url": "https://cdn.filestackcontent.com/SU8Lk6RlQXqa7zya6NN6",
-                                "uploadId": "rbjaTqbGFRh7UpEY",
-                                "originalFile": {
-                                "name": "a1498d35-5092-4c85-9895-a52aab24eddc.jpeg",
-                                "type": "image/jpeg",
-                                "size": 276444
-                                },
-                                "status": "Stored"
-                            }
-                        ]
-                    },
-                    {
-                        "no": 2,
-                        "title": "Frame2",
-                        "description": "Description 2",
-                        "link": "https://filmstrip.com/2"
-                    }
-                ],
-                "createdAt": "2019-08-10T01:03:47.073Z",
-                "createdBy": "system",
-                "modifiedAt": "2019-08-10T01:04:51.582Z",
-                "modifiedBy": "system"
-            }
-        ]
+        filmstrip: Filmstrips.findOne(),
+        email: atob(match.params.emailBase64)
     }
 })(AnswerWrapper))

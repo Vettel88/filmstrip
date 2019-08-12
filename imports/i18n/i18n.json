@@ -1,11 +1,26 @@
 {
   "en": {
     "translation": {
+      "PickFile": "Pick a file",
+      "Files": "Files",
+      "Links": "Links",
+      "Link": "Link",
+      "URL": "URL",
+      "AnswerText": "Your Text Answer",
       "AnswerLandingHelp": "You will use your camera and microphone to record your answers. Please make sure you are in a quiet location and have 5-10 minutes of free time.",
-      "AnswerLandingTypeEmail": "Please type in your e-mail address to start.",
+      "AnswerLandingTypeEmail": "Type your e-mail address to start.",
       "AnswerLandingContact": "You will be contacted back at this address.",
       "AnswerLandingNotFound": "The questionnaire you requested is invalid or has expired.",
-      "AnswerLandingPleaseCheckLink": "Please check the link that you have been provided."
+      "AnswerLandingPleaseCheckLink": "Please check the link that you have been provided.",
+      "AnswerRecordButton": "Record your answer",
+      "AnswerPrevQuestion": "< Previous",
+      "AnswerNextQuestion": "Next >",
+      "AnswerFinish": "Finish",
+      "AnswerVideo": "Your Video Answer",
+      "AnswerAddLinks": "Add link(s)",
+      "AnswerUploadFiles": "Upload file(s)",
+      "AnswerAddAnotherLink": "+ Add another link",
+      "AnswerUploadAnotherFile": "+ Upload another file"
     }
   }
 }
