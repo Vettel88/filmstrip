@@ -49,7 +49,6 @@ const SideNav = ({open, setOpen}) => {
                   <List>
                       <ListItem setOpen={setOpen}><Link to="/">Dashboard</Link></ListItem>
                       <ListItem setOpen={setOpen}><Link to="/filmstrips">Filmstrips</Link></ListItem>
-                      <ListItem setOpen={setOpen}><Link to="/videoRecorder">VideoRecorder</Link></ListItem>
                   </List>
               </DrawerContent>
           </Drawer>

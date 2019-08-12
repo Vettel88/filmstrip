@@ -4,11 +4,29 @@
   text-align: center;
 }
 
-.AnswerLanding {
+.AnswerQuestionnaireContainer {
 
   max-width: 32rem;
   margin: 0 auto;
-  padding-top: @pad*2;
+  padding: @pad*2;
+
+  .mdc-text-field--fullwidth {
+    display: block;
+
+    .mdc-notched-outline {
+      top: 0;
+    }
+  }
+
+  .AnswerField,
+  .FileUploadContainer {
+  }
+
+  .FileUploadContainer {
+    button {
+      width: 100%;
+    }
+  }
 
   .solitary {
     margin-top: @pad*3;
@@ -50,7 +68,7 @@
   }
 
   .big {
-    font-size: 24px;
+    font-size: 18px;
     height: auto;
     line-height: 24px;
     padding: @pad*2 @pad*8;
@@ -76,3 +94,66 @@
 
 }
 
+.AnswerCardDetails,
+.AnswerCard {
+  padding: @pad*2;
+  text-align: left;
+
+  ul {
+    margin-bottom: @pad*2;
+  }
+}
+
+.AnswerCard {
+  h6 {
+    margin: @pad*2 0 @pad 0;
+
+    &.noMarginTop {
+      margin-top: 0;
+    }
+  }
+}
+
+.AnswerCardDetails {
+  margin-bottom: @pad*2;
+}
+
+.AnswerNavigationButtons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  a {
+    background: #25455b;
+    color: white;
+    display: block;
+    padding: @pad*2 @pad*4;
+    text-align: center;
+    text-transform: uppercase;
+    width: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    border-bottom: 1px solid white;
+    border-right: 1px solid white;
+
+    &:first-child {
+      border-left: 1px solid white;
+    }
+
+    &:hover {
+      background-color: #367aa8;
+    }
+
+    &.disabled {
+      cursor: default;
+      pointer-events: none;
+      background-color: #666;
+    }
+
+  }
+
+}

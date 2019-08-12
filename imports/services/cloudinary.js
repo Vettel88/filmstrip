@@ -1,16 +1,16 @@
 const {
-    CLOUDINARY_CLOUD_NAME,
-    CLOUDINARY_UPLOAD_PRESET
+    cloudinaryUploadPreset,
+    cloudinaryCloudName
 } = Meteor.settings.public;
 
-const postUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`;
+const postUrl = `https://api.cloudinary.com/v1_1/${cloudinaryCloudName}/upload`;
 
 export default {
     uploadVideo: uploadBlob =>
         new Promise((resolve, reject) => {
             const formData = new FormData();
             formData.append("file", uploadBlob);
-            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+            formData.append("upload_preset", cloudinaryUploadPreset);
             return fetch(postUrl, {
                 method: "post",
                 body: formData
