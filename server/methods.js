@@ -9,5 +9,11 @@ Meteor.methods({
         check(no, Number)
         Frames.upsert({filmstripId, no}, {$set: {...frame}})
     },
+    'filmstrip.frame.saveVideo'({filmstripId, frameId, video}) {
+        check(filmstripId, String)
+        check(frameId, String)
+        check(video, Object)
+        Frames.update(frameId, {$set: {video}})
+    },
 });
   

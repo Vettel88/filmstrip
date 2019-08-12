@@ -12,6 +12,7 @@ import { AnswerQuestionnaire } from '/imports/ui/components/answer/AnswerQuestio
 import { FilmstripsList } from './components/FilmstripsList.jsx'
 import { FilmstripsItem } from './components/FilmstripsItem.jsx'
 import { Filmstrip } from './components/Filmstrip.jsx'
+import { FrameVideoRecorder } from '/imports/ui/components/FrameVideoRecorder.jsx'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
@@ -36,6 +37,8 @@ export default App = () =>
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
+            
+            <AppRoute exact path="/videoRecorder/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>
     </Router>

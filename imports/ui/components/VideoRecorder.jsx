@@ -11,6 +11,7 @@ export class VideoRecorder extends React.Component {
         console.warn("VideoRecorder Error: ", error)
     }
     render() {
+        console.log('props', this.props)
         const { onError, onSuccess } = this.props
         const handleSuccess = onSuccess || this.onSuccess
         const handleError = onError || this.onError

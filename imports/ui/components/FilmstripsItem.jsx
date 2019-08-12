@@ -1,46 +1,49 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import ReactFilestack from 'filestack-react'
-import { VideoRecorder } from '/imports/ui/components/VideoRecorder.jsx'
-import { Image, CloudinaryContext, Transformation } from 'cloudinary-react'
+import { Image, Video, CloudinaryContext, Transformation } from 'cloudinary-react'
 import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner } from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
+import { withRouter } from 'react-router-dom'
 import get from 'lodash/get'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import './FilmstripsItem.less'
 
-const FrameSelectorItem = ({item, setNo}) => {
-    const clickHandler = (event) => {
+const FrameSelectorItem = withRouter(({history, frame, setNo}) => {
+    const changeFrame = (event) => {
         document.querySelectorAll('form.formFrame').forEach(form => form.style.display = 'none')
         document.querySelector(`#${CSS.escape(event.currentTarget.dataset.no)}`).style.display = 'block'
         setNo(event.currentTarget.dataset.no)
     }
+    const removeFrame = (event) => {
+        if(confirm('Do you want to delete the frame?')) {
+            alert('Wait for the future to come!')
+        }
+    }
+    const addVideo = (event) =>
+        history.push(`/videoRecorder/${frame.filmstripId}/${frame._id}`)
+    
+    const publicId = get(frame, 'video.public_id', 'sample')
     return (<>
-        {/* <Image cloudName="demo" publicId="sample" width="300" crop="scale"/> */}
-        {/* <CloudinaryContext cloudName="demo">
-            <Image publicId="sample">
-                <Transformation width="200" crop="scale" angle="10"/>
-            </Image>
-        </CloudinaryContext> */}
-        {/* <VideoRecorder/> */}
-        <Button raised data-no={item.no} onClick={clickHandler}>
-            <Icon icon="camera" /> {item.no}
+        <Video cloudName={Meteor.settings.public.cloudinary.cloudName} publicId={publicId} width="300" crop="scale"/>
+        <Button raised data-no={frame.no} onClick={changeFrame}>
+            {frame.no}
+        </Button>
+        <Button raised data-no={frame.no} onClick={removeFrame}>
+            <Icon icon="remove" /> {frame.no}
+        </Button>
+        <Button raised data-no={frame.no} onClick={addVideo}>
+            <Icon icon="add" /> {frame.no}
         </Button>
     </>)
-}
+})
 
 const FrameSelector = ({frames, setNo}) => <>
-    {frames.map(frame => <FrameSelectorItem key={frame.no} item={frame} setNo={setNo}/>)}
+    {frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} setNo={setNo}/>)}
 </>
-
-// The dummyHandler is necessary, otherwise we get this warning:
-// Warning: Failed prop type: You provided a `value` prop to a form field without an `onChange` handler. This will render a read-only field. If the field should be mutable use `defaultValue`. Otherwise, set either `onChange` or `readOnly`.
-const noop = (event) => {
-    console.log(event.target.name, event.target.value)
-}
 
 const setter = (set) => (event) => set(event.target.value)
 
