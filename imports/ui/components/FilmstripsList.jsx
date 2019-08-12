@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Route, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { withTracker } from 'meteor/react-meteor-data'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'

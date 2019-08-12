@@ -11,6 +11,7 @@ import { TextField } from '@rmwc/textfield'
 import ReactFilestack from 'filestack-react'
 // import { Queues } from '/imports/db/queues.js'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
+import Video from './VideoPlayer';
 
 const frames = [
     {
@@ -106,7 +107,6 @@ export const Filmstrip = ({ match }) =>
                 />
 
             </GridCell>
-
             <GridCell>
                 <h2>Frames</h2>
                 <ul>
