@@ -20,5 +20,6 @@ Meteor.startup(() => {
       ],
     })
   }
+  console.log(JSON.stringify(Filmstrips.find().fetch(), null, 2))
 });
 
