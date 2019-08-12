@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import { Route, Link, Redirect } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
-import { Queues } from '/imports/db/queues.js'
+import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
@@ -45,7 +45,7 @@ class AnswerHome extends React.Component {
         return (
             <div className='centered AnswerLanding'>
                 <img src='/icons8-short_hair_girl_question_mark.svg' className='topIcon centered' />
-                <h4><Typography use='headline4'>{this.props.item.title}</Typography></h4>
+                <h4><Typography use='headline4'>{this.props.item.name}</Typography></h4>
                 <p><Typography use='body1'>{this.props.item.description}</Typography></p>
                 <h6><Typography use='body2'>{t('AnswerLandingHelp')}</Typography></h6>
                 <form onSubmit={this.handleSubmit}>
@@ -85,10 +85,10 @@ const AnswerWrapper = ({ isLoading, queueItem, email, t }) => {
 
 export const AnswerLanding = withTranslation()(withTracker(({ match }) => {
     const id = match.params.id
-    const handle = Meteor.subscribe('Queue', id)
+    const handle = Meteor.subscribe('Filmstrip', id)
     return {
         isLoading: !handle.ready(),
-        queueItem: Queues.findOne(),
+        queueItem: Filmstrips.findOne(),
         email: match.params.emailBase64 ? atob(match.params.emailBase64) : ''
     }
 })(AnswerWrapper))
