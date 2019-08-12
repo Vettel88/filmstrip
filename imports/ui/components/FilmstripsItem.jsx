@@ -6,6 +6,7 @@ import { Image, CloudinaryContext, Transformation } from 'cloudinary-react'
 import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner } from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
+import get from 'lodash/get'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
@@ -135,7 +136,8 @@ const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => {
 }
 
 const FilmstripContent = ({filmstrip, frames}) => {
-    const [no, setNo] = React.useState(frames[0].no)
+    console.log(frames)
+    const [no, setNo] = React.useState(get(frames[0], 'no'))
     return (<>
         <h1>Frames</h1>
         <FrameSelector frames={frames} setNo={setNo}/>

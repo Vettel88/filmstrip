@@ -23,7 +23,7 @@ Meteor.startup(() => {
     insertFrame({ _id: '1', filmstripId: '1', no: 1, title: 'Frame 1', description: 'Description 1', link: 'https://filmstrip.com/1' })
     insertFrame({ _id: '2', filmstripId: '1', no: 2, title: 'Frame 2', description: 'Description 2', link: 'https://filmstrip.com/2' })
   }
-  console.log(JSON.stringify(Filmstrips.find().fetch(), null, 2))
-  console.log(JSON.stringify(Frames.find().fetch(), null, 2))
+  // console.log(JSON.stringify(Filmstrips.find().fetch(), null, 2))
+  // console.log(JSON.stringify(Frames.find().fetch(), null, 2))
 });
 
