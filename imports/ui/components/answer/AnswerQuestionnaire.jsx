@@ -44,7 +44,7 @@ class AnswerQuestionnaireContainer extends React.Component {
     }
 
     render() {
-        
+
         const t = this.props.t
         const currentFrame = this.props.filmstrip.frames[this.state.currentFrameIndex];
         const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
@@ -67,6 +67,7 @@ class AnswerQuestionnaireContainer extends React.Component {
                 </div>
             </div>
         )
+
     }
 
 }
