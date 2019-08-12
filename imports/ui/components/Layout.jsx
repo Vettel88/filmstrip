@@ -65,7 +65,7 @@ export default class Layout extends Component {
             <>
                 <Header />
                 <Grid>
-                    <GridCell>
+                    <GridCell span={12}>
                         {this.props.children}
                     </GridCell>
                 </Grid>

@@ -1,10 +1,12 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import ReactFilestack from 'filestack-react'
-import { TextField, Button, Icon, List, ListItem, Card } from 'rmwc'
+import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner } from 'rmwc'
+import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
+import './FilmstripsItem.less'
 
 const FrameSelectorItem = ({item, setNo}) => {
     const clickHandler = (event) => {
@@ -29,18 +31,27 @@ const noop = (event) => {
 
 const setter = (set) => (event) => set(event.target.value)
 
-const FrameItem = ({frame, no}) => {
-    // const currentFrame = item.frames.find(i => i.no === no)
-    // console.log('currentFrame', currentFrame)
-    // const [lastNo, setLastNo] = React.useState(no)
-    // const [frame, setFrame] = React.useState(frame)
-    const [title, setTitle] = React.useState(frame.title)
+const StyledReactFilestack = styled(ReactFilestack)`
+    text-align: right;
+    float: right;
+    text-decoration: underline;
+    color: blue;
+`
 
+const FrameItem = ({filmstrip, frame, no}) => {
+    const [title, setTitle] = React.useState(frame.title)
+    const [description, setDescription] = React.useState(frame.description)
+    const [link, setLink] = React.useState(frame.link)
+
+    // All frames will be rendered but only the currently selected will be visible
     const getStyle = no => ({ display: no === 1 ? 'inline' : 'none' })
     
     return (<>
         <form className="formFrame" id={no} style={getStyle(no)}>
-            <TextField label="Frame Title" name="title" value={title} onChange={setter(setTitle)} maxLength={50} characterCount/>
+            <GridCell span={12}>
+                <TextField label="Frame Title" name="title" value={title} onChange={setter(setTitle)} maxLength={50} characterCount/>
+            </GridCell>
+            <GridCell span={12}>
             <TextField
                 textarea
                 outlined
@@ -49,88 +60,79 @@ const FrameItem = ({frame, no}) => {
                 rows={3}
                 maxLength={120}
                 characterCount
-                value={frame.description}
-                onChange={noop}
+                value={description}
+                onChange={setter(setDescription)}
             />
-            <TextField textarea label="Link" defaultValue={frame.link}/>
+            </GridCell>
+            <GridCell span={12}>
+            <TextField textarea label="Link" defaultValue={link} onChange={setter(setLink)}/>
+            </GridCell>
+            <GridCell span={12}>
+            
             <h3>Files</h3>
 
-            // TODO move apikey to setttings file
-            <ReactFilestack
-                apikey={'Aqp34KkGdTvCthMIbNKTYz'}
-                // onSuccess={(result) => console.log(result)}
-                onSuccess={(result) => Meteor.call('filmstrip.addFileLink', {filmstripId: item._id, frameNo: no, filesUploaded: result.filesUploaded})}
+            <StyledReactFilestack
+                apikey={Meteor.settings.public.filestack.apikey}
+                onSuccess={(result) => Meteor.call('filmstrip.frame.addFile', {filmstripId: filmstrip._id, frameNo: no, filesUploaded: result.filesUploaded})}
+                componentDisplayMode={{
+                    type: 'link',
+                    customText: 'Upload',
+                }}
                 render={({ onPick }) => (
                     <Button label='+ Upload File' onClick={onPick} />
                 )}
             />
+            </GridCell>
+            <GridCell span={12}>
 
             <List>
-                <ListItem>Ho</ListItem>
-                {frame.files && frame.files.map((file, i) => <FileItem key={i} file={file} />)}
+                {frame.files && frame.files.map((file, i) => 
+                    <FileItem key={i} file={file} filmstrip={filmstrip} frame={frame} no={no}/>)}
             </List>
-
-            {/* <h2>{frame.files.length}</h2> */}
-            {/* <Card>
-                {frame.files.length ?
-                    <List>
-                        <h2></h2>
-                        {frame.files.map((file, i) => {
-                            return (
-                                <ListItem key={i}>{file.filename}</ListItem>
-                            )
-                        })}
-                    </List>
-                    : null}
-            </Card> */}
+            </GridCell>
         </form>
     </>)
 }
 
-const FileItem = ({file}) => {
-    console.log(file)
-    console.log(file.filename)
-    return (
-        <ListItem key={file.filename}>{file.filename}</ListItem>
-    )
+const removeFileHandler = (filmstrip, frame, no, file) => event => {
+    event.preventDefault()
+    console.log(filmstrip, frame, no, file)    
+    Meteor.call('filmstrip.frame.removeFile', {filmstripId: filmstrip._id, frameNo: no, handle: file.handle})
 }
 
-const FilmstripContent = ({item}) => {
-    const [no, setNo] = React.useState(item.frames[0].no)
-    // const frame = item.frames.find(i => i.no === no)
-    // const findFrame = (no) => {
-    //     console.log('findFrame', no, typeof no)
-    //     const i = item.frames.find(i => i.no === no)
-    //     console.log(i)
-    //     return i
-    // }
-    // const [frame, setFrame] = React.useState(findFrame(+no))
-    // setFrame(item.frames[no])
-    // setTitle(currentFrame.title)
-    // console.log('title', title)
+const FileItem = ({filmstrip, frame, no, file}) => {
+    console.log('file', file)
+    console.log(file.filename)
+    return (<GridInner>
+        <GridCell span={9}>
+            <ListItem key={file.filename}>{file.filename}</ListItem>
+        </GridCell>
+        <GridCell span={3} className="right">
+            <button className="removeFile" onClick={removeFileHandler(filmstrip, frame, no, file)}>Remove</button>
+        </GridCell>
+    </GridInner>)
+}
 
-
+const FilmstripContent = ({filmstrip}) => {
+    const [no, setNo] = React.useState(filmstrip.frames[0].no)
     return (<>
         <h1>Frames</h1>
-        <FrameSelector frames={item.frames} setNo={setNo}/>
-        {/* <FrameItem item={item} no={+no}/> */}
-        {item.frames && item.frames.map((frame, i) => <FrameItem key={i} frame={frame} no={frame.no}/>)}
+        <FrameSelector frames={filmstrip.frames} setNo={setNo}/>
+        {filmstrip.frames && filmstrip.frames.map((frame, i) => <FrameItem key={i} filmstrip={filmstrip} frame={frame} no={frame.no}/>)}
     </>)
 }
 
-const FilmstripWrapper = ({isLoading, item}) => 
-    <ul>
+const FilmstripWrapper = ({isLoading, filmstrip}) => 
+    <div className="filmstripsItem">
         {loadingWrapper(isLoading, () => 
-            <FilmstripContent key={item._id} item={item} />)
+            <FilmstripContent key={filmstrip._id} filmstrip={filmstrip} />)
         }
-    </ul>
+    </div>
 
 export const FilmstripsItem = withTracker(({ match }) => {
     const handle = Meteor.subscribe('Filmstrip', match.params.filmstripId)
-    console.log(match.params)
-    console.log(Filmstrips.findOne())
     return {
         isLoading: !handle.ready(),
-        item: Filmstrips.findOne()
+        filmstrip: Filmstrips.findOne()
     }
 })(FilmstripWrapper)
