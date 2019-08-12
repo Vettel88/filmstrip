@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Route, Link, Redirect } from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
@@ -43,7 +43,7 @@ class AnswerHome extends React.Component {
         }
 
         return (
-            <div className='centered AnswerLanding'>
+            <div className='centered AnswerQuestionnaireContainer'>
                 <img src='/icons8-short_hair_girl_question_mark.svg' className='topIcon centered' />
                 <h4><Typography use='headline4'>{this.props.item.name}</Typography></h4>
                 <p><Typography use='body1'>{this.props.item.description}</Typography></p>
