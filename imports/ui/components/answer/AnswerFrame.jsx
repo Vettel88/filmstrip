@@ -10,22 +10,36 @@ import ReactFilestack from 'filestack-react'
 
 export class AnswerFrame extends React.Component {
 
-    state = {
-        text: null,
-        link: "",
-        files: []
+    constructor(props) {
+
+        super(props)
+
+        const serializedCachedState = localStorage.getItem(this.props.frame._id)
+        const cachedState = serializedCachedState ? JSON.parse(serializedCachedState) : null;
+
+        if(cachedState) this.state = cachedState
+        else {
+            this.state = {
+                text: null,
+                link: "",
+                files: []
+            }
+        }
+
     }
 
     handleLinkAnswer = (event) => {
         this.setState({
             link: event.target.value
         })
+        this.updateLocalStorageState();
     }
 
     handleTextAnswer = (event) => {
         this.setState({
             text: event.target.value
         })
+        this.updateLocalStorageState();
     }
 
     answerUploadSave = (res) => {
@@ -34,6 +48,12 @@ export class AnswerFrame extends React.Component {
         this.setState({
             files
         })
+        this.updateLocalStorageState();
+    }
+
+    updateLocalStorageState = () => {
+        console.log(this.state);
+        localStorage.setItem(this.props.frame._id, JSON.stringify(this.state));
     }
 
     render() {
@@ -68,6 +88,7 @@ export class AnswerFrame extends React.Component {
                     className='AnswerField'
                     fullwidth
                     onChange={this.handleTextAnswer}
+                    defaultValue={this.state.text}
                     outlined
                     rows={4}
                     textarea />
@@ -81,6 +102,7 @@ export class AnswerFrame extends React.Component {
                     label={t('URL')}
                     className='AnswerField'
                     onChange={this.handleLinkAnswer}
+                    defaultValue={this.state.link}
                     fullwidth
                     outlined />
                 </>

@@ -25,6 +25,7 @@ Meteor.startup(() => {
   if (Frames.find().count() === 0) {
 
     insertFrame({
+      _id: "abc1",
       no: 1,
       title: 'Frame1',
       filmstripId: '1',
@@ -54,6 +55,7 @@ Meteor.startup(() => {
     })
 
     insertFrame({
+      _id: "def2",
       no: 2,
       title: 'Frame2',
       filmstripId: '1',
