@@ -18,6 +18,14 @@ class AnswerQuestionnaireContainer extends React.Component {
         answers: []
     }
 
+    handleChange = (event) => {
+        console.log(event)
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault()
+    }
+
     prevQuestion = (event) => {
         event.preventDefault()
         this.setState({
@@ -74,8 +82,7 @@ class AnswerQuestionnaireContainer extends React.Component {
     }
 
     render() {
-
-        const t = this.props.t
+        const { t } = this.props
         const currentFrame = this.props.filmstrip.frames[this.state.currentFrameIndex];
         const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
 

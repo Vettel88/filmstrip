@@ -1,35 +1,70 @@
 import { Meteor } from 'meteor/meteor'
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import ReactFilestack from 'filestack-react'
-import { Image, Video } from 'cloudinary-react'
+import { Image } from 'cloudinary-react'
 import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner, Avatar } from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
 import { withRouter } from 'react-router-dom'
 import get from 'lodash/get'
-import { loadingWrapper } from '/imports/ui/UIHelpers.js'
+import { loadingWrapper, addTranslations, t, withTranslation, changeLanguage } from '/imports/ui/UIHelpers.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import Video from '/imports/ui/components/VideoPlayer.js';
 import './FilmstripsItem.less'
+
+Meteor.startup(() => {
+    addTranslations('en', {    
+        FramestripsItem: {
+            Frames: 'Frames',
+            'Frame Title': 'Frame Title',
+            'Frame Description': 'Frame Description',
+            Upload: 'Upload',
+            Link: 'Link',
+            Files: 'Files',
+            Save: 'Save',
+            Remove: 'Remove',
+            'Do you want to delete the frame?': 'Do you want to delete the frame?',
+            'Wait for the future to come!': 'Wait for the future to come!',
+        }
+    })
+    addTranslations('es', {
+        FramestripsItem: {
+            Frames: 'Marcos',
+            'Frame Title': 'Titulo',
+            'Frame Description': 'Descripción',
+            Upload: 'Subir',
+            Link: 'Enlace',
+            Files: 'Subir archivos',
+            Save: 'Guardar',
+            Remove: 'Remover',
+            'Do you want to delete the frame?': 'Quieres borrarlo?',
+            'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
+        }
+    })
+});
 
 const FrameEditorItem = withRouter(({history, match, frame}) => {
     const removeFrame = (event) => {
-        if(confirm('Do you want to delete the frame?')) {
-            alert('Wait for the future to come!')
+        changeLanguage('es')
+        if(confirm(t('FramestripsItem.Do you want to delete the frame?'))) {
+            alert(t('FramestripsItem.Wait for the future to come!'))
         }
     }
     const addVideo = (event) =>
-        history.push(`/videoRecorder/${frame.filmstripId}/${frame._id}`)
-    
+        history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
+
     const publicId = get(frame, 'video.public_id')
     const cloudName = publicId && Meteor.settings.public.cloudinary.cloudName
     const imageOrVideo = publicId
-        ? <Video cloudName={cloudName} publicId={publicId} width="300" crop="scale"/>
+        ? <Video publicId={publicId} width="300"/>
         : <Image cloudName="demo" publicId="sample" width="300" crop="scale"/>
 
     // All frames will be rendered but only the currently selected will be visible
     const { frameId } = match.params
-    const getStyle = id => ({ display: id === frameId ? 'block' : 'none' })
+    const getStyle = id => {
+        return ({ display: id === frameId ? 'block' : 'none' })
+    }
 
     return (<div className="videoEditor" style={getStyle(frame._id)}>
         {imageOrVideo}
@@ -47,11 +82,11 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
 const FrameSelectorItem = withRouter(({history, match, frame}) => {
     const changeFrame = (event) => {
         const { filmstripId } = match.params
-        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.no}`)
+        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.id}`)
     }
     
     return (<>
-        <Button raised data-no={frame.no} onClick={changeFrame}>
+        <Button raised data-id={frame._id} onClick={changeFrame}>
             {frame.no}
         </Button>
     </>)
@@ -59,7 +94,8 @@ const FrameSelectorItem = withRouter(({history, match, frame}) => {
 
 const FrameEditor = ({frames}) => <div>
     {frames.map(frame => <FrameEditorItem key={frame.no} frame={frame} />)}
-</div>
+</div>// export const FilmstripsItem = withTracker(({ match }) => {
+
 
 const FrameSelector = ({frames}) => <div>
     {frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} />)}
@@ -82,19 +118,19 @@ const FrameItem = withRouter(({match, filmstrip, frame, no}) => {
 
     // All frames will be rendered but only the currently selected will be visible
     const { frameId } = match.params
-    const getStyle = no => ({ display: no === +frameId ? 'inline' : 'none' })
+    const getStyle = () => ({ display: frame._id === frameId ? 'inline' : 'none' })
     
     return (<>
-        <form className="formFrame" id={no} style={getStyle(no)}>
+        <form className="formFrame" id={no} style={getStyle()}>
             <GridCell span={12}>
-                <TextField label="Frame Title" name="title" value={title} onChange={setter(setTitle)} maxLength={50} characterCount/>
+                <TextField label={t('FramestripsItem.Frame Title')} name="title" value={title} onChange={setter(setTitle)} maxLength={50} characterCount/>
             </GridCell>
             <GridCell span={12}>
                 <TextField
                     textarea
                     outlined
                     fullwidth
-                    label="Frame Description"
+                    label={t('FramestripsItem.Frame Description')}
                     rows={3}
                     maxLength={120}
                     characterCount
@@ -103,10 +139,10 @@ const FrameItem = withRouter(({match, filmstrip, frame, no}) => {
                 />
             </GridCell>
             <GridCell span={12}>
-                <TextField textarea label="Link" defaultValue={link} onChange={setter(setLink)}/>
+                <TextField textarea label={t('FramestripsItem.Link')} defaultValue={link} onChange={setter(setLink)}/>
             </GridCell>
             <GridCell span={12}>
-                <h3>Files</h3>
+                <h3>{t('FramestripsItem.Files')}</h3>
                 <StyledReactFilestack
                     apikey={Meteor.settings.public.filestack.apikey}
                     onSuccess={({filesUploaded}) => {
@@ -116,10 +152,10 @@ const FrameItem = withRouter(({match, filmstrip, frame, no}) => {
                     }}
                     componentDisplayMode={{
                         type: 'link',
-                        customText: 'Upload',
+                        customText: t('FramestripsItem.Upload'),
                     }}
                     render={({ onPick }) => (
-                        <Button label='+ Upload File' onClick={onPick} />
+                        <Button label='' onClick={onPick} />
                     )}
                 />
             </GridCell>
@@ -130,7 +166,7 @@ const FrameItem = withRouter(({match, filmstrip, frame, no}) => {
                 </List>
             </GridCell>
             <GridCell span={12}>
-                <button className="saveFrame" onClick={saveFrame({filmstrip, no, title, description, link, files})}>Save</button>
+                <button className="saveFrame" onClick={saveFrame({filmstrip, no, title, description, link, files})}>{t('FramestripsItem.Save')}</button>
             </GridCell>
         </form>
     </>)
@@ -157,18 +193,46 @@ const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => {
             <ListItem key={file.filename}>{file.filename}</ListItem>
         </GridCell>
         <GridCell span={2}>
-            <button className="removeFile" onClick={removeFile({filmstrip, frame, no, file, files, setFiles})}>Remove</button>
+            <button className="removeFile" onClick={removeFile({filmstrip, frame, no, file, files, setFiles})}>{t('FramestripsItem.Remove')}</button>
         </GridCell>
     </GridInner>)
 }
 
 const FilmstripContent = ({match, filmstrip, frames, filmstripId, frameId}) => {
     const frame = frames.find(f => f._id === frameId)
+
+    useEffect(() => {
+        // addTranslations('en', {    
+        //     FramestripsItem: {
+        //         Frames: 'Frames',
+        //         'Frame Title': 'Frame Title',
+        //         'Frame Description': 'Frame Description',
+        //         Upload: 'Upload',
+        //         Link: 'Link',
+        //         Files: 'UploaFilesd',
+        //         'Do you want to delete the frame?': 'Do you want to delete the frame?',
+        //         'Wait for the future to come!': 'Wait for the future to come!',
+        //     }
+        // })
+        // addTranslations('es', {
+        //     FramestripsItem: {
+        //         Frames: 'Frames',
+        //         'Frame Title': 'Frame Title',
+        //         'Frame Description': 'Frame Description',
+        //         Upload: 'Upload',
+        //         Link: 'Link',
+        //         Files: 'UploaFilesd',
+        //         'Do you want to delete the frame?': 'Quieres borrarlo?',
+        //         'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
+        //     }
+        // })
+    })
+
     return (<>
-        <h1>Frames</h1>
+        <h1>{t('FramestripsItem.Frames')}</h1>
         <div style={{textAlign: 'center'}}>
-        <FrameEditor frames={frames} />
-        <FrameSelector frames={frames} />
+            <FrameEditor frames={frames} />
+            <FrameSelector frames={frames} />
         </div>
         {frames && frames.map((frame, i) => <FrameItem key={i} filmstrip={filmstrip} frame={frame} no={frame.no}/>)}
     </>)
@@ -181,9 +245,10 @@ const FilmstripWrapper = ({isLoading, filmstrip, frames, filmstripId, frameId}) 
         }
     </div>
 
-export const FilmstripsItem = withTracker(({ match }) => {
+export const FilmstripsItem = withTranslation()(withTracker(({ match }) => {
     const handle = Meteor.subscribe('Filmstrip', match.params.filmstripId)
     const { filmstripId, frameId } = match.params
+
     return {
         isLoading: !handle.ready(),
         filmstrip: Filmstrips.findOne(match.params.filmstripId),
@@ -191,4 +256,4 @@ export const FilmstripsItem = withTracker(({ match }) => {
         filmstripId,
         frameId,
     }
-})(FilmstripWrapper)
+})(FilmstripWrapper))

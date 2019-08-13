@@ -29,7 +29,7 @@ class AnswerHome extends React.Component {
 
     render() {
         
-        const t = this.props.t
+        const { t } = this.props
 
         if (this.state.toQuestionnaire === true) {
             const url = `/a/${this.props.item._id}/${btoa(this.state.email)}/q`;

@@ -12,7 +12,10 @@
       "AnswerLandingContact": "You will be contacted back at this address.",
       "AnswerLandingNotFound": "The questionnaire you requested is invalid or has expired.",
       "AnswerLandingPleaseCheckLink": "Please check the link that you have been provided.",
+      "AnswerRecordOrUploadVideoButton": "Record or Upload a Video answer",
       "AnswerRecordButton": "Record your answer",
+      "AnswerStopRecordingButton": "Stop recording",
+      "AnswerResetRecordingButton": "Re-Record your answer",
       "AnswerPrevQuestion": "< Previous",
       "AnswerNextQuestion": "Next >",
       "AnswerFinish": "Finish",
@@ -23,5 +26,6 @@
       "AnswerUploadAnotherFile": "+ Upload another file",
       "AnswerLandingFinished": "Thank you for answering."
     }
-  }
+  },
+  "es": {}
 }

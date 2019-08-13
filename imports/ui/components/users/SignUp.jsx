@@ -1,6 +1,6 @@
 import { Accounts } from 'meteor/accounts-base'
 import React, { useState } from 'react'
-import { Link } from "react-router-dom"
+import { Route, Link } from "react-router-dom"
 import { TextField, Button } from 'rmwc'
 import { validateEmail, validatePassword } from '/imports/ui/UIHelpers.js'
 

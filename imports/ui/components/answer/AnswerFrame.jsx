@@ -6,6 +6,7 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { List, ListItem, ListItemText, ListItemPrimaryText, ListItemSecondaryText, ListItemMeta, Card, TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
+import VideoRecorder from '../VideoRecorder'
 import ReactFilestack from 'filestack-react'
 
 export class AnswerFrame extends React.Component {
@@ -54,8 +55,7 @@ export class AnswerFrame extends React.Component {
     }
 
     render() {
-        
-        const t = this.props.t
+        const { t } = this.props
         const frame = this.props.frame
         let files, link, textAnswer, linkAnswer, fileAnswer
 
@@ -143,7 +143,7 @@ export class AnswerFrame extends React.Component {
                 </Card>
                 <Card className='AnswerCard' outlined>
                     <h6 className='noMarginTop'><Typography use='subtitle2'>{t('AnswerVideo')}</Typography></h6>
-                    <Button label={t('AnswerRecordButton')} raised className='big' />
+                    <VideoRecorder onSuccess={console.warn} onError={console.warn} />
                     {textAnswer}
                     {linkAnswer}
                     {fileAnswer}

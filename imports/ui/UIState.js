@@ -1,6 +1,6 @@
 // poor mans global state until we maybe need a manager
 export default (UIState = {
-  name: 'Filmstrip'
+  appName: 'Filmstrip'
 });
 
 if (Meteor.isServer) {

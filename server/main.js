@@ -10,8 +10,8 @@ const insertFrame = o => Frames.insert(o)
 
 Meteor.startup(() => {
   // bootstrap
-  Filmstrips.remove({})
-  Frames.remove({})
+  // Filmstrips.remove({})
+  // Frames.remove({})
 
   if (Filmstrips.find().count() === 0) {
     insertFilmstrip({
@@ -51,7 +51,8 @@ Meteor.startup(() => {
           },
           "status": "Stored"
         }
-      ]
+      ],
+      "video": { "public_id": "filmstrip_1/blob_x9ftyt", "version": 1565720793, "signature": "090f7f0a0cbcba56c1735ff8afa76bb9dc18d421", "width": 640, "height": 480, "format": "webm", "resource_type": "video", "created_at": "2019-08-13T18:26:33Z", "tags": [], "pages": 0, "bytes": 621600, "type": "upload", "etag": "ef89370f9fa5b4dd89cb18df22ae22d8", "placeholder": false, "url": "http://res.cloudinary.com/incnition/video/upload/v1565720793/filmstrip_1/blob_x9ftyt.webm", "secure_url": "https://res.cloudinary.com/incnition/video/upload/v1565720793/filmstrip_1/blob_x9ftyt.webm", "access_mode": "public", "existing": false, "audio": { "codec": "opus", "frequency": 48000, "channels": 1, "channel_layout": "mono" }, "video": { "pix_format": "yuv420p", "codec": "vp8", "level": -99, "profile": "0", "dar": "4:3" }, "is_audio": false, "frame_rate": 1000, "duration": 4.56, "rotation": 0, "original_filename": "blob" },
     })
 
     insertFrame({
