@@ -4,7 +4,7 @@ import { Route, Link, Redirect } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
-import { Card, TextField, Button, Typography } from 'rmwc'
+import { List, ListItem, ListItemText, ListItemPrimaryText, ListItemSecondaryText, ListItemMeta, Card, TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
 import ReactFilestack from 'filestack-react'
 
@@ -12,32 +12,27 @@ export class AnswerFrame extends React.Component {
 
     state = {
         text: null,
-        links: [],
+        link: "",
         files: []
     }
 
-    handleTextAnswer = (event) => {
-        event.preventDefault()
-    }
-
-    addLink = (event) => {
-        event.preventDefault()
-    }
-
     handleLinkAnswer = (event) => {
-        event.preventDefault()
+        this.setState({
+            link: event.target.value
+        })
     }
 
     handleTextAnswer = (event) => {
-        event.preventDefault()
         this.setState({
             text: event.target.value
         })
     }
 
-    answerUploadSave = (res, files, event) => {
+    answerUploadSave = (res) => {
+        const files = this.state.files.concat(res.filesUploaded)
+        console.log(res, files)
         this.setState({
-            files: this.state.files.concat(res.filesUploaded)
+            files
         })
     }
 
@@ -72,6 +67,7 @@ export class AnswerFrame extends React.Component {
                     label={t('AnswerText')}
                     className='AnswerField'
                     fullwidth
+                    onChange={this.handleTextAnswer}
                     outlined
                     rows={4}
                     textarea />
@@ -80,10 +76,11 @@ export class AnswerFrame extends React.Component {
 
         if (frame.allowLinks) {
             linkAnswer = <>
-                    <h6><Typography use='subtitle2'>{t('AnswerAddLinks')}</Typography></h6>
+                    <h6><Typography use='subtitle2'>{t('AnswerAddLink')}</Typography></h6>
                     <TextField
                     label={t('URL')}
                     className='AnswerField'
+                    onChange={this.handleLinkAnswer}
                     fullwidth
                     outlined />
                 </>
@@ -92,6 +89,21 @@ export class AnswerFrame extends React.Component {
         if (frame.allowFiles) {
             fileAnswer = <div className='FileUploadContainer'>
                     <h6><Typography use='subtitle2'>{t('AnswerUploadFiles')}</Typography></h6>
+                    <List>
+                        {
+                            this.state.files.map(file => {
+                                return (
+                                    <ListItem key={file.handle}>
+                                        <ListItemText>
+                                            <ListItemPrimaryText>{file.filename}</ListItemPrimaryText>
+                                            <ListItemSecondaryText>{Math.round(file.size/1024)}kB</ListItemSecondaryText>
+                                        </ListItemText>
+                                        <ListItemMeta icon="delete" />
+                                    </ListItem>
+                                )
+                            })
+                        }
+                    </List>
                     <ReactFilestack
                         apikey={Meteor.settings.public.filestack.apikey}
                         onSuccess={(res) => this.answerUploadSave(res, files)}
