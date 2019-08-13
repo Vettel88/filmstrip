@@ -1,8 +1,9 @@
 import React from 'react'
 import { CircularProgress } from 'rmwc'
+import '@rmwc/circular-progress/circular-progress.css'
 
 export const loadingWrapper = (isLoading, fn) =>
-    isLoading ? <CircularProgress size="small" />  : fn()
+    isLoading ? <CircularProgress />  : fn()
 
 export const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
 

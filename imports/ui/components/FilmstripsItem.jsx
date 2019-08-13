@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import ReactFilestack from 'filestack-react'
-import { Image, Video } from 'cloudinary-react'
+import { Image } from 'cloudinary-react'
 import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner, Avatar } from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
@@ -10,6 +10,7 @@ import get from 'lodash/get'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import Video from '/imports/ui/components/VideoPlayer.js';
 import './FilmstripsItem.less'
 
 const FrameEditorItem = withRouter(({history, match, frame}) => {
@@ -24,7 +25,8 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
     const publicId = get(frame, 'video.public_id')
     const cloudName = publicId && Meteor.settings.public.cloudinary.cloudName
     const imageOrVideo = publicId
-        ? <Video cloudName={cloudName} publicId={publicId} width="300" crop="scale"/>
+        // ? <Video cloudName={cloudName} publicId={publicId} width="300" crop="scale"/>
+        ? <Video publicId={publicId} width="300"/>
         : <Image cloudName="demo" publicId="sample" width="300" crop="scale"/>
 
     // All frames will be rendered but only the currently selected will be visible

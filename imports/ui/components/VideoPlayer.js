@@ -3,12 +3,12 @@ import { Video } from "cloudinary-react"
 import windowSize from "react-window-size"
 const { cloudName } = Meteor.settings.public.cloudinary
 
-const VideoPlayer = ({ publicId, showControls, windowWidth }) => (
-    <Video
+export default VideoPlayer = ({ publicId, showControls=true, width, windowWidth }) =>
+    (<Video
         cloudName={cloudName}
         publicId={publicId}
         controls={showControls}
-        width={0.8 * windowWidth}
-    />
-);
-export default windowSize(VideoPlayer);
+        width={width || windowWidth * 0.8}
+    />)
+
+// export default windowSize(VideoPlayer)
