@@ -26,8 +26,6 @@ export class AnswerFrame extends React.Component {
             }
         }
 
-        //console.log(this.state);
-
     }
 
     handleLinkAnswer = (event) => {

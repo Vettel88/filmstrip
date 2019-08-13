@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { Random } from 'meteor/random'
 import React from 'react'
 import { Route, Link, Redirect } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
@@ -27,17 +28,46 @@ class AnswerQuestionnaireContainer extends React.Component {
     getAnswersFromLocalStorage = () => {
     }
 
-    nextQuestion = (event) => {
+    nextQuestion = async (event) => {
+
         if(this.state.currentFrameIndex === this.props.filmstrip.frames.length -1) {
             
-            console.log("Finished")
+            const filmstrip = {
+                answerToFilmstripId: this.props.filmstrip._id,
+                name: this.props.filmstrip.name
+            }
+
+            const frames = this.props.filmstrip.frames.map(frame => {
+
+                return Object.assign({
+                    no: frame.no,
+                    answerToFrameId: frame._id,
+                    answerToFilmstripId: this.props.filmstrip._id
+                }, JSON.parse(localStorage.getItem(frame._id)))
+
+            })
+
+            console.log("Finished", frames)
+
+            try {
+                const res = await Meteor.call('questionnaire.save', {
+                    filmstrip,
+                    frames
+                })
+                console.log(res)
+            } catch(err) {
+                console.error(err)
+            }
 
         }
         else {
+
             this.setState({
                 currentFrameIndex: this.state.currentFrameIndex + 1
             })
+
         }
+
     }
 
     render() {
