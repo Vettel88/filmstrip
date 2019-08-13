@@ -33,15 +33,14 @@ export const forbidClientSideUpdates = collection =>
     })
 
 export const createStandardPublications = (collection, plural, singular) => {
-    if (Meteor.isClient) return;
+    if (Meteor.isClient) return
     const pluralName = plural || collection._name
     const singularName = singular || pluralName.substring(0, pluralName.length - 1)
-    console.log("publishing", pluralName, singularName)
+    // console.log("publishing", pluralName, singularName)
     Meteor.publish(pluralName, () => collection.find())
     Meteor.publish(singularName, function(_id) {
         check([_id], [String])
-        // TODO active when accounting works
-        // if (!this.userId) return this.ready()
+        if (!this.userId) return this.ready()
         return collection.find({_id})
     })
 }        

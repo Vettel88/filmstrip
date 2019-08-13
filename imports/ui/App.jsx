@@ -4,7 +4,6 @@ import Layout from './components/Layout'
 
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
 import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
-import { VideoRecorder } from '/imports/ui/components/VideoRecorder.jsx'
 
 import AnswerLayout from '/imports/ui/components/answer/AnswerLayout.jsx'
 import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
@@ -13,6 +12,7 @@ import { AnswerQuestionnaire } from '/imports/ui/components/answer/AnswerQuestio
 import { FilmstripsList } from './components/FilmstripsList.jsx'
 import { FilmstripsItem } from './components/FilmstripsItem.jsx'
 import { Filmstrip } from './components/Filmstrip.jsx'
+import { FrameVideoRecorder } from '/imports/ui/components/FrameVideoRecorder.jsx'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
@@ -30,18 +30,19 @@ export default App = () =>
         <Switch>
             <AppRoute exact path="/" component={Home} layout={Layout} />
             <AppRoute path="/filmstrips" component={FilmstripsList} layout={Layout} />
-            <AppRoute path="/filmstrip/:filmstripId" component={FilmstripsItem} layout={Layout} />
+            <AppRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
             <AppRoute exact path="/filmstrip" component={Filmstrip} layout={Layout} />
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
-            <AppRoute path="/videoRecorder" component={VideoRecorder} />
+            
+            <AppRoute exact path="/videoRecorder/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>
     </Router>
 
 const Home = () => <h2>Home</h2>
 
-const NoMatch = (props) => <div>404 - not your day</div>
+const NoMatch = (props) => <div>404 - sorry, nothing found</div>

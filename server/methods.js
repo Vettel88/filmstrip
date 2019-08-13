@@ -1,22 +1,19 @@
 import { check } from 'meteor/check'
 import { Filmstrips } from '/imports/db/filmstrips.js'
+import { Frames } from '/imports/db/frames.js'
 
 Meteor.methods({
-    'filmstrip.frame.addFile'({filmstripId, frameNo, filesUploaded}) {
+    'filmstrip.frame.save'({filmstripId, no, frame}) {
         check(filmstripId, String)
-        check(frameNo, Number)
-        check(filesUploaded, [Object])
-        console.log(filmstripId, frameNo, filesUploaded)
-        filesUploaded.forEach(file =>
-            Filmstrips.update({_id: filmstripId, 'frames.no': frameNo}, {$addToSet: {'frames.$.files': file}})
-        )
+        check(frame, Object)
+        check(no, Number)
+        Frames.upsert({filmstripId, no}, {$set: {...frame}})
     },
-    'filmstrip.frame.removeFile'({filmstripId, frameNo, handle}) {
+    'filmstrip.frame.saveVideo'({filmstripId, frameId, video}) {
         check(filmstripId, String)
-        check(frameNo, Number)
-        check(handle, String)
-        // TODO remove, but before move frame to its own collection, unfortunately
-        console.log(filmstripId, frameNo, handle)
+        check(frameId, String)
+        check(video, Object)
+        Frames.upsert(frameId, {$set: {video}})
     },
 });
   

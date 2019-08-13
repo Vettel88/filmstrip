@@ -1,10 +1,26 @@
+import { Meteor } from 'meteor/meteor'
+import { check } from 'meteor/check'
+import { Frames } from './frames.js'
+
 import {
-  createCollection,
-  createStandardPublications
+    createCollection,
+    createStandardPublications
 } from './collectionHelpers.js';
 
 export const Filmstrips = createCollection('Filmstrips')
-createStandardPublications(Filmstrips)
+// createStandardPublications(Filmstrips)
+
+if (Meteor.isServer) {
+    Meteor.publish('Filmstrips', () => Filmstrips.find())
+    Meteor.publish('Filmstrip', function (_id) {
+        check([_id], [String])
+        if (!this.userId) return this.ready()
+        return [
+            Filmstrips.find({ _id }),
+            Frames.find({ filmstripId: _id }),
+        ]
+    })
+}
 
 // # Frames / Slides
 // Required fields:

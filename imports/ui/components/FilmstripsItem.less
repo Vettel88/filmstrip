@@ -1,5 +1,4 @@
 .filmstripsItem {
-    // background: red;
     h3 {
         float: left;
     }
@@ -14,12 +13,36 @@
         clear: both;
     }
     .mdc-layout-grid__cell {
-        // margin-top: 30px;
         padding-top: 10px;
-        // background: red;
     }
     .mdc-layout-grid__cell.right {
         text-align: right;
+    }
+    .videoEditor {
+        position: relative;
+        width: 300px;
+        margin: auto;
+        .actions {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 6px;
+            // left: 130px;
+            right: 6px;
+            opacity: 0.7;
+            button + button {
+                margin-top: 2px;
+            }
+            // button {
+                // padding: 3px;
+                // border-radius: 50%;
+                // margin: 0;
+                // padding: 0;
+            // }
+            // i {
+            //     font-size: 10px;
+            // }
+        }
     }
   }
   

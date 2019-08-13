@@ -1,5 +1,9 @@
 {
     "public": {
+        "cloudinary": {
+            "uploadPreset": "filmstrip_1",
+            "cloudName": "incnition"
+        },
         "filestack": {
             "apikey": "Aqp34KkGdTvCthMIbNKTYz"
         }

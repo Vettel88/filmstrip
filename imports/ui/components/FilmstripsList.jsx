@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Route, Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { withTracker } from 'meteor/react-meteor-data'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
@@ -21,10 +21,6 @@ const ListWrapper = ({isLoading, items}) =>
 
 export const FilmstripsList = withTracker(() => {
     const handle = Meteor.subscribe('Filmstrips')
-    // console.log(Frames.find().count())
-    const s = Filmstrips.find().fetch()
-    console.log(JSON.stringify(s, null, 2))
-  
     return {
         isLoading: !handle.ready(),
         items: Filmstrips.find().fetch()
