@@ -85,7 +85,7 @@ const AnswerWrapper = ({ isLoading, queueItem, email, t }) => {
 
 export const AnswerLanding = withTranslation()(withTracker(({ match }) => {
     const id = match.params.id
-    const handle = Meteor.subscribe('Filmstrip', id)
+    const handle = Meteor.subscribe('AnswerFilmstrip', id)
     return {
         isLoading: !handle.ready(),
         queueItem: Filmstrips.findOne(),
