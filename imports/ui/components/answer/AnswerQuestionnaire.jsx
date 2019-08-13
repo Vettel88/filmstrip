@@ -28,7 +28,7 @@ class AnswerQuestionnaireContainer extends React.Component {
     getAnswersFromLocalStorage = () => {
     }
 
-    nextQuestion = async (event) => {
+    nextQuestion = (event) => {
 
         if(this.state.currentFrameIndex === this.props.filmstrip.frames.length -1) {
             
@@ -49,15 +49,18 @@ class AnswerQuestionnaireContainer extends React.Component {
 
             console.log("Finished", frames)
 
-            try {
-                const res = await Meteor.call('questionnaire.save', {
-                    filmstrip,
-                    frames
-                })
-                console.log(res)
-            } catch(err) {
-                console.error(err)
-            }
+            Meteor.call('questionnaire.save', {
+                filmstrip,
+                frames
+            }, (err, res) => {
+                if(err) console.error(err)
+                else {
+                    console.log(res)
+                    this.setState({
+                        toFinish: true
+                    })
+                }
+            })
 
         }
         else {
@@ -75,6 +78,11 @@ class AnswerQuestionnaireContainer extends React.Component {
         const t = this.props.t
         const currentFrame = this.props.filmstrip.frames[this.state.currentFrameIndex];
         const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
+
+        if (this.state.toFinish === true) {
+            const url = `/a/${this.props.filmstrip._id}/${btoa(this.props.email)}/finish`;
+            return <Redirect to={url} />
+        }
 
         return (
             <div className='centered AnswerQuestionnaireContainer'>

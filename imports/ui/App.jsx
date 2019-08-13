@@ -8,6 +8,7 @@ import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
 import AnswerLayout from '/imports/ui/components/answer/AnswerLayout.jsx'
 import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
 import { AnswerQuestionnaire } from '/imports/ui/components/answer/AnswerQuestionnaire.jsx'
+import { AnswerFinish } from '/imports/ui/components/answer/AnswerFinish.jsx'
 
 import { FilmstripsList } from './components/FilmstripsList.jsx'
 import { FilmstripsItem } from './components/FilmstripsItem.jsx'
@@ -37,7 +38,7 @@ export default App = () =>
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
-            
+            <AppRoute exact path="/a/:id/:emailBase64/finish" component={AnswerFinish} layout={AnswerLayout} />
             <AppRoute exact path="/videoRecorder/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>

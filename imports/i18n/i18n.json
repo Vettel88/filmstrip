@@ -20,7 +20,8 @@
       "AnswerAddLink": "Add link",
       "AnswerUploadFiles": "Upload file(s)",
       "AnswerAddAnotherLink": "+ Add another link",
-      "AnswerUploadAnotherFile": "+ Upload another file"
+      "AnswerUploadAnotherFile": "+ Upload another file",
+      "AnswerLandingFinished": "Thank you for answering."
     }
   }
 }
