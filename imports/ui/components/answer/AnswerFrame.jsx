@@ -15,7 +15,7 @@ export class AnswerFrame extends React.Component {
         super(props)
 
         const serializedCachedState = localStorage.getItem(this.props.frame._id)
-        const cachedState = serializedCachedState ? JSON.parse(serializedCachedState) : null;
+        const cachedState = serializedCachedState ? JSON.parse(serializedCachedState) : null
 
         if(cachedState) this.state = cachedState
         else {
@@ -32,14 +32,14 @@ export class AnswerFrame extends React.Component {
         this.setState({
             link: event.target.value
         })
-        this.updateLocalStorageState();
+        this.updateLocalStorageState()
     }
 
     handleTextAnswer = (event) => {
         this.setState({
             text: event.target.value
         })
-        this.updateLocalStorageState();
+        this.updateLocalStorageState()
     }
 
     answerUploadSave = (res) => {
@@ -48,19 +48,18 @@ export class AnswerFrame extends React.Component {
         this.setState({
             files
         })
-        this.updateLocalStorageState();
+        this.updateLocalStorageState()
     }
 
     updateLocalStorageState = () => {
-        console.log(this.state);
-        localStorage.setItem(this.props.frame._id, JSON.stringify(this.state));
+        localStorage.setItem(this.props.frame._id, JSON.stringify(this.state))
     }
 
     render() {
         
         const t = this.props.t
         const frame = this.props.frame
-        let files, link, textAnswer, linkAnswer, fileAnswer;
+        let files, link, textAnswer, linkAnswer, fileAnswer
 
         if (frame.files && frame.files.length) {
             files = <>
