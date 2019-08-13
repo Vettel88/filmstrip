@@ -15,5 +15,12 @@ Meteor.methods({
         check(video, Object)
         Frames.upsert(frameId, {$set: {video}})
     },
+    'questionnaire.save'({ filmstrip, frames }) {
+        check(filmstrip, Object)
+        check(frames, [Object])
+        Filmstrips.insert(filmstrip)
+        frames.forEach(frame => Frames.insert(frame))        
+        return true
+    },
 });
   

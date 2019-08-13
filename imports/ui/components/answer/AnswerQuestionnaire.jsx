@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor'
+import { Random } from 'meteor/random'
 import React from 'react'
 import { Route, Link, Redirect } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
@@ -32,16 +33,63 @@ class AnswerQuestionnaireContainer extends React.Component {
         })
     }
 
+    getAnswersFromLocalStorage = () => {
+    }
+
     nextQuestion = (event) => {
-        this.setState({
-            currentFrameIndex: this.state.currentFrameIndex + 1
-        })
+
+        if(this.state.currentFrameIndex === this.props.filmstrip.frames.length -1) {
+            
+            const filmstrip = {
+                answerToFilmstripId: this.props.filmstrip._id,
+                name: this.props.filmstrip.name
+            }
+
+            const frames = this.props.filmstrip.frames.map(frame => {
+
+                return Object.assign({
+                    no: frame.no,
+                    answerToFrameId: frame._id,
+                    answerToFilmstripId: this.props.filmstrip._id
+                }, JSON.parse(localStorage.getItem(frame._id)))
+
+            })
+
+            console.log("Finished", frames)
+
+            Meteor.call('questionnaire.save', {
+                filmstrip,
+                frames
+            }, (err, res) => {
+                if(err) console.error(err)
+                else {
+                    console.log(res)
+                    this.setState({
+                        toFinish: true
+                    })
+                }
+            })
+
+        }
+        else {
+
+            this.setState({
+                currentFrameIndex: this.state.currentFrameIndex + 1
+            })
+
+        }
+
     }
 
     render() {
         const { t } = this.props
         const currentFrame = this.props.filmstrip.frames[this.state.currentFrameIndex];
         const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
+
+        if (this.state.toFinish === true) {
+            const url = `/a/${this.props.filmstrip._id}/${btoa(this.props.email)}/finish`;
+            return <Redirect to={url} />
+        }
 
         return (
             <div className='centered AnswerQuestionnaireContainer'>

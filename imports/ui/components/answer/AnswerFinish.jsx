@@ -7,29 +7,15 @@ import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
 
-class AnswerHome extends React.Component {
+class AnswerEnd extends React.Component {
 
     state = {
-        email: this.props.email ? this.props.email : '',
-        toQuestionnaire: false
-    }
-
-    handleChange = (event) => {
-        this.setState({
-            email: event.target.value
-        })
-    }
-
-    handleSubmit = (event) => {
-        this.setState({
-            toQuestionnaire: true
-        })
-        event.preventDefault()
+        email: this.props.email ? this.props.email : ''
     }
 
     render() {
         
-        const { t } = this.props
+        const t = this.props.t
 
         if (this.state.toQuestionnaire === true) {
             const url = `/a/${this.props.item._id}/${btoa(this.state.email)}/q`;
@@ -38,15 +24,9 @@ class AnswerHome extends React.Component {
 
         return (
             <div className='centered AnswerQuestionnaireContainer'>
-                <img src='/icons8-short_hair_girl_question_mark.svg' className='topIcon centered' />
+                <img src='/icons8-checked.svg' className='topIcon centered' />
                 <h4><Typography use='headline4'>{this.props.item.name}</Typography></h4>
-                <p><Typography use='body1'>{this.props.item.description}</Typography></p>
-                <h6><Typography use='body2'>{t('AnswerLandingHelp')}</Typography></h6>
-                <form onSubmit={this.handleSubmit}>
-                    <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern='^[^\s@]+@[^\s@]+\.[^\s@]+$' />
-                    <p className='smallHelp'><Typography use='caption'>{t('AnswerLandingContact')}</Typography></p>
-                    <Button label='Start' raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
-                </form>
+                <p><Typography use='body1'>{t('AnswerLandingFinished')}</Typography></p>
             </div>
         )
     }
@@ -70,18 +50,17 @@ const AnswerWrapper = ({ isLoading, queueItem, email, t }) => {
     return (
         <div>
             {loadingWrapper(isLoading, () =>
-                <AnswerHome key={queueItem._id} item={queueItem} email={email} t={t} />
+              <AnswerEnd key={queueItem._id} item={queueItem} email={email} t={t} />
             )}
         </div>
     )
 
 }
 
-export const AnswerLanding = withTranslation()(withTracker(({ match }) => {
+export const AnswerFinish = withTranslation()(withTracker(({ match }) => {
     const id = match.params.id
     const handle = Meteor.subscribe('AnswerFilmstrip', id)
     return {
-        isLoading: !handle.ready(),
         queueItem: Filmstrips.findOne(),
         email: match.params.emailBase64 ? atob(match.params.emailBase64) : ''
     }
