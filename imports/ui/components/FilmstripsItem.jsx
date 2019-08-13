@@ -29,7 +29,9 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
 
     // All frames will be rendered but only the currently selected will be visible
     const { frameId } = match.params
-    const getStyle = id => ({ display: id === frameId ? 'block' : 'none' })
+    const getStyle = id => {
+        return ({ display: id === frameId ? 'block' : 'none' })
+    }
 
     return (<div className="videoEditor" style={getStyle(frame._id)}>
         {imageOrVideo}
@@ -47,11 +49,11 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
 const FrameSelectorItem = withRouter(({history, match, frame}) => {
     const changeFrame = (event) => {
         const { filmstripId } = match.params
-        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.no}`)
+        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.id}`)
     }
     
     return (<>
-        <Button raised data-no={frame.no} onClick={changeFrame}>
+        <Button raised data-id={frame._id} onClick={changeFrame}>
             {frame.no}
         </Button>
     </>)
@@ -82,10 +84,10 @@ const FrameItem = withRouter(({match, filmstrip, frame, no}) => {
 
     // All frames will be rendered but only the currently selected will be visible
     const { frameId } = match.params
-    const getStyle = no => ({ display: no === +frameId ? 'inline' : 'none' })
+    const getStyle = () => ({ display: frame._id === frameId ? 'inline' : 'none' })
     
     return (<>
-        <form className="formFrame" id={no} style={getStyle(no)}>
+        <form className="formFrame" id={no} style={getStyle()}>
             <GridCell span={12}>
                 <TextField label="Frame Title" name="title" value={title} onChange={setter(setTitle)} maxLength={50} characterCount/>
             </GridCell>
@@ -167,8 +169,8 @@ const FilmstripContent = ({match, filmstrip, frames, filmstripId, frameId}) => {
     return (<>
         <h1>Frames</h1>
         <div style={{textAlign: 'center'}}>
-        <FrameEditor frames={frames} />
-        <FrameSelector frames={frames} />
+            <FrameEditor frames={frames} />
+            <FrameSelector frames={frames} />
         </div>
         {frames && frames.map((frame, i) => <FrameItem key={i} filmstrip={filmstrip} frame={frame} no={frame.no}/>)}
     </>)
