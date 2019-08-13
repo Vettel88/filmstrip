@@ -63,6 +63,7 @@ class AnswerQuestionnaireContainer extends React.Component {
             }, (err, res) => {
                 if(err) console.error(err)
                 else {
+                    localStorage.clear()
                     console.log(res)
                     this.setState({
                         toFinish: true
@@ -92,7 +93,7 @@ class AnswerQuestionnaireContainer extends React.Component {
         }
 
         return (
-            <div className='centered AnswerQuestionnaireContainer'>
+            <div className='centered AnswerQuestionnaireContainer AnswerQuestionnaireContainerPad'>
                 <h5><Typography use='headline5'>{this.props.filmstrip.name}</Typography></h5>
                 <AnswerFrame key={currentFrame._id} frame={currentFrame} t={t} filmstrip={this.props.filmstrip} currentFrameIndex={this.state.currentFrameIndex} />
                 <div className='AnswerNavigationButtons'>

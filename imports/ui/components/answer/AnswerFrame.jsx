@@ -42,7 +42,8 @@ export class AnswerFrame extends React.Component {
     }
 
     answerUploadSave = (res) => {
-        const files = this.state.files.concat(res.filesUploaded)
+        const stateFiles = this.state.files ? this.state.files : []
+        const files = stateFiles.concat(res.filesUploaded)
         //console.log(res, files)
         this.updateLocalStorageState({
             files
