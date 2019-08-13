@@ -5,10 +5,14 @@ import { withTracker } from 'meteor/react-meteor-data'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
 
-const ListItem = ({item}) =>     
-    <li>
-        <Link to={`/filmstrip/${item._id}`}>{item.name} ({item._id})</Link>
+const ListItem = ({item}) => {
+    // console.log(item)
+    return <li>
+        {/* <Link to={`/filmstrip/${item._id}`}>{item.name} ({item._id})</Link> */}
+        {/* hard coded frame number for the moment */}
+        <Link to={`/filmstrip/${item._id}/1`}>{item.name} ({item._id})</Link>
     </li>
+}
 
 const ListWrapper = ({isLoading, items}) => 
     <div>
