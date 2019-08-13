@@ -30,7 +30,7 @@ export default App = () =>
         <Switch>
             <AppRoute exact path="/" component={Home} layout={Layout} />
             <AppRoute path="/filmstrips" component={FilmstripsList} layout={Layout} />
-            <AppRoute path="/filmstrip/:filmstripId" component={FilmstripsItem} layout={Layout} />
+            <AppRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
             <AppRoute exact path="/filmstrip" component={Filmstrip} layout={Layout} />
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />

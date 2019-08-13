@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import ReactFilestack from 'filestack-react'
-import { Image, Video, CloudinaryContext, Transformation } from 'cloudinary-react'
+import { Image, Video } from 'cloudinary-react'
 import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner } from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
@@ -12,12 +12,7 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import './FilmstripsItem.less'
 
-const FrameSelectorItem = withRouter(({history, frame, setNo}) => {
-    const changeFrame = (event) => {
-        document.querySelectorAll('form.formFrame').forEach(form => form.style.display = 'none')
-        document.querySelector(`#${CSS.escape(event.currentTarget.dataset.no)}`).style.display = 'block'
-        setNo(event.currentTarget.dataset.no)
-    }
+const FrameEditorItem = withRouter(({history, match, frame}) => {
     const removeFrame = (event) => {
         if(confirm('Do you want to delete the frame?')) {
             alert('Wait for the future to come!')
@@ -26,24 +21,49 @@ const FrameSelectorItem = withRouter(({history, frame, setNo}) => {
     const addVideo = (event) =>
         history.push(`/videoRecorder/${frame.filmstripId}/${frame._id}`)
     
-    const publicId = get(frame, 'video.public_id', 'sample')
+    const publicId = get(frame, 'video.public_id')
+    const cloudName = publicId && Meteor.settings.public.cloudinary.cloudName
+    const imageOrVideo = publicId
+        ? <Video cloudName={cloudName} publicId={publicId} width="300" crop="scale"/>
+        : <Image cloudName="demo" publicId="sample" width="300" crop="scale"/>
+
+    // All frames will be rendered but only the currently selected will be visible
+    const { frameId } = match.params
+    const getStyle = id => ({ display: id === frameId ? 'inline' : 'none' })
+
+    return (<div className="videoEditor" style={getStyle(frame._id)}>
+        {imageOrVideo}
+        <div className="actions">
+            <Button raised data-no={frame.no} onClick={removeFrame}>
+                <Icon icon="remove" />
+            </Button>
+            <Button raised data-no={frame.no} onClick={addVideo}>
+                <Icon icon="add" />
+            </Button>
+        </div>
+    </div>)
+})
+
+const FrameSelectorItem = withRouter(({history, match, frame}) => {
+    const changeFrame = (event) => {
+        const { filmstripId } = match.params
+        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.no}`)
+    }
+    
     return (<>
-        <Video cloudName={Meteor.settings.public.cloudinary.cloudName} publicId={publicId} width="300" crop="scale"/>
         <Button raised data-no={frame.no} onClick={changeFrame}>
             {frame.no}
-        </Button>
-        <Button raised data-no={frame.no} onClick={removeFrame}>
-            <Icon icon="remove" /> {frame.no}
-        </Button>
-        <Button raised data-no={frame.no} onClick={addVideo}>
-            <Icon icon="add" /> {frame.no}
         </Button>
     </>)
 })
 
-const FrameSelector = ({frames, setNo}) => <>
-    {frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} setNo={setNo}/>)}
-</>
+const FrameEditor = ({frames}) => <div>
+    {frames.map(frame => <FrameEditorItem key={frame.no} frame={frame} />)}
+</div>
+
+const FrameSelector = ({frames}) => <div>
+    {frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} />)}
+</div>
 
 const setter = (set) => (event) => set(event.target.value)
 
@@ -54,14 +74,15 @@ const StyledReactFilestack = styled(ReactFilestack)`
     color: blue;
 `
 
-const FrameItem = ({filmstrip, frame, no}) => {
+const FrameItem = withRouter(({match, filmstrip, frame, no}) => {
     const [title, setTitle] = React.useState(frame.title)
     const [description, setDescription] = React.useState(frame.description)
     const [link, setLink] = React.useState(frame.link)
     const [files, setFiles] = React.useState(frame.files || [])
 
     // All frames will be rendered but only the currently selected will be visible
-    const getStyle = no => ({ display: no === 1 ? 'inline' : 'none' })
+    const { frameId } = match.params
+    const getStyle = no => ({ display: no === +frameId ? 'inline' : 'none' })
     
     return (<>
         <form className="formFrame" id={no} style={getStyle(no)}>
@@ -113,7 +134,7 @@ const FrameItem = ({filmstrip, frame, no}) => {
             </GridCell>
         </form>
     </>)
-}
+})
 
 const saveFrame = ({filmstrip, no, title, description, link, files}) => event => {
     event.preventDefault()
@@ -138,28 +159,33 @@ const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => {
     </GridInner>)
 }
 
-const FilmstripContent = ({filmstrip, frames}) => {
-    console.log(frames)
-    const [no, setNo] = React.useState(get(frames[0], 'no'))
+const FilmstripContent = ({match, filmstrip, frames, filmstripId, frameId}) => {
+    const frame = frames.find(f => f._id === frameId)
     return (<>
         <h1>Frames</h1>
-        <FrameSelector frames={frames} setNo={setNo}/>
+        <div style={{textAlign: 'center'}}>
+        <FrameEditor frames={frames} />
+        <FrameSelector frames={frames} />
+        </div>
         {frames && frames.map((frame, i) => <FrameItem key={i} filmstrip={filmstrip} frame={frame} no={frame.no}/>)}
     </>)
 }
 
-const FilmstripWrapper = ({isLoading, filmstrip, frames}) => 
+const FilmstripWrapper = ({isLoading, filmstrip, frames, filmstripId, frameId}) => 
     <div className="filmstripsItem">
         {loadingWrapper(isLoading, () => 
-            <FilmstripContent key={filmstrip._id} filmstrip={filmstrip} frames={frames} />)
+            <FilmstripContent key={filmstrip._id} filmstrip={filmstrip} frames={frames} filmstripId={filmstripId} frameId={frameId}/>)
         }
     </div>
 
 export const FilmstripsItem = withTracker(({ match }) => {
     const handle = Meteor.subscribe('Filmstrip', match.params.filmstripId)
+    const { filmstripId, frameId } = match.params
     return {
         isLoading: !handle.ready(),
         filmstrip: Filmstrips.findOne(match.params.filmstripId),
         frames: Frames.find({ filmstripId: match.params.filmstripId }).fetch(),
+        filmstripId,
+        frameId,
     }
 })(FilmstripWrapper)

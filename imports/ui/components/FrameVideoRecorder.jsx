@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom'
 import { VideoRecorder } from '/imports/ui/components/VideoRecorder.jsx'
 
 const saveVideo = (filmstripId, frameId, history) => (video) => {
+    // TODO the method relies on an existing frame, but a new one maybe is not persisted at all - find a way to promote the video pack to the filmstrip editor without saving here
+    // I guess it is time for some real state management
     Meteor.call('filmstrip.frame.saveVideo', {filmstripId, frameId, video})
     // TODO navigate to frame in FilmstripsItem
     history.push(`/filmstrip/${filmstripId}/${frameId}`)
