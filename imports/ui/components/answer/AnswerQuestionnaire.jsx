@@ -24,10 +24,20 @@ class AnswerQuestionnaireContainer extends React.Component {
         })
     }
 
+    getAnswersFromLocalStorage = () => {
+    }
+
     nextQuestion = (event) => {
-        this.setState({
-            currentFrameIndex: this.state.currentFrameIndex + 1
-        })
+        if(this.state.currentFrameIndex === this.props.filmstrip.frames.length -1) {
+            
+            console.log("Finished")
+
+        }
+        else {
+            this.setState({
+                currentFrameIndex: this.state.currentFrameIndex + 1
+            })
+        }
     }
 
     render() {

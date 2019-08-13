@@ -26,32 +26,32 @@ export class AnswerFrame extends React.Component {
             }
         }
 
+        //console.log(this.state);
+
     }
 
     handleLinkAnswer = (event) => {
-        this.setState({
+        this.updateLocalStorageState({
             link: event.target.value
         })
-        this.updateLocalStorageState()
     }
 
     handleTextAnswer = (event) => {
-        this.setState({
+        this.updateLocalStorageState({
             text: event.target.value
         })
-        this.updateLocalStorageState()
     }
 
     answerUploadSave = (res) => {
         const files = this.state.files.concat(res.filesUploaded)
-        console.log(res, files)
-        this.setState({
+        //console.log(res, files)
+        this.updateLocalStorageState({
             files
         })
-        this.updateLocalStorageState()
     }
 
-    updateLocalStorageState = () => {
+    updateLocalStorageState = (state) => {
+        this.setState(state)
         localStorage.setItem(this.props.frame._id, JSON.stringify(this.state))
     }
 
@@ -112,7 +112,7 @@ export class AnswerFrame extends React.Component {
                     <h6><Typography use='subtitle2'>{t('AnswerUploadFiles')}</Typography></h6>
                     <List>
                         {
-                            this.state.files.map(file => {
+                            this.state.files ? this.state.files.map(file => {
                                 return (
                                     <ListItem key={file.handle}>
                                         <ListItemText>
@@ -122,7 +122,7 @@ export class AnswerFrame extends React.Component {
                                         <ListItemMeta icon="delete" />
                                     </ListItem>
                                 )
-                            })
+                            }) : ''
                         }
                     </List>
                     <ReactFilestack
