@@ -12,15 +12,45 @@ export class AnswerFrame extends React.Component {
 
     constructor(props) {
         super(props)
-        this.handleChange = this.handleChange.bind(this)
+        this.state = {
+            text: null,
+            links: [],
+            files: []
+        }
+        this.handleTextAnswer = this.handleTextAnswer.bind(this)
+        this.addLink = this.addLink.bind(this)
+        this.handleLinkAnswer = this.handleLinkAnswer.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.answerUploadSave = this.answerUploadSave.bind(this)
     }
 
-    handleChange(event) {
+    handleTextAnswer(event) {
+        event.preventDefault()
+    }
+
+    addLink(event) {
+        event.preventDefault()
+    }
+
+    handleLinkAnswer(event) {
+        event.preventDefault()
+    }
+
+    handleTextAnswer(event) {
+        event.preventDefault()
+        this.setState({
+            text: event.target.value
+        })
     }
 
     handleSubmit(event) {
         event.preventDefault()
+    }
+
+    answerUploadSave(res, files, event) {
+        this.setState({
+            files: this.state.files.concat(res.filesUploaded)
+        })
     }
 
     render() {
@@ -76,7 +106,7 @@ export class AnswerFrame extends React.Component {
                     <h6><Typography use='subtitle2'>{t('AnswerUploadFiles')}</Typography></h6>
                     <ReactFilestack
                         apikey={Meteor.settings.public.filestack.apikey}
-                        onSuccess={(res) => answerUploadSave(res, files)}
+                        onSuccess={(res) => this.answerUploadSave(res, files)}
                         render={({ onPick }) => (
                             <Button label={t('PickFile')} raised onClick={onPick} />
                         )}

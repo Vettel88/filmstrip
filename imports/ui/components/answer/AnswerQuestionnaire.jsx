@@ -3,6 +3,7 @@ import React from 'react'
 import { Route, Link, Redirect } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Filmstrips } from '/imports/db/filmstrips.js'
+import { Frames } from '/imports/db/frames.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
@@ -44,7 +45,7 @@ class AnswerQuestionnaireContainer extends React.Component {
     }
 
     render() {
-        
+
         const t = this.props.t
         const currentFrame = this.props.filmstrip.frames[this.state.currentFrameIndex];
         const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
@@ -67,6 +68,7 @@ class AnswerQuestionnaireContainer extends React.Component {
                 </div>
             </div>
         )
+
     }
 
 }
@@ -79,11 +81,23 @@ const AnswerWrapper = ({ isLoading, filmstrip, email, t }) =>
     </div>
 
 export const AnswerQuestionnaire = withTranslation()(withTracker(({ match }) => {
+    
     const id = match.params.id
-    const handle = Meteor.subscribe('Filmstrip', id)
+    const handle = Meteor.subscribe('AnswerFilmstrip', id)
+    
+    const frames = Frames.find({
+        filmstripId: id
+    }).fetch()
+
+    const filmstrip = Filmstrips.findOne({
+        _id: id
+    })
+
+    if(filmstrip) filmstrip.frames = frames
+
     return {
         isLoading: !handle.ready(),
-        filmstrip: Filmstrips.findOne(),
+        filmstrip,
         email: atob(match.params.emailBase64)
     }
 })(AnswerWrapper))

@@ -20,6 +20,13 @@ if (Meteor.isServer) {
             Frames.find({ filmstripId: _id }),
         ]
     })
+    Meteor.publish('AnswerFilmstrip', function (_id) {
+        check([_id], [String])
+        return [
+            Filmstrips.find({ _id: _id, live: true }),
+            Frames.find({ filmstripId: _id })
+        ]
+    })
 }
 
 // # Frames / Slides
