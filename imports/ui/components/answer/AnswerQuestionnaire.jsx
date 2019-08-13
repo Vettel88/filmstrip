@@ -11,34 +11,20 @@ import { AnswerFrame } from './AnswerFrame.jsx'
 
 class AnswerQuestionnaireContainer extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            email: props.email,
-            currentFrameIndex: 0,
-            answers: []
-        }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.prevQuestion = this.prevQuestion.bind(this)
-        this.nextQuestion = this.nextQuestion.bind(this)
+    state = {
+        email: this.props.email,
+        currentFrameIndex: 0,
+        answers: []
     }
 
-    handleChange(event) {
-    }
-
-    handleSubmit(event) {
-        event.preventDefault()
-    }
-
-    prevQuestion(event) {
+    prevQuestion = (event) => {
         event.preventDefault()
         this.setState({
             currentFrameIndex: this.state.currentFrameIndex - 1
         })
     }
 
-    nextQuestion(event) {
+    nextQuestion = (event) => {
         this.setState({
             currentFrameIndex: this.state.currentFrameIndex + 1
         })

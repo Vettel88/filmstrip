@@ -10,44 +10,32 @@ import ReactFilestack from 'filestack-react'
 
 export class AnswerFrame extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            text: null,
-            links: [],
-            files: []
-        }
-        this.handleTextAnswer = this.handleTextAnswer.bind(this)
-        this.addLink = this.addLink.bind(this)
-        this.handleLinkAnswer = this.handleLinkAnswer.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
-        this.answerUploadSave = this.answerUploadSave.bind(this)
+    state = {
+        text: null,
+        links: [],
+        files: []
     }
 
-    handleTextAnswer(event) {
+    handleTextAnswer = (event) => {
         event.preventDefault()
     }
 
-    addLink(event) {
+    addLink = (event) => {
         event.preventDefault()
     }
 
-    handleLinkAnswer(event) {
+    handleLinkAnswer = (event) => {
         event.preventDefault()
     }
 
-    handleTextAnswer(event) {
+    handleTextAnswer = (event) => {
         event.preventDefault()
         this.setState({
             text: event.target.value
         })
     }
 
-    handleSubmit(event) {
-        event.preventDefault()
-    }
-
-    answerUploadSave(res, files, event) {
+    answerUploadSave = (res, files, event) => {
         this.setState({
             files: this.state.files.concat(res.filesUploaded)
         })

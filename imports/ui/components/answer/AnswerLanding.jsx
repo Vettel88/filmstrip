@@ -9,24 +9,18 @@ import { withTranslation } from 'react-i18next'
 
 class AnswerHome extends React.Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            email: props.email ? props.email : '',
-            toQuestionnaire: false
-        }
-        this.handleChange = this.handleChange.bind(this)
-        this.handleSubmit = this.handleSubmit.bind(this)
+    state = {
+        email: this.props.email ? this.props.email : '',
+        toQuestionnaire: false
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState({
             email: event.target.value
         })
     }
 
-    handleSubmit(event) {
-        console.log('email:', this.state.email)
+    handleSubmit = (event) => {
         this.setState({
             toQuestionnaire: true
         })
