@@ -45,4 +45,4 @@ export default App = () =>
 
 const Home = () => <h2>Home</h2>
 
-const NoMatch = (props) => <div>404 - not your day</div>
+const NoMatch = (props) => <div>404 - sorry, nothing found</div>

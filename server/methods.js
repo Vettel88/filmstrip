@@ -13,7 +13,7 @@ Meteor.methods({
         check(filmstripId, String)
         check(frameId, String)
         check(video, Object)
-        Frames.update(frameId, {$set: {video}})
+        Frames.upsert(frameId, {$set: {video}})
     },
 });
   

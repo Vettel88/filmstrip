@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import ReactFilestack from 'filestack-react'
 import { Image, Video } from 'cloudinary-react'
-import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner } from 'rmwc'
+import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner, Avatar } from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
 import { withRouter } from 'react-router-dom'
@@ -29,13 +29,13 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
 
     // All frames will be rendered but only the currently selected will be visible
     const { frameId } = match.params
-    const getStyle = id => ({ display: id === frameId ? 'inline' : 'none' })
+    const getStyle = id => ({ display: id === frameId ? 'block' : 'none' })
 
     return (<div className="videoEditor" style={getStyle(frame._id)}>
         {imageOrVideo}
         <div className="actions">
             <Button raised data-no={frame.no} onClick={removeFrame}>
-                <Icon icon="remove" />
+                <Icon icon={{ icon: 'clear', size: 'xsmall' }} />
             </Button>
             <Button raised data-no={frame.no} onClick={addVideo}>
                 <Icon icon="add" />
@@ -150,10 +150,13 @@ const removeFile = ({filmstrip, no, frame, file, files, setFiles}) => event => {
 
 const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => {
     return (<GridInner>
-        <GridCell span={9}>
+        <GridCell span={2}>
+            <img src={file.url} alt={file.filename} width="48" height="48"></img>
+        </GridCell>
+        <GridCell span={8}>
             <ListItem key={file.filename}>{file.filename}</ListItem>
         </GridCell>
-        <GridCell span={3} className="right">
+        <GridCell span={2}>
             <button className="removeFile" onClick={removeFile({filmstrip, frame, no, file, files, setFiles})}>Remove</button>
         </GridCell>
     </GridInner>)
