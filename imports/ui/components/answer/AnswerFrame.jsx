@@ -8,6 +8,7 @@ import { List, ListItem, ListItemText, ListItemPrimaryText, ListItemSecondaryTex
 import { withTranslation } from 'react-i18next'
 import VideoRecorder from '../VideoRecorder'
 import ReactFilestack from 'filestack-react'
+import { thisTypeAnnotation } from '@babel/types';
 
 export class AnswerFrame extends React.Component {
 
@@ -21,6 +22,7 @@ export class AnswerFrame extends React.Component {
         if(cachedState) this.state = cachedState
         else {
             this.state = {
+                showVideoRecorder: false,
                 text: null,
                 link: "",
                 files: []
@@ -136,21 +138,66 @@ export class AnswerFrame extends React.Component {
 
         return (
             <>
-                <Card className='AnswerCardDetails'>
-                    <h5><Typography use='headline5'>{this.props.currentFrameIndex + 1}/{this.props.filmstrip.frames.length}: {frame.title}</Typography></h5>
-                    <p><Typography use='body1'>{frame.description}</Typography></p>
+                <Card className="AnswerCardDetails">
+                    <h5>
+                        <Typography use="headline5">
+                            {this.props.currentFrameIndex + 1}/
+                            {this.props.filmstrip.frames.length}:{" "}
+                            {frame.title}
+                        </Typography>
+                    </h5>
+                    <p>
+                        <Typography use="body1">
+                            {frame.description}
+                        </Typography>
+                    </p>
                     {files}
                     {link}
                 </Card>
-                <Card className='AnswerCard' outlined>
-                    <h6 className='noMarginTop'><Typography use='subtitle2'>{t('AnswerVideo')}</Typography></h6>
-                    <VideoRecorder onSuccess={console.warn} onError={console.warn} />
+                <Card className="AnswerCard" outlined>
+                    <h6 className="noMarginTop">
+                        <Typography use="subtitle2">
+                            {t("AnswerVideo")}
+                        </Typography>
+                    </h6>
+                    {this.state.cloudinaryPublicId && !this.state.showVideoRecorder && (
+                        <VideoPlayer
+                            publicId={this.state.cloudinaryPublicId}
+                        />
+                    )}
+                    {this.state.showVideoRecorder && (
+                        <VideoRecorder
+                            onSuccess={({
+                                public_id: cloudinaryPublicId
+                            }) =>
+                                this.updateLocalStorageState({
+                                    cloudinaryPublicId
+                                })
+                            }
+                            onError={console.error}
+                        />
+                    )}
+                    <Button
+                        label={
+                            this.state.showVideoRecorder
+                                ? t("AnswerFinishedRecordingButton")
+                                : t("AnswerRecordButton")
+                        }
+                        raised
+                        onClick={() =>
+                            this.setState({
+                                showVideoRecorder: !this.state
+                                    .showVideoRecorder
+                            })
+                        }
+                        className="big"
+                    />
                     {textAnswer}
                     {linkAnswer}
                     {fileAnswer}
                 </Card>
             </>
-        )
+        );
     }
 
 }
