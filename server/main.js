@@ -18,7 +18,7 @@ Meteor.startup(() => {
       _id: '1',
       name: 'Filmstrip 1',
       description: 'Description of Filmstrip 1',
-      live: true
+      live: true,
     })
   }
 
@@ -64,7 +64,7 @@ Meteor.startup(() => {
       link: 'https://filmstrip.com/2',
       allowText: true,
       allowLinks: false,
-      allowFiles: false
+      allowFiles: false,
     })
 
   }

@@ -10,9 +10,8 @@ import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
 import { AnswerQuestionnaire } from '/imports/ui/components/answer/AnswerQuestionnaire.jsx'
 import { AnswerFinish } from '/imports/ui/components/answer/AnswerFinish.jsx'
 
-import { FilmstripsList } from './components/FilmstripsList.jsx'
-import { FilmstripsItem } from './components/FilmstripsItem.jsx'
-import { Filmstrip } from './components/Filmstrip.jsx'
+import { FilmstripsList } from '/imports/ui/components/FilmstripsList.jsx'
+import { FilmstripsItem } from '/imports/ui/components/FilmstripsItem.jsx'
 import { FrameVideoRecorder } from '/imports/ui/components/FrameVideoRecorder.jsx'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
@@ -32,7 +31,6 @@ export default App = () =>
             <AppRoute exact path="/" component={Home} layout={Layout} />
             <AppRoute path="/filmstrips" component={FilmstripsList} layout={Layout} />
             <AppRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
-            <AppRoute exact path="/filmstrip" component={Filmstrip} layout={Layout} />
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
