@@ -160,38 +160,37 @@ export class AnswerFrame extends React.Component {
                             {t("AnswerVideo")}
                         </Typography>
                     </h6>
-                    {this.state.cloudinaryPublicId && !this.state.showVideoRecorder && (
-                        <VideoPlayer
-                            publicId={this.state.cloudinaryPublicId}
-                        />
-                    )}
+                    {this.state.cloudinaryPublicId &&
+                        !this.state.showVideoRecorder && (
+                            <VideoPlayer
+                                publicId={this.state.cloudinaryPublicId}
+                            />
+                        )}
                     {this.state.showVideoRecorder && (
                         <VideoRecorder
                             onSuccess={({
                                 public_id: cloudinaryPublicId
                             }) =>
                                 this.updateLocalStorageState({
+                                    showVideoRecorder: false,
                                     cloudinaryPublicId
                                 })
                             }
                             onError={console.error}
                         />
                     )}
-                    <Button
-                        label={
-                            this.state.showVideoRecorder
-                                ? t("AnswerFinishedRecordingButton")
-                                : t("AnswerRecordButton")
-                        }
-                        raised
-                        onClick={() =>
-                            this.setState({
-                                showVideoRecorder: !this.state
-                                    .showVideoRecorder
-                            })
-                        }
-                        className="big"
-                    />
+                    {!this.state.showVideoRecorder && (
+                        <Button
+                            label={t("AnswerRecordButton")}
+                            raised
+                            onClick={() =>
+                                this.setState({
+                                    showVideoRecorder: true
+                                })
+                            }
+                            className="big"
+                        />
+                    )}
                     {textAnswer}
                     {linkAnswer}
                     {fileAnswer}
@@ -199,5 +198,4 @@ export class AnswerFrame extends React.Component {
             </>
         );
     }
-
 }
