@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { VideoRecorder } from '/imports/ui/components/VideoRecorder'
+import VideoRecorder from '/imports/ui/components/VideoRecorder/index.jsx'
 
 const saveVideo = (filmstripId, frameId, history) => (video) => {
     // TODO the method relies on an existing frame, but a new one maybe is not persisted at all - find a way to promote the video pack to the filmstrip editor without saving here
@@ -13,6 +13,7 @@ const saveVideo = (filmstripId, frameId, history) => (video) => {
 
 export const FrameVideoRecorder = withRouter(( {history, match} ) => {
     const { filmstripId, frameId } = match.params
+    console.log('FrameVideoRecorder', filmstripId, frameId)
     return (
         <VideoRecorder onSuccess={saveVideo(filmstripId, frameId, history)}/>
     )

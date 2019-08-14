@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import React, { useState, useEffect } from 'react';
 import ReactFilestack from 'filestack-react'
 import { Image } from 'cloudinary-react'
-import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner, Avatar } from 'rmwc'
+import { TextField, Button, Icon, List, ListItem, Card, GridCell, GridInner, Fab } from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
 import { withRouter } from 'react-router-dom'
@@ -51,11 +51,13 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
             alert(t('FramestripsItem.Wait for the future to come!'))
         }
     }
-    const addVideo = (event) =>
-        history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
+    const addVideo = (event) => {
+        console.log('addVideo', history, `/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
+        // return history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
+        return history.push(`/recordVideo/${frame.filmstripId}/${frame._id}`)
+    }
 
     const publicId = get(frame, 'video.public_id')
-    const cloudName = publicId && Meteor.settings.public.cloudinary.cloudName
     const imageOrVideo = publicId
         ? <Video publicId={publicId} width="300"/>
         : <Image cloudName="demo" publicId="sample" width="300" crop="scale"/>
@@ -69,33 +71,38 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
     return (<div className="videoEditor" style={getStyle(frame._id)}>
         {imageOrVideo}
         <div className="actions">
-            <Button raised data-no={frame.no} onClick={removeFrame}>
-                <Icon icon={{ icon: 'clear', size: 'xsmall' }} />
-            </Button>
-            <Button raised data-no={frame.no} onClick={addVideo}>
-                <Icon icon="add" />
-            </Button>
+            <Fab icon="clear" data-no={frame.no} onClick={removeFrame} style={{ backgroundColor: 'var(--mdc-theme-error)' }} theme={['onError']}  mini={true}/>
+            <Fab icon="add" data-no={frame.no} onClick={addVideo} mini={true}/>
         </div>
     </div>)
 })
 
 const FrameSelectorItem = withRouter(({history, match, frame}) => {
-    const changeFrame = (event) => {
-        const { filmstripId } = match.params
-        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.id}`)
-    }
+    const { filmstripId, frameId } = match.params
+    const changeFrame = event =>
+        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.id}`)    
+    const getColor = () => frame._id === frameId ? 'black' : 'grey'
     
     return (<>
-        <Button raised data-id={frame._id} onClick={changeFrame}>
-            {frame.no}
-        </Button>
+        <Icon data-id={frame._id} onClick={changeFrame}
+            icon={
+                <div
+                    style={{
+                        background: getColor(),
+                        width: '12px',
+                        height: '12px',
+                        borderRadius: '50px',
+                        marginLeft: '3px',
+                    }}
+                />
+            }
+        />
     </>)
 })
 
 const FrameEditor = ({frames}) => <div>
     {frames.map(frame => <FrameEditorItem key={frame.no} frame={frame} />)}
-</div>// export const FilmstripsItem = withTracker(({ match }) => {
-
+</div>
 
 const FrameSelector = ({frames}) => <div>
     {frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} />)}
