@@ -71,8 +71,6 @@ export default App = () =>
                 <AppRoute exact path="/a/:id/:emailBase64/finish" component={AnswerFinish} layout={AnswerLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64/sent" component={AnswerSent} layout={AnswerLayout} />
                 <AppRoute exact path="/confirm/:id/:emailBase64" component={AnswerConfirm} layout={AnswerLayout} />
-                <AppRoute exact path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={AnswerLayout} />
-                <AppRoute exact path="/recordVideo/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
             <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
