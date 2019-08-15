@@ -21,8 +21,6 @@ export const SignUp = () => {
                 setIsPasswordInvalid(!passwordValid)
                 if (emailValid && passwordValid) {
                     Accounts.createUser({ email, password }, (error, result) => {
-                        console.log(error)
-                        console.log(result)
                         history.push('/' )
                     })
                 }
