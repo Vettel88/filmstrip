@@ -6,17 +6,33 @@ import Postmark from 'postmark'
 const postmark = new Postmark.ServerClient(Meteor.settings.postmark.apikey)
 
 Meteor.methods({
+    'filmstrip.create'() {
+        console.log('filmstrip.create')
+        const filmstripId = Filmstrips.insert({})
+        const frameId = Frames.insert({filmstripId, no: 1})
+        console.log(filmstripId, frameId)
+        return { filmstripId, frameId }
+    },
+    'filmstrip.remove'(filmstripId) {
+        check(filmstripId, String)
+        Frames.remove({filmstripId})
+        Filmstrips.remove({_id: filmstripId})
+    },
+    'filmstrip.toggleLive'(filmstrip) {
+        check(filmstrip, Object)
+        Filmstrips.update({_id: filmstrip._id}, {$set: {live: !filmstrip.live}})
+    },
     'filmstrip.frame.save'({filmstripId, no, frame}) {
         check(filmstripId, String)
         check(frame, Object)
         check(no, Number)
         Frames.upsert({filmstripId, no}, {$set: {...frame}})
     },
-    'filmstrip.frame.saveVideo'({filmstripId, frameId, video}) {
+    'filmstrip.frame.saveVideo'({filmstripId, frameId, cloudinaryPublicId}) {
         check(filmstripId, String)
         check(frameId, String)
-        check(video, Object)
-        Frames.upsert(frameId, {$set: {video}})
+        check(cloudinaryPublicId, String)
+        Frames.upsert(frameId, {$set: {cloudinaryPublicId}})
     },
     'questionnaire.save'({ filmstrip, frames }) {
         check(filmstrip, Object)

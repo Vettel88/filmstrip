@@ -19,7 +19,6 @@ const loggedIn = () => {
                 history.push('/signIn' )
             }
             
-            // console.log(Meteor.user())
             return (
                 <MenuSurfaceAnchor>
                     <Menu open={open}onClose={evt => setOpen(false)}>
@@ -40,7 +39,7 @@ const loggedIn = () => {
 
 export const loggedOut = () =>
     <Button trailingIcon="keyboard_arrow_right" >
-        <StyledLink to="/signIn">Log in</StyledLink>
+        <StyledLink to="/signIn">Sign in</StyledLink>
     </Button>
 
 export const MenuUserWrapper = ({ isLoggedIn }) =>

@@ -1,6 +1,7 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Layout from './components/Layout'
+import ModalLayout from './components/ModalLayout'
 
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
 import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
@@ -12,14 +13,14 @@ import { AnswerFinish } from '/imports/ui/components/answer/AnswerFinish.jsx'
 import { AnswerSent } from '/imports/ui/components/answer/AnswerSent.jsx'
 import { AnswerConfirm } from '/imports/ui/components/answer/AnswerConfirm.jsx'
 
-import { FilmstripsList } from './components/FilmstripsList.jsx'
-import { FilmstripsItem } from './components/FilmstripsItem.jsx'
-import { Filmstrip } from './components/Filmstrip.jsx'
+import { FilmstripsList } from '/imports/ui/components/FilmstripsList.jsx'
+import { FilmstripsItem } from '/imports/ui/components/FilmstripsItem.jsx'
 import { FrameVideoRecorder } from '/imports/ui/components/FrameVideoRecorder.jsx'
 import { ThemeProvider } from 'rmwc'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
+
 
 const AppRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) => (
     <Route {...rest} render={props => (
@@ -28,6 +29,13 @@ const AppRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) =
         </RouteLayout>
     )} />
 )
+
+const PrivateRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) =>
+    <Route {...rest} render={(props) => (
+        Meteor.userId()
+            ? <RouteLayout><RouteComponent {...props} /></RouteLayout> 
+            : <Redirect to='/signIn' />
+    )} />
 
 export default App = () =>
     <ThemeProvider
@@ -53,12 +61,11 @@ export default App = () =>
     >
         <Router>
             <Switch>
-                <AppRoute exact path="/" component={Home} layout={Layout} />
-                <AppRoute path="/filmstrips" component={FilmstripsList} layout={Layout} />
-                <AppRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
-                <AppRoute exact path="/filmstrip" component={Filmstrip} layout={Layout} />
                 <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
                 <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
+                <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
+                <PrivateRoute exact path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
+                <PrivateRoute exact path="/recordVideo/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
                 <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
@@ -71,7 +78,5 @@ export default App = () =>
             </Switch>
         </Router>
     </ThemeProvider>
-
-const Home = () => <h2>Home</h2>
 
 const NoMatch = (props) => <div>404 - sorry, nothing found</div>
