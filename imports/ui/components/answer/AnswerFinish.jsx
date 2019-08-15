@@ -6,6 +6,7 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
+import { regexEmail } from '../../UIHelpers'
 
 class AnswerEnd extends React.Component {
 
@@ -52,7 +53,7 @@ class AnswerEnd extends React.Component {
                 <h4><Typography use='headline4'>{t('AnswerFinished')}</Typography></h4>
                 <p><Typography use='body1'>{t('AnswerEmailConfirmation')}</Typography></p>
                 <form onSubmit={this.handleSubmit}>
-                    <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern='^[^\s@]+@[^\s@]+\.[^\s@]+$' />
+                    <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern={regexEmail} />
                     <p className='smallHelp'><Typography use='caption'>{t('AnswerFinishedCopy')}</Typography></p>
                     <Button label={t('AnswerFinishedConfirmButton')} raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
                 </form>
@@ -95,6 +96,7 @@ export const AnswerFinish = withTranslation()(withTracker(({ match }) => {
     const id = match.params.id
     const handle = Meteor.subscribe('AnswerFilmstrip', id)
     return {
+        isLoading: !handle.ready(),
         filmstrip: Filmstrips.findOne(),
         email: match.params.emailBase64 ? atob(match.params.emailBase64) : ''
     }

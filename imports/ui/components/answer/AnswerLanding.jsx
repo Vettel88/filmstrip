@@ -3,7 +3,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import { Filmstrips } from '/imports/db/filmstrips.js'
-import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
+import { loadingWrapper, emailIsValid, regexEmail } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
 import { withTranslation } from 'react-i18next'
 
@@ -43,7 +43,7 @@ class AnswerHome extends React.Component {
                 <p><Typography use='body1'>{this.props.filmstrip.description}</Typography></p>
                 <h6><Typography use='body2'>{t('AnswerEmailConfirmation')}</Typography></h6>
                 <form onSubmit={this.handleSubmit}>
-                    <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern='^[^\s@]+@[^\s@]+\.[^\s@]+$' />
+                    <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern={regexEmail} />
                     <p className='smallHelp'><Typography use='caption'>{t('AnswerLandingContact')}</Typography></p>
                     <Button label={t('AnswerStart')} raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
                 </form>

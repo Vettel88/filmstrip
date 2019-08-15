@@ -52,6 +52,7 @@ export const AnswerSent = withTranslation()(withTracker(({ match }) => {
   const id = match.params.id
   const handle = Meteor.subscribe('AnswerFilmstrip', id)
   return {
+    isLoading: !handle.ready(),
     filmstrip: Filmstrips.findOne(),
     email: match.params.emailBase64 ? atob(match.params.emailBase64) : ''
   }
