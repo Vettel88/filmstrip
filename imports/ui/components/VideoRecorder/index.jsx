@@ -2,10 +2,13 @@ import React, { Component } from "react"
 import VR from "react-video-recorder"
 import Timer from './Timer'
 import Countdown from './Countdown'
-import { Button as Btn } from 'rmwc'
+import { Button as Btn, CircularProgress } from 'rmwc'
 import { isSafari, isIOS } from "react-device-detect"
 import cloudinary from "../../../services/cloudinary"
 import styled from 'styled-components'
+const LoadingIndicator = styled(CircularProgress)`
+    color: green;
+`
 
 const Button = styled(Btn)`
     color: #6200EE !important;
@@ -39,12 +42,7 @@ class Actions extends Component {
     renderIsReplaying = () => {
         if (this.props.isReplayingVideo) {
             return (
-                <Button
-                    onClick={this.props.onStopReplaying}
-                    data-qa="start-replaying"
-                >
-                    Try Again
-                </Button>
+                <LoadingIndicator size='xlarge' />
             );
         }
     };

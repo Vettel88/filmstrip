@@ -1,17 +1,12 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-// import { Route, Link } from 'react-router-dom'
-import { withTracker } from 'meteor/react-meteor-data'
 import { Button } from '@rmwc/button'
 import { Card } from '@rmwc/card'
-import { FormField } from '@rmwc/formfield'
-import { Grid, GridCell, GridInner } from '@rmwc/grid'
+import { Grid, GridCell } from '@rmwc/grid'
 import { List, ListItem } from '@rmwc/list'
 import { TextField } from '@rmwc/textfield'
 import ReactFilestack from 'filestack-react'
-// import { Queues } from '/imports/db/queues.js'
-import { loadingWrapper } from '/imports/ui/UIHelpers.js'
-import Video from './VideoPlayer';
+const { apikey: filestackApiKey } = Meteor.settings.public.filestack
 
 const frames = [
     {
@@ -69,7 +64,7 @@ const Frame = props => {
                     </List>
                     : null}
                 <ReactFilestack
-                    apikey={'Aqp34KkGdTvCthMIbNKTYz'}
+                    apikey={filestackApiKey}
                     onSuccess={(res) => frameUploadSave(res, files)}
                     render={({ onPick }) => (
                         <Button label='Upload' onClick={onPick} />
@@ -99,7 +94,7 @@ export const Filmstrip = ({ match }) =>
                     textarea />
 
                 <ReactFilestack
-                    apikey={'Aqp34KkGdTvCthMIbNKTYz'}
+                    apikey={filestackApiKey}
                     onSuccess={(res) => console.log(match)}
                     render={({ onPick }) => (
                         <Button label='Upload' onClick={onPick} />
