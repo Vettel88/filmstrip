@@ -13,29 +13,48 @@ class AnswerEnd extends React.Component {
         email: this.props.email ? this.props.email : ''
     }
 
+    handleChange = (event) => {
+        this.setState({
+            email: event.target.value
+        })
+    }
+
+    handleSubmit = (event) => {
+        this.setState({
+            toConfirmationSent: true
+        })
+        event.preventDefault()
+    }
+
     render() {
         
         const t = this.props.t
-
-        if (this.state.toQuestionnaire === true) {
-            const url = `/a/${this.props.item._id}/${btoa(this.state.email)}/q`;
-            return <Redirect to={url} />
-        }
+        const answerUrl = `/a/${this.props.filmstrip._id}/${btoa(this.props.email)}/q`
 
         return (
             <div className='centered AnswerQuestionnaireContainer'>
                 <img src='/icons8-checked.svg' className='topIcon centered' />
-                <h4><Typography use='headline4'>{this.props.item.name}</Typography></h4>
-                <p><Typography use='body1'>{t('AnswerLandingFinished')}</Typography></p>
+                <h4><Typography use='headline4'>{t('AnswerFinished')}</Typography></h4>
+                <p><Typography use='body1'>{t('AnswerEmailConfirmation')}</Typography></p>
+                <form onSubmit={this.handleSubmit}>
+                    <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern='^[^\s@]+@[^\s@]+\.[^\s@]+$' />
+                    <p className='smallHelp'><Typography use='caption'>{t('AnswerFinishedCopy')}</Typography></p>
+                    <Button label={t('AnswerFinishedConfirmButton')} raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
+                </form>
+                <p>
+                    <Typography use='body1'>
+                        <a href={answerUrl}>{t('AnswerFinishedChangeAnswers')}</a>
+                    </Typography>
+                </p>
             </div>
         )
     }
 
 }
 
-const AnswerWrapper = ({ isLoading, queueItem, email, t }) => {
+const AnswerWrapper = ({ isLoading, filmstrip, email, t }) => {
 
-    if(!isLoading && !queueItem) {
+    if (!isLoading && !filmstrip) {
 
         return (
             <div className='centered AnswerLanding'>
@@ -50,7 +69,7 @@ const AnswerWrapper = ({ isLoading, queueItem, email, t }) => {
     return (
         <div>
             {loadingWrapper(isLoading, () =>
-              <AnswerEnd key={queueItem._id} item={queueItem} email={email} t={t} />
+                <AnswerEnd key={filmstrip._id} filmstrip={filmstrip} email={email} t={t} />
             )}
         </div>
     )
@@ -61,7 +80,7 @@ export const AnswerFinish = withTranslation()(withTracker(({ match }) => {
     const id = match.params.id
     const handle = Meteor.subscribe('AnswerFilmstrip', id)
     return {
-        queueItem: Filmstrips.findOne(),
+        filmstrip: Filmstrips.findOne(),
         email: match.params.emailBase64 ? atob(match.params.emailBase64) : ''
     }
 })(AnswerWrapper))

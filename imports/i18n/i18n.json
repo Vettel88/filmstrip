@@ -19,13 +19,18 @@
       "AnswerResetRecordingButton": "Re-Record your answer",
       "AnswerPrevQuestion": "< Previous",
       "AnswerNextQuestion": "Next >",
+      "AnswerStart": "Start",
       "AnswerFinish": "Finish",
       "AnswerVideo": "Your Video Answer",
       "AnswerAddLink": "Add link",
       "AnswerUploadFiles": "Upload file(s)",
       "AnswerAddAnotherLink": "+ Add another link",
       "AnswerUploadAnotherFile": "+ Upload another file",
-      "AnswerLandingFinished": "Thank you for answering."
+      "AnswerFinished": "Thank you for answering.",
+      "AnswerFinishedCopy": "We will send you a link that you need to click in order to verify your e-mail address and complete your answers.",
+      "AnswerEmailConfirmation": "Please make sure your e-mail address is correct so we can get in touch with you.",
+      "AnswerFinishedConfirmButton": "Send confirmation",
+      "AnswerFinishedChangeAnswers": "< Change your answers"
     }
   },
   "es": {}

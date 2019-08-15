@@ -54,7 +54,8 @@ class AnswerQuestionnaireContainer extends React.Component {
             const filmstrip = {
                 answerToFilmstripId: this.props.filmstrip._id,
                 name: this.props.filmstrip.name,
-                frameIds: frames.map(f => f._id)
+                frameIds: frames.map(f => f._id),
+                email: this.props.email
             }
 
             console.log("Finished", frames)
@@ -65,7 +66,7 @@ class AnswerQuestionnaireContainer extends React.Component {
             }, (err, res) => {
                 if(err) console.error(err)
                 else {
-                    localStorage.clear()
+                    //localStorage.clear()
                     console.log(res)
                     this.setState({
                         toFinish: true

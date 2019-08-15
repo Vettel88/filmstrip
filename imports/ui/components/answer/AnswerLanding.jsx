@@ -32,20 +32,20 @@ class AnswerHome extends React.Component {
         const { t } = this.props
 
         if (this.state.toQuestionnaire === true) {
-            const url = `/a/${this.props.item._id}/${btoa(this.state.email)}/q`;
+            const url = `/a/${this.props.filmstrip._id}/${btoa(this.state.email)}/q`;
             return <Redirect to={url} />
         }
 
         return (
             <div className='centered AnswerQuestionnaireContainer'>
                 <img src='/icons8-short_hair_girl_question_mark.svg' className='topIcon centered' />
-                <h4><Typography use='headline4'>{this.props.item.name}</Typography></h4>
-                <p><Typography use='body1'>{this.props.item.description}</Typography></p>
-                <h6><Typography use='body2'>{t('AnswerLandingHelp')}</Typography></h6>
+                <h4><Typography use='headline4'>{this.props.filmstrip.name}</Typography></h4>
+                <p><Typography use='body1'>{this.props.filmstrip.description}</Typography></p>
+                <h6><Typography use='body2'>{t('AnswerEmailConfirmation')}</Typography></h6>
                 <form onSubmit={this.handleSubmit}>
                     <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern='^[^\s@]+@[^\s@]+\.[^\s@]+$' />
                     <p className='smallHelp'><Typography use='caption'>{t('AnswerLandingContact')}</Typography></p>
-                    <Button label='Start' raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
+                    <Button label={t('AnswerStart')} raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
                 </form>
             </div>
         )
@@ -53,9 +53,9 @@ class AnswerHome extends React.Component {
 
 }
 
-const AnswerWrapper = ({ isLoading, queueItem, email, t }) => {
+const AnswerWrapper = ({ isLoading, filmstrip, email, t }) => {
 
-    if(!isLoading && !queueItem) {
+    if (!isLoading && !filmstrip) {
 
         return (
             <div className='centered AnswerLanding'>
@@ -70,7 +70,7 @@ const AnswerWrapper = ({ isLoading, queueItem, email, t }) => {
     return (
         <div>
             {loadingWrapper(isLoading, () =>
-                <AnswerHome key={queueItem._id} item={queueItem} email={email} t={t} />
+                <AnswerHome key={filmstrip._id} filmstrip={filmstrip} email={email} t={t} />
             )}
         </div>
     )
@@ -82,7 +82,7 @@ export const AnswerLanding = withTranslation()(withTracker(({ match }) => {
     const handle = Meteor.subscribe('AnswerFilmstrip', id)
     return {
         isLoading: !handle.ready(),
-        queueItem: Filmstrips.findOne(),
+        filmstrip: Filmstrips.findOne(),
         email: match.params.emailBase64 ? atob(match.params.emailBase64) : ''
     }
 })(AnswerWrapper))
