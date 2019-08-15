@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Route, Link } from "react-router-dom"
 import { TextField, Button } from 'rmwc'
 import { validateEmail, validatePassword } from '/imports/ui/UIHelpers.js'
+import './users.less'
 
 export const SignUp = () => {
     const [isEmailInvalid, setIsEmailInvalid] = useState(false)
@@ -28,9 +29,9 @@ export const SignUp = () => {
                 <form>
                     <TextField name="email" type="email" label="E-Mail" invalid={isEmailInvalid}/>
                     <TextField name="password" type="password" label="Password" invalid={isPasswordInvalid}/>
-                    <Button label="Sign Up" onClick={submit}/>
+                    <Button label="Sign Up" onClick={submit} raised/>
                 </form>
-                <Link to="/signIn">Sign in</Link>
+                <Button><Link to="/signIn">Sign in</Link></Button>
             </>)
         }} />
     )

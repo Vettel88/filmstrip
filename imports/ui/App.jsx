@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Layout from './components/Layout'
 import ModalLayout from './components/ModalLayout'
 
@@ -27,22 +27,27 @@ const AppRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) =
     )} />
 )
 
+const PrivateRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) =>
+    <Route {...rest} render={(props) => (
+        Meteor.userId()
+            ? <RouteLayout><RouteComponent {...props} /></RouteLayout> 
+            : <Redirect to='/signIn' />
+    )} />
+
 export default App = () =>
     <Router>
         <Switch>
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
-            <AppRoute exact path="/" component={FilmstripsList} layout={Layout} />
-            <AppRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
-            <AppRoute exact path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={AnswerLayout} />
+            <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
+            <PrivateRoute exact path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
+            <PrivateRoute exact path="/recordVideo/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64/finish" component={AnswerFinish} layout={AnswerLayout} />
-            <AppRoute exact path="/recordVideo/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>
-        <AppRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
     </Router>
 
 const NoMatch = (props) => <div>404 - sorry, nothing found</div>
