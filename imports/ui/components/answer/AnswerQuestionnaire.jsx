@@ -39,21 +39,23 @@ class AnswerQuestionnaireContainer extends React.Component {
     nextQuestion = (event) => {
 
         if(this.state.currentFrameIndex === this.props.filmstrip.frames.length -1) {
-            
-            const filmstrip = {
-                answerToFilmstripId: this.props.filmstrip._id,
-                name: this.props.filmstrip.name
-            }
 
             const frames = this.props.filmstrip.frames.map(frame => {
 
                 return Object.assign({
+                    _id: Random.id(),
                     no: frame.no,
                     answerToFrameId: frame._id,
                     answerToFilmstripId: this.props.filmstrip._id
                 }, JSON.parse(localStorage.getItem(frame._id)))
 
             })
+
+            const filmstrip = {
+                answerToFilmstripId: this.props.filmstrip._id,
+                name: this.props.filmstrip.name,
+                frameIds: frames.map(f => f._id)
+            }
 
             console.log("Finished", frames)
 
