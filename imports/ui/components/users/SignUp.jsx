@@ -20,8 +20,11 @@ export const SignUp = () => {
                 const passwordValid = !validatePassword(password)
                 setIsPasswordInvalid(!passwordValid)
                 if (emailValid && passwordValid) {
-                    Accounts.createUser({ email, password })
-                    history.push('/' )
+                    Accounts.createUser({ email, password }, (error, result) => {
+                        console.log(error)
+                        console.log(result)
+                        history.push('/' )
+                    })
                 }
             }
 
