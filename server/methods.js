@@ -34,14 +34,14 @@ Meteor.methods({
         check(cloudinaryPublicId, String)
         Frames.upsert(frameId, {$set: {cloudinaryPublicId}})
     },
-    'questionnaire.save'({ filmstrip, frames }) {
+    'answer.save'({ filmstrip, frames }) {
         check(filmstrip, Object)
         check(frames, [Object])
         Filmstrips.insert(filmstrip)
         frames.forEach(frame => Frames.insert(frame))        
         return true
     },
-    'questionnaire.sendConfirmation': async function ({ filmstripId, email }) {
+    'answer.sendConfirmation': async function ({ filmstripId, email }) {
         check(filmstripId, String)
         check(email, String)
 

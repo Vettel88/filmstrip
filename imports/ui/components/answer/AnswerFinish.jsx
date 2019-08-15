@@ -23,7 +23,7 @@ class AnswerEnd extends React.Component {
     handleSubmit = (event) => {
         event.preventDefault()
 
-        Meteor.call('questionnaire.sendConfirmation', {
+        Meteor.call('answer.sendConfirmation', {
             filmstripId: this.props.filmstrip._id,
             email: this.state.email
         }, (err, res) => {

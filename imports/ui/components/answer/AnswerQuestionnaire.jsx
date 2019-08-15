@@ -60,7 +60,7 @@ class AnswerQuestionnaireContainer extends React.Component {
 
             console.log("Finished", frames)
 
-            Meteor.call('questionnaire.save', {
+            Meteor.call('answer.save', {
                 filmstrip,
                 frames
             }, (err, res) => {
