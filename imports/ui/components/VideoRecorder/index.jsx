@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import VR from "react-video-recorder"
+import ReactVideoRecorder from "react-video-recorder"
 import Timer from './Timer'
 import Countdown from './Countdown'
 import { Button as Btn, CircularProgress } from 'rmwc'
@@ -92,7 +92,6 @@ class Actions extends Component {
                 {this.props.isRunningCountdown && <Countdown countdownTime={this.props.countdownTime} />}
                 {this.renderTimer()}
                 <ActionsWrapper>
-                    {this.renderIsReplaying()}
                     {this.renderIsRecording()}
                     {this.renderIsReadyToRecord()}
                     {this.renderUseVideoInput()}
@@ -116,7 +115,7 @@ export default class VideoRecorder extends React.Component {
         const handleSuccess = onSuccess || this.onSuccess
         const handleError = onError || this.onError
         return (
-            <VR
+            <ReactVideoRecorder
                 isOnInitially={true}
                 isReplayVideoMuted={true}
                 useVideoInput={isIOS && !isSafari}
