@@ -9,17 +9,17 @@ export const createCollection = (name, doForbidClientSideUpdats = true) => {
     collection.insert = (doc, callback) => {
         doc.createdAt = new Date()
         doc.createdBy = getUserId()
-        oldInsert.call(collection, doc, callback)
+        return oldInsert.call(collection, doc, callback)
     }
     collection.update = (selector, modifier, options, callback) => {
         set(modifier, '$set.modifiedAt', new Date())
         set(modifier, '$set.modifiedBy', getUserId())
-        oldUpdate.call(collection, selector, modifier, options, callback)
+        return oldUpdate.call(collection, selector, modifier, options, callback)
     }
     collection.upsert = (selector, modifier, options, callback) => {
         set(modifier, '$set.modifiedAt', new Date())
         set(modifier, '$set.modifiedBy', getUserId())
-        oldUpsert.call(collection, selector, modifier, options, callback)
+        return oldUpsert.call(collection, selector, modifier, options, callback)
     }
     if (doForbidClientSideUpdats) forbidClientSideUpdates(collection)
     return collection
