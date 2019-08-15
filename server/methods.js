@@ -25,11 +25,11 @@ Meteor.methods({
         check(no, Number)
         Frames.upsert({filmstripId, no}, {$set: {...frame}})
     },
-    'filmstrip.frame.saveVideo'({filmstripId, frameId, video}) {
+    'filmstrip.frame.saveVideo'({filmstripId, frameId, cloudinaryPublicId}) {
         check(filmstripId, String)
         check(frameId, String)
-        check(video, Object)
-        Frames.upsert(frameId, {$set: {video}})
+        check(cloudinaryPublicId, String)
+        Frames.upsert(frameId, {$set: {cloudinaryPublicId}})
     },
     'questionnaire.save'({ filmstrip, frames }) {
         check(filmstrip, Object)

@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom'
 import Layout from './components/Layout'
+import ModalLayout from './components/ModalLayout'
 
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
 import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
@@ -16,6 +17,7 @@ import { FrameVideoRecorder } from '/imports/ui/components/FrameVideoRecorder.js
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
+
 
 const AppRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) => (
     <Route {...rest} render={props => (
@@ -40,6 +42,7 @@ export default App = () =>
             <AppRoute exact path="/recordVideo/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>
+        <AppRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
     </Router>
 
 const NoMatch = (props) => <div>404 - sorry, nothing found</div>

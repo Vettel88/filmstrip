@@ -53,11 +53,10 @@ const FrameEditorItem = withRouter(({history, match, frame}) => {
     }
     const addVideo = (event) => {
         console.log('addVideo', history, `/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
-        // return history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
-        return history.push(`/recordVideo/${frame.filmstripId}/${frame._id}`)
+        return history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo/`)
     }
 
-    const publicId = get(frame, 'video.public_id')
+    const publicId = get(frame, 'cloudinaryPublicId')
     const imageOrVideo = publicId
         ? <Video publicId={publicId} width="300"/>
         : <Image cloudName="demo" publicId="sample" width="300" crop="scale"/>
@@ -206,7 +205,6 @@ const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => {
 }
 
 const FilmstripContent = ({match, filmstrip, frames, filmstripId, frameId}) => {
-    const frame = frames.find(f => f._id === frameId)
 
     useEffect(() => {
         // addTranslations('en', {    
@@ -235,14 +233,24 @@ const FilmstripContent = ({match, filmstrip, frames, filmstripId, frameId}) => {
         // })
     })
 
-    return (<>
-        <h1>{t('FramestripsItem.Frames')}</h1>
-        <div style={{textAlign: 'center'}}>
-            <FrameEditor frames={frames} />
-            <FrameSelector frames={frames} />
-        </div>
-        {frames && frames.map((frame, i) => <FrameItem key={i} filmstrip={filmstrip} frame={frame} no={frame.no}/>)}
-    </>)
+    return (
+        <>
+            <h1>{t("FramestripsItem.Frames")}</h1>
+            <div style={{ textAlign: "center" }}>
+                <FrameEditor frames={frames} />
+                <FrameSelector frames={frames} />
+            </div>
+            {frames &&
+                frames.map((frame, i) => (
+                    <FrameItem
+                        key={i}
+                        filmstrip={filmstrip}
+                        frame={frame}
+                        no={frame.no}
+                    />
+                ))}
+        </>
+    );
 }
 
 const FilmstripWrapper = ({isLoading, filmstrip, frames, filmstripId, frameId}) => 
