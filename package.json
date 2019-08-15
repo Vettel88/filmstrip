@@ -15,6 +15,7 @@
     "filestack-react": "^3.1.0",
     "i18next": "^17.0.10",
     "lodash": "^4.17.15",
+    "postmark": "^2.2.9",
     "react": "^16.8.6",
     "react-device-detect": "^1.7.5",
     "react-dom": "^16.8.6",

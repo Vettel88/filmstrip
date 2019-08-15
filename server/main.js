@@ -14,12 +14,14 @@ Meteor.startup(() => {
   // Frames.remove({})
 
   if (Filmstrips.find().count() === 0) {
+
     insertFilmstrip({
       _id: '1',
       name: 'Filmstrip 1',
       description: 'Description of Filmstrip 1',
       live: true,
     })
+
   }
 
   if (Frames.find().count() === 0) {
