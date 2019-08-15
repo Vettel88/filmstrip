@@ -20,16 +20,31 @@ class AnswerEnd extends React.Component {
     }
 
     handleSubmit = (event) => {
-        this.setState({
-            toConfirmationSent: true
-        })
         event.preventDefault()
+
+        Meteor.call('questionnaire.sendConfirmation', {
+            filmstripId: this.props.filmstrip._id,
+            email: this.state.email
+        }, (err, res) => {
+            if(err) console.log(err)
+            else {
+                this.setState({
+                    toSent: true
+                })
+                console.log(res);
+            }
+        })
     }
 
     render() {
         
         const t = this.props.t
         const answerUrl = `/a/${this.props.filmstrip._id}/${btoa(this.props.email)}/q`
+
+        if (this.state.toSent === true) {
+            const url = `/a/${this.props.filmstrip._id}/${btoa(this.state.email)}/sent`;
+            return <Redirect to={url} />
+        }
 
         return (
             <div className='centered AnswerQuestionnaireContainer'>

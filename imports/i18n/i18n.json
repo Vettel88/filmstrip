@@ -29,8 +29,17 @@
       "AnswerFinished": "Thank you for answering.",
       "AnswerFinishedCopy": "We will send you a link that you need to click in order to verify your e-mail address and complete your answers.",
       "AnswerEmailConfirmation": "Please make sure your e-mail address is correct so we can get in touch with you.",
+      "AnswerEmailSent": "We’ve sent you an e-mail at {{email}}. Please click on the link in the message to verify your address and complete your answers.",
       "AnswerFinishedConfirmButton": "Send confirmation",
-      "AnswerFinishedChangeAnswers": "< Change your answers"
+      "AnswerFinishedChangeAnswers": "< Change your answers",
+      "AnswerConfirmed": "Thanks for completing your answers!",
+      "SignupHeader": "Want to create your own Film Strip?",
+      "SignupCopy": "Sign up for FREE and start creating immediately.",
+      "SignupFirstname": "First name",
+      "SignupLastname": "Last name",
+      "SignupEmail": "E-mail address",
+      "SignupPhone": "Phone number",
+      "SignupButton": "Sign up"
     }
   },
   "es": {}
