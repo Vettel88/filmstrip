@@ -121,7 +121,7 @@ Meteor.startup(() => {
         FramestripsList: {
             Create: 'Create',
             undefined: 'No name given yet',
-            ConfirmRemoval: 'Do you want to delete the filmstrip?',
+            confirmRemoval: 'Do you want to delete the filmstrip?',
             Live: 'Live',
             NotLive: 'Not live',
             CopyPublicLink: 'Copy public link',

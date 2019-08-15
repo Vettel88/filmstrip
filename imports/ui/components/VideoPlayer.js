@@ -13,8 +13,8 @@ class VideoPlayer extends React.Component {
             <video
                 key={publicId}
                 controls
-                playsinline
-                showControls={showControls}
+                playsInline
+                // showControls={showControls}
                 width={width || 0.8 * windowWidth}
                 poster={this._cloudinaryURL('jpg')}
             >

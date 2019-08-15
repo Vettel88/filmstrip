@@ -37,12 +37,10 @@ const PrivateRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest 
 export default App = () =>
     <Router>
         <Switch>
-            <AppRoute exact path="/" component={Home} layout={Layout} />
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
-            <PrivateRoute path="/filmstrips" component={FilmstripsList} layout={Layout} />
-            <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
-            <PrivateRoute exact path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={AnswerLayout} />
+            <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
+            <PrivateRoute exact path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
             <PrivateRoute exact path="/recordVideo/:filmstripId/:frameId" component={FrameVideoRecorder} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
@@ -50,7 +48,6 @@ export default App = () =>
             <AppRoute exact path="/a/:id/:emailBase64/finish" component={AnswerFinish} layout={AnswerLayout} />
             <AppRoute component={NoMatch} layout={Layout} />
         </Switch>
-        <AppRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
     </Router>
 
 const NoMatch = (props) => <div>404 - sorry, nothing found</div>

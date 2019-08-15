@@ -55,7 +55,7 @@ const SideNav = ({ open, setOpen }) => <>
             <List>
                 <ListItem setOpen={setOpen}><Link to="/">Dashboard</Link></ListItem>
                 <IfLoggedIn>
-                    <ListItem setOpen={setOpen} disabled={true}><Link to="/filmstrips">Filmstrips</Link></ListItem>
+                    <ListItem setOpen={setOpen} disabled={true}><Link to="/">Filmstrips</Link></ListItem>
                 </IfLoggedIn>
             </List>
         </DrawerContent>
