@@ -39,15 +39,11 @@ class AnswerQuestionnaireContainer extends React.Component {
     nextQuestion = (event) => {
 
         if(this.state.currentFrameIndex === this.props.filmstrip.frames.length -1) {
-            
-            const filmstrip = {
-                answerToFilmstripId: this.props.filmstrip._id,
-                name: this.props.filmstrip.name
-            }
 
             const frames = this.props.filmstrip.frames.map(frame => {
 
                 return Object.assign({
+                    _id: Random.id(),
                     no: frame.no,
                     answerToFrameId: frame._id,
                     answerToFilmstripId: this.props.filmstrip._id
@@ -55,15 +51,22 @@ class AnswerQuestionnaireContainer extends React.Component {
 
             })
 
+            const filmstrip = {
+                answerToFilmstripId: this.props.filmstrip._id,
+                name: this.props.filmstrip.name,
+                frameIds: frames.map(f => f._id),
+                email: this.props.email
+            }
+
             console.log("Finished", frames)
 
-            Meteor.call('questionnaire.save', {
+            Meteor.call('answer.save', {
                 filmstrip,
                 frames
             }, (err, res) => {
                 if(err) console.error(err)
                 else {
-                    localStorage.clear()
+                    //localStorage.clear()
                     console.log(res)
                     this.setState({
                         toFinish: true

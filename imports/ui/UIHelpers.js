@@ -10,7 +10,7 @@ import UIState from './UIState.js'
 export const loadingWrapper = (isLoading, fn) =>
     isLoading ? <CircularProgress />  : fn()
 
-export const regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+export const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 export const validateEmail = email => !!email.match(regexEmail)
 export const validatePassword = password => true
