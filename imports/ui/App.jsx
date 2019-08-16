@@ -13,9 +13,9 @@ import { AnswerFinish } from '/imports/ui/components/answer/AnswerFinish.jsx'
 import { AnswerSent } from '/imports/ui/components/answer/AnswerSent.jsx'
 import { AnswerConfirm } from '/imports/ui/components/answer/AnswerConfirm.jsx'
 
-import { FilmstripsList } from '/imports/ui/components/FilmstripsList.jsx'
-import { FilmstripsItem } from '/imports/ui/components/FilmstripsItem.jsx'
-import { FrameVideoRecorder } from '/imports/ui/components/FrameVideoRecorder.jsx'
+import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
+import { FilmstripsItemNavigation } from '/imports/ui/components/filmstrips/FilmstripsItemNavigation.jsx'
+import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
 import { ThemeProvider } from 'rmwc'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
@@ -59,12 +59,13 @@ export default App = () =>
             'textIconOnLight': '#ffffff'
         }}
     >
+
         <Router>
             <Switch>
                 <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
                 <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
                 <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
-                <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
+                <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItemNavigation} layout={Layout} />
                 <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
