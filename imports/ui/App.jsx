@@ -11,9 +11,9 @@ import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
 import { AnswerQuestionnaire } from '/imports/ui/components/answer/AnswerQuestionnaire.jsx'
 import { AnswerFinish } from '/imports/ui/components/answer/AnswerFinish.jsx'
 
-import { FilmstripsList } from '/imports/ui/components/FilmstripsList.jsx'
-import { FilmstripsItem } from '/imports/ui/components/FilmstripsItem.jsx'
-import { FrameVideoRecorder } from '/imports/ui/components/FrameVideoRecorder.jsx'
+import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
+import { FilmstripsItemNavigation } from '/imports/ui/components/filmstrips/FilmstripsItemNavigation.jsx'
+import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
@@ -40,7 +40,9 @@ export default App = () =>
             <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
             <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
             <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
-            <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} />
+            {/* <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItem} layout={Layout} /> */}
+            {/* <PrivateRoute path="/filmstrip/:filmstripId/:frameId/:tab" component={FilmstripsItemNavigation} layout={Layout} /> */}
+            <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItemNavigation} layout={Layout} />
             <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
             <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />

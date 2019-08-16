@@ -11,38 +11,6 @@ import { loadingWrapper, addTranslations, t, withTranslation, changeLanguage } f
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import Video from '/imports/ui/components/VideoPlayer.js';
-import './FilmstripsItem.less'
-
-Meteor.startup(() => {
-    addTranslations('en', {    
-        FramestripsItem: {
-            Frames: 'Frames',
-            'Frame Title': 'Frame Title',
-            'Frame Description': 'Frame Description',
-            Upload: 'Upload',
-            Link: 'Link',
-            Files: 'Files',
-            Save: 'Save',
-            Remove: 'Remove',
-            'Do you want to delete the frame?': 'Do you want to delete the frame?',
-            'Wait for the future to come!': 'Wait for the future to come!',
-        }
-    })
-    addTranslations('es', {
-        FramestripsItem: {
-            Frames: 'Marcos',
-            'Frame Title': 'Titulo',
-            'Frame Description': 'Descripción',
-            Upload: 'Subir',
-            Link: 'Enlace',
-            Files: 'Subir archivos',
-            Save: 'Guardar',
-            Remove: 'Remover',
-            'Do you want to delete the frame?': 'Quieres borrarlo?',
-            'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
-        }
-    })
-});
 
 const FrameEditorItem = withRouter(({history, match, frame}) => {
     const removeFrame = (event) => {
@@ -190,8 +158,7 @@ const removeFile = ({filmstrip, no, frame, file, files, setFiles}) => event => {
     setFiles(newFiles)
 }
 
-const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => {
-    return (<GridInner>
+const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => <GridInner>
         <GridCell span={2}>
             <img src={file.url} alt={file.filename} width="48" height="48"></img>
         </GridCell>
@@ -201,58 +168,24 @@ const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => {
         <GridCell span={2}>
             <button className="removeFile" onClick={removeFile({filmstrip, frame, no, file, files, setFiles})}>{t('FramestripsItem.Remove')}</button>
         </GridCell>
-    </GridInner>)
-}
+    </GridInner>
 
-const FilmstripContent = ({match, filmstrip, frames, filmstripId, frameId}) => {
-
-    useEffect(() => {
-        // addTranslations('en', {    
-        //     FramestripsItem: {
-        //         Frames: 'Frames',
-        //         'Frame Title': 'Frame Title',
-        //         'Frame Description': 'Frame Description',
-        //         Upload: 'Upload',
-        //         Link: 'Link',
-        //         Files: 'UploaFilesd',
-        //         'Do you want to delete the frame?': 'Do you want to delete the frame?',
-        //         'Wait for the future to come!': 'Wait for the future to come!',
-        //     }
-        // })
-        // addTranslations('es', {
-        //     FramestripsItem: {
-        //         Frames: 'Frames',
-        //         'Frame Title': 'Frame Title',
-        //         'Frame Description': 'Frame Description',
-        //         Upload: 'Upload',
-        //         Link: 'Link',
-        //         Files: 'UploaFilesd',
-        //         'Do you want to delete the frame?': 'Quieres borrarlo?',
-        //         'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
-        //     }
-        // })
-    })
-
-    return (
-        <>
-            <h1>{t("FramestripsItem.Frames")}</h1>
-            <div style={{ textAlign: "center" }}>
-                <FrameEditor frames={frames} />
-                <FrameSelector frames={frames} />
-            </div>
-            {frames &&
-                frames.map((frame, i) => (
-                    <FrameItem
-                        key={i}
-                        filmstrip={filmstrip}
-                        frame={frame}
-                        no={frame.no}
-                    />
-                ))}
-        </>
-    );
-}
-
+const FilmstripContent = ({match, filmstrip, frames, filmstripId, frameId}) => <>
+    <h1>{t("FramestripsItem.Frames")}</h1>
+    <div style={{ textAlign: "center" }}>
+        <FrameEditor frames={frames} />
+        <FrameSelector frames={frames} />
+    </div>
+    {frames && frames.map((frame, i) => (
+        <FrameItem
+            key={i}
+            filmstrip={filmstrip}
+            frame={frame}
+            no={frame.no}
+        />
+    ))}
+</>
+    
 const FilmstripWrapper = ({isLoading, filmstrip, frames, filmstripId, frameId}) => 
     <div className="filmstripsItem">
         {loadingWrapper(isLoading, () => 
@@ -261,6 +194,7 @@ const FilmstripWrapper = ({isLoading, filmstrip, frames, filmstripId, frameId}) 
     </div>
 
 export const FilmstripsItem = withTranslation()(withTracker(({ match }) => {
+    console.log(match)
     const handle = Meteor.subscribe('Filmstrip', match.params.filmstripId)
     const { filmstripId, frameId } = match.params
 
@@ -272,3 +206,34 @@ export const FilmstripsItem = withTranslation()(withTracker(({ match }) => {
         frameId,
     }
 })(FilmstripWrapper))
+
+Meteor.startup(() => {
+    addTranslations('en', {    
+        FramestripsItem: {
+            Frames: 'Frames',
+            'Frame Title': 'Frame Title',
+            'Frame Description': 'Frame Description',
+            Upload: 'Upload',
+            Link: 'Link',
+            Files: 'Files',
+            Save: 'Save',
+            Remove: 'Remove',
+            'Do you want to delete the frame?': 'Do you want to delete the frame?',
+            'Wait for the future to come!': 'Wait for the future to come!',
+        }
+    })
+    addTranslations('es', {
+        FramestripsItem: {
+            Frames: 'Marcos',
+            'Frame Title': 'Titulo',
+            'Frame Description': 'Descripción',
+            Upload: 'Subir',
+            Link: 'Enlace',
+            Files: 'Subir archivos',
+            Save: 'Guardar',
+            Remove: 'Remover',
+            'Do you want to delete the frame?': 'Quieres borrarlo?',
+            'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
+        }
+    })
+})

@@ -47,7 +47,7 @@ const FilmstripsListItem = withRouter(({history, filmstrip}) => {
 
     const gotoFirstFrame = event => {
         event.preventDefault()
-        history.push(`/filmstrip/${filmstrip._id}/${frameId}`)
+        history.push(`/filmstrip/${filmstrip._id}/${frameId}/settings`)
     }
     const getInviteesCount = filmstrip => 0
     const getAnswersDoneCount = filmstrip => 0
@@ -85,7 +85,7 @@ const FilmstripsListWrapper = withRouter(({history, isLoading, filmstrips}) => {
             if (error) return console.error(error)
             const { filmstripId, frameId } = result
             if (filmstripId && frameId)
-                history.push(`/filmstrip/${filmstripId}/${frameId}`)
+                history.push(`/filmstrip/${filmstripId}/${frameId}/settings`)
         })
     }
     
