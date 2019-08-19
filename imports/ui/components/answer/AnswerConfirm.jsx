@@ -1,11 +1,9 @@
 import React from 'react'
-import { withTracker } from 'meteor/react-meteor-data'
-import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Typography } from 'rmwc'
-import { withTranslation } from 'react-i18next'
 import { SignupForm } from '../signup/SignupForm.jsx'
+import { prepareAnswerView } from './AnswerCommon.jsx'
 
-class AnswerConfirmed extends React.Component {
+class AnswerConfirmContainer extends React.Component {
 
   render() {
 
@@ -23,18 +21,4 @@ class AnswerConfirmed extends React.Component {
 
 }
 
-const AnswerWrapper = ({ email, t }) => {
-
-  return (
-      <AnswerConfirmed email={email} t={t} />
-  )
-
-}
-
-export const AnswerConfirm = withTranslation()(withTracker(({ match }) => {
-  const id = match.params.id
-  return {
-    filmstrip: Filmstrips.findOne(),
-    email: match.params.emailBase64 ? atob(match.params.emailBase64) : ''
-  }
-})(AnswerWrapper))
+export const AnswerConfirm = prepareAnswerView(AnswerConfirmContainer)

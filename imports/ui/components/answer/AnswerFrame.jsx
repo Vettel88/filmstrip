@@ -1,14 +1,8 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Route, Link, Redirect } from 'react-router-dom'
-import { withTracker } from 'meteor/react-meteor-data'
-import { Filmstrips } from '/imports/db/filmstrips.js'
-import { loadingWrapper, emailIsValid } from '/imports/ui/UIHelpers.js'
 import { List, ListItem, ListItemText, ListItemPrimaryText, ListItemSecondaryText, ListItemMeta, Card, TextField, Button, Typography } from 'rmwc'
-import { withTranslation } from 'react-i18next'
 import VideoRecorder from '../VideoRecorder'
 import ReactFilestack from 'filestack-react'
-import { thisTypeAnnotation } from '@babel/types';
 
 export class AnswerFrame extends React.Component {
 

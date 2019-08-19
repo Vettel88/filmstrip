@@ -10,8 +10,8 @@ const insertFrame = o => Frames.insert(o)
 
 Meteor.startup(() => {
   // bootstrap
-  // Filmstrips.remove({})
-  // Frames.remove({})
+  Filmstrips.remove({})
+  Frames.remove({})
 
   if (Filmstrips.find().count() === 0) {
 

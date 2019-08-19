@@ -25,6 +25,7 @@
     "react-video-recorder": "^3.10.0",
     "react-window-size": "^1.2.2",
     "rmwc": "^5.6.0",
+    "simpl-schema": "^1.5.5",
     "styled-components": "^4.3.2"
   },
   "meteor": {
