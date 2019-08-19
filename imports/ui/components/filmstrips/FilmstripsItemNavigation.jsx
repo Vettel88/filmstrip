@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TabBar, Tab, GridCell, GridInner } from 'rmwc'
 import { loadingWrapper, addTranslations, t, withTranslation, changeLanguage } from '/imports/ui/UIHelpers.js'
-import { FilmstripsItem as Settings } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
+import Settings from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
 import './FilmstripsItem.less'
 
 const Invites = (props) => <div>Invites</div>
