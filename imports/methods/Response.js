@@ -2,7 +2,6 @@ import { Meteor } from 'meteor/meteor'
 import { Random } from 'meteor/random'
 import { ValidatedMethod } from 'meteor/mdg:validated-method'
 import SimpleSchema from 'simpl-schema'
-import { DatabaseError } from '/imports/errors/index.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import Postmark from 'postmark'
@@ -41,18 +40,15 @@ export const ResponseSave = new ValidatedMethod({
 
     filmstrip.frameIds = frames.map(frame => {
       frame._id = Random.id()
-      const frameCreateOp = Frames.insert(frame)
-      if (!frameCreateOp) throw DatabaseError.CreateFailed()
+      Frames.insert(frame)
       return frame._id
     })
 
     filmstrip.confirmed = false
     filmstrip.confirmationKey = Random.id(32)
 
-    const filmstripCreateOp = Filmstrips.insert(filmstrip)
+    Filmstrips.insert(filmstrip)
     
-    if (!filmstripCreateOp) throw DatabaseError.CreateFailed()
-
     return filmstrip._id
 
   }
@@ -93,8 +89,6 @@ export const ResponseVerifyConfirmation = new ValidatedMethod({
             confirmedAt: new Date()
           }
       })
-
-      if (!filmstripUpdateOp) throw DatabaseError.UpdateFailed()
 
       if(filmstripUpdateOp === 1) return true
       else return false

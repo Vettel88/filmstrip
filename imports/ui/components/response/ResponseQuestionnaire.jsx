@@ -14,14 +14,6 @@ class ResponseQuestionnaireContainer extends React.Component {
         responses: []
     }
 
-    handleChange = (event) => {
-        console.log(event)
-    }
-
-    handleSubmit = (event) => {
-        event.preventDefault()
-    }
-
     prevQuestion = (event) => {
         event.preventDefault()
         this.setState({
@@ -52,16 +44,12 @@ class ResponseQuestionnaireContainer extends React.Component {
                 email: this.props.email
             }
 
-            console.log("Finished", frames)
-
             ResponseSave.call({
                 filmstrip,
                 frames
             }, (err, res) => {
                 if(err) console.error(err)
                 else {
-                    //localStorage.clear()
-                    console.log(res)
                     this.setState({
                         createdFilmstripId: res,
                         toFinish: true

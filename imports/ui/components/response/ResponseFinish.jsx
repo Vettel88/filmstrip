@@ -32,10 +32,10 @@ class ResponseFinishContainer extends React.Component {
         }, (err, res) => {
             if (err) console.error(err)
             else {
+                localStorage.clear()
                 this.setState({
                     toSent: true
                 })
-                console.log(res);
             }
         })
     }
