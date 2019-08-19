@@ -43,6 +43,7 @@ export default class FilmstripStore {
     persist(){
         Meteor.call('filmstrip.update', this.filmstrip)
         this.frames.forEach(frame => {
+            console.log("frame files:", frame._id, frame.files)
             Meteor.call('filmstrip.frame.save', {
                 filmstripId: this.filmstrip._id,
                 no: frame.no,

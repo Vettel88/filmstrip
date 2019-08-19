@@ -198,9 +198,9 @@ const FrameItem = observer(({frameId}) => {
                         <StyledReactFilestack
                             apikey={Meteor.settings.public.filestack.apikey}
                             onSuccess={({filesUploaded}) => {
-                                const newFiles = [].concat(files)
+                                const newFiles = [].concat(frame.files)
                                 filesUploaded.forEach(f => newFiles.push(f))
-                                setFiles(newFiles)
+                                store.setFrameValue(frame, 'files', newFiles)
                             }}
                             componentDisplayMode={{
                                 type: 'link',
@@ -217,10 +217,10 @@ const FrameItem = observer(({frameId}) => {
                                 <FileItem
                                     key={i}
                                     file={file}
-                                    filmstrip={filmstrip}
+                                    filmstrip={store.filmstrip}
                                     frame={frame}
                                     no={frame.no}
-                                    files={files}
+                                    files={frame.files}
                                     setFiles={console.log}
                                 />)
                             }
@@ -262,13 +262,13 @@ const saveFilmstrip = event => {
     store.persist()
 }
 
-const removeFile = ({filmstrip, no, frame, file, files, setFiles}) => event => {
+const removeFile = ({filmstrip, no, frame, file, files}) => event => {
     event.preventDefault()
     const newFiles = files.filter(f => f.handle !== file.handle)
-    setFiles(newFiles)
+    store.setFrameValue(frame, 'files', newFiles)
 }
 
-const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => <Grid>
+const FileItem = ({filmstrip, frame, no, file, files}) => <Grid>
         <GridCell span={2}>
             <img src={file.url} alt={file.filename} width="48" height="48"></img>
         </GridCell>
@@ -276,7 +276,7 @@ const FileItem = ({filmstrip, frame, no, file, files, setFiles}) => <Grid>
             <ListItem key={file.filename}>{file.filename}</ListItem>
         </GridCell>
         <GridCell span={2}>
-            <button className="removeFile" onClick={removeFile({filmstrip, frame, no, file, files, setFiles})}>{t('FramestripsItem.Remove')}</button>
+            <button className="removeFile" onClick={removeFile({filmstrip, frame, no, file, files})}>{t('FramestripsItem.Remove')}</button>
         </GridCell>
     </Grid>
 
@@ -290,7 +290,7 @@ const FilmstripItem = observer((props) => {
                         open={store.isDirty}
                         onClose={e => store.isDirty = false}
                         message="You have unsaved changes"
-                        timeout={100000000000000000000}
+                        timeout={100000000000000000000} // ms => 3.17 x 10^9 years
                         action={
                             <SnackbarAction
                                 label="SAVE"
