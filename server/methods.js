@@ -21,12 +21,12 @@ Meteor.methods({
         Filmstrips.update({_id: filmstrip._id}, {$set: { live }})
     },
     'filmstrip.saveWithFrames'(filmstrip, frames){
-        const { _id, name, description } = filmstrip
-
         check(filmstrip, Object)
+        check(frames, [Object])
+
+        const { _id, name, description } = filmstrip
         Filmstrips.update({_id}, {$set: {name, description}})
 
-        check(frames, [Object])
         frames.forEach(frame => {
             Frames.upsert({
                 filmstripId: _id,
