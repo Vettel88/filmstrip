@@ -1,6 +1,24 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
-import { Grid as UnstyledGrid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, GridInner, TopAppBar as UnstyledTopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
+import {
+    Grid as UnstyledGrid,
+    Drawer,
+    List,
+    ListItem as LI,
+    DrawerHeader,
+    DrawerContent,
+    DrawerSubtitle,
+    DrawerTitle,
+    GridCell,
+    GridInner,
+    TopAppBar as UnstyledTopAppBar,
+    TopAppBarSection,
+    TopAppBarNavigationIcon,
+    TopAppBarRow,
+    TopAppBarTitle,
+    Snackbar as UnstyledSnackbar,
+    SnackbarAction,
+} from 'rmwc'
 import styled from 'styled-components'
 import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
 import UIState from '/imports/ui/UIState.js'

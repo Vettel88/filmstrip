@@ -48,8 +48,8 @@ const FilmstripSettings = observer((props) => {
         <>
             <FormField>
                 <Switch
-                    checked={store.isLive}
-                    onClick={() => (store.isLive = !store.isLive)}
+                    checked={store.filmstrip.live}
+                    onClick={() => store.toggleLive()}
                     label="Make this filmstrip live"
                 />
             </FormField>
@@ -157,7 +157,6 @@ const StyledReactFilestack = styled(ReactFilestack)`
 
 const FrameItem = observer(({frameId}) => {
     const frame = store.getFrame(frameId) || {}
-    const [files, setFiles] = React.useState(frame.files || [])
 
     return (
         <>
@@ -214,7 +213,7 @@ const FrameItem = observer(({frameId}) => {
                     </GridCell>
                     <GridCell span={12}>
                         <List>
-                            {files && files.map((file, i) => 
+                            {frame.files && frame.files.map((file, i) => 
                                 <FileItem
                                     key={i}
                                     file={file}
@@ -226,12 +225,6 @@ const FrameItem = observer(({frameId}) => {
                                 />)
                             }
                         </List>
-                    </GridCell>
-                    <GridCell span={12}>
-                        <button className="saveFrame" onClick={
-                            console.log
-                            // saveFrame({filmstrip, no: frame.no, title, description, link, files})
-                            }>{t('FramestripsItem.Save')}</button>
                     </GridCell>
                 </CardPrimaryAction>
             </Card>
@@ -264,10 +257,9 @@ const FrameItem = observer(({frameId}) => {
     )
 })
 
-const saveFrame = ({filmstrip, no, title, description, link, files}) => event => {
+const saveFilmstrip = event => {
     event.preventDefault()
-    const frame = {title, description, link, files}
-    Meteor.call('filmstrip.frame.save', {filmstripId: filmstrip._id, no, frame})
+    store.persist()
 }
 
 const removeFile = ({filmstrip, no, frame, file, files, setFiles}) => event => {
@@ -297,13 +289,12 @@ const FilmstripItem = observer((props) => {
                     <Snackbar
                         open={store.isDirty}
                         onClose={e => store.isDirty = false}
-                        dismissIcon
                         message="You have unsaved changes"
-                        timeout={10000000000000000}
+                        timeout={100000000000000000000}
                         action={
                             <SnackbarAction
                                 label="SAVE"
-                                onClick={() => store.persist()}
+                                onClick={saveFilmstrip}
                             />
                         }
                     />
@@ -326,12 +317,12 @@ const FilmstripItem = observer((props) => {
 
 const FilmstripItemContainer = withTranslation()(withTracker(({match}) => {
     const { filmstripId, frameId } = match.params
-    Meteor.subscribe('Filmstrip', filmstripId, { onReady: () => {
+    Meteor.subscribe('Filmstrip', filmstripId, () => {
         store.filmstrip = Filmstrips.findOne(filmstripId)
-    } })
-    Meteor.subscribe('Frames', { filmstripId: filmstripId }, { onReady: () => {
+    })
+    Meteor.subscribe('Frames', { filmstripId: filmstripId }, () => {
         store.frames = Frames.find({ filmstripId }).fetch()
-    } })
+    })
     return ({ filmstripId, frameId })
 })(FilmstripItem))
 

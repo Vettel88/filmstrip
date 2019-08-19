@@ -1,7 +1,6 @@
 import { observable, computed } from 'mobx'
 
 export default class FilmstripStore {
-    @observable isLive = false
     @observable isDirty = false
 
     @observable filmstripId
@@ -22,6 +21,11 @@ export default class FilmstripStore {
         return this.frames.find(frame => frame._id === this.frameId)
     }
 
+    toggleLive(){
+        this.filmstrip.live = !this.filmstrip.live
+        Meteor.call('filmstrip.toggleLive', { filmstrip: this.filmstrip })
+    }
+
     getFrame(frameId){
         return this.frames.find(frame => frame._id === frameId)
     }
@@ -37,6 +41,13 @@ export default class FilmstripStore {
     }
 
     persist(){
-        console.log("Persisting Filmstrip #", this.filmstrip._id)
+        Meteor.call('filmstrip.update', this.filmstrip)
+        this.frames.forEach(frame => {
+            Meteor.call('filmstrip.frame.save', {
+                filmstripId: this.filmstrip._id,
+                no: frame.no,
+                frame
+            })
+        })
     }
 }
