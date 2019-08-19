@@ -1,6 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import '/imports/ui/UIState.js'
 import './methods.js'
+import '/imports/methods/Response.js'
 
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
@@ -10,8 +11,8 @@ const insertFrame = o => Frames.insert(o)
 
 Meteor.startup(() => {
   // bootstrap
-  // Filmstrips.remove({})
-  // Frames.remove({})
+  //Filmstrips.remove({})
+  //Frames.remove({})
 
   if (Filmstrips.find().count() === 0) {
 

@@ -43,7 +43,7 @@ const popupMenu = (filmstrip) => {
 
 const FilmstripsListItem = withRouter(({history, filmstrip}) => {
     const firstFrame = Frames.findOne({ filmstripId: filmstrip._id, no: 1 })
-    const frameId = firstFrame._id
+    const frameId = firstFrame && firstFrame._id ? firstFrame._id : '-1'
 
     const gotoFirstFrame = event => {
         event.preventDefault()
