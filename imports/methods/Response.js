@@ -129,28 +129,21 @@ export const ResponseSendConfirmation = new ValidatedMethod({
 
       if (filmstrip) {
 
-        try {
+        await postmark.sendEmailWithTemplate({
+          "From": Meteor.settings.postmark.sender,
+          "To": email,
+          "TemplateAlias": "ResponseConfirm-en",
+          "TemplateModel": {
+            "filmstrip_name": filmstrip.name,
+            "action_url": link,
+            "support_email": Meteor.settings.public.support.email,
+            "sender_name": Meteor.settings.public.support.sender,
+            "product_name": Meteor.settings.public.support.productName,
+            "product_url": Meteor.settings.public.support.productUrl
+          }
+        })
 
-          await postmark.sendEmailWithTemplate({
-            "From": Meteor.settings.postmark.sender,
-            "To": email,
-            "TemplateAlias": "ResponseConfirm-en",
-            "TemplateModel": {
-              "filmstrip_name": filmstrip.name,
-              "action_url": link,
-              "support_email": Meteor.settings.public.support.email,
-              "sender_name": Meteor.settings.public.support.sender,
-              "product_name": Meteor.settings.public.support.productName,
-              "product_url": Meteor.settings.public.support.productUrl
-            }
-          })
-
-          return true
-
-        }
-        catch (err) {
-          console.error('Postmark error:', err)
-        }
+        return true
 
       }
 
