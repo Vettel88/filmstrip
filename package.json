@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.3.4",
+    "bcrypt": "^3.0.6",
     "cloudinary-core": "^2.7.3",
     "cloudinary-react": "^1.1.4",
     "css-reset-and-normalize": "^2.1.0",
