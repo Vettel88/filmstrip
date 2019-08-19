@@ -10,19 +10,29 @@ Meteor.methods({
         console.log(filmstripId, frameId)
         return { filmstripId, frameId }
     },
-    'filmstrip.update'(filmstrip) {
-        const { _id, name, description } = filmstrip
-        check(filmstrip, Object)
-        Filmstrips.update({_id}, {$set: {name, description}})
-    },
     'filmstrip.remove'(filmstripId) {
         check(filmstripId, String)
         Frames.remove({filmstripId})
         Filmstrips.remove({_id: filmstripId})
     },
-    'filmstrip.toggleLive'(filmstrip) {
+    'filmstrip.setLive'(filmstrip, live) {
         check(filmstrip, Object)
-        Filmstrips.update({_id: filmstrip._id}, {$set: {live: filmstrip.live}})
+        check(live, Boolean)
+        Filmstrips.update({_id: filmstrip._id}, {$set: { live }})
+    },
+    'filmstrip.saveWithFrames'(filmstrip, frames){
+        const { _id, name, description } = filmstrip
+
+        check(filmstrip, Object)
+        Filmstrips.update({_id}, {$set: {name, description}})
+
+        check(frames, [Object])
+        frames.forEach(frame => {
+            Frames.upsert({
+                filmstripId: _id,
+                no: frame.no
+            }, {$set: {...frame}})
+        })
     },
     'filmstrip.frame.save'({filmstripId, no, frame}) {
         check(filmstripId, String)

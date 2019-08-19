@@ -23,7 +23,7 @@ export default class FilmstripStore {
 
     toggleLive(){
         this.filmstrip.live = !this.filmstrip.live
-        Meteor.call('filmstrip.toggleLive', { filmstrip: this.filmstrip })
+        Meteor.call('filmstrip.setLive', this.filmstrip, this.filmstrip.live)
     }
 
     getFrame(frameId){
@@ -41,14 +41,6 @@ export default class FilmstripStore {
     }
 
     persist(){
-        Meteor.call('filmstrip.update', this.filmstrip)
-        this.frames.forEach(frame => {
-            console.log("frame files:", frame._id, frame.files)
-            Meteor.call('filmstrip.frame.save', {
-                filmstripId: this.filmstrip._id,
-                no: frame.no,
-                frame
-            })
-        })
+        Meteor.call('filmstrip.saveWithFrames', this.filmstrip, this.frames)
     }
 }
