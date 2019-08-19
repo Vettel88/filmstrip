@@ -1,7 +1,8 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import Layout from './components/Layout'
-import ModalLayout from './components/ModalLayout'
+import Layout from './components/layouts/Layout'
+import ModalLayout from './components/layouts/ModalLayout'
+import FilmstripLayout from './components/layouts/FilmstripLayout'
 
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
 import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
@@ -62,13 +63,13 @@ export default App = () =>
                 <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
                 <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
                 <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
-                <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItemNavigation} layout={Layout} />
                 <AppRoute exact path="/a/:id" component={ResponseLanding} layout={ResponseLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64" component={ResponseLanding} layout={ResponseLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64/q" component={ResponseQuestionnaire} layout={ResponseLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64/:createdFilmstripId/finish" component={ResponseFinish} layout={ResponseLayout} />
                 <AppRoute exact path="/a/:id/:emailBase64/sent" component={ResponseConfirmationSent} layout={ResponseLayout} />
                 <AppRoute exact path="/confirm/:createdFilmstripId/:emailBase64/:confirmationKey" component={ResponseConfirm} layout={ResponseLayout} />
+                <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItemNavigation} layout={FilmstripLayout} />
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
             <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />

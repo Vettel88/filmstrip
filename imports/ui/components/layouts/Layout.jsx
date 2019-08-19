@@ -1,10 +1,29 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
-import { Grid as UnstyledGrid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, GridInner, TopAppBar as UnstyledTopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
+import {
+    Grid as UnstyledGrid,
+    Drawer,
+    List,
+    ListItem as LI,
+    DrawerHeader,
+    DrawerContent,
+    DrawerSubtitle,
+    DrawerTitle,
+    GridCell,
+    GridInner,
+    TopAppBar as UnstyledTopAppBar,
+    TopAppBarSection,
+    TopAppBarNavigationIcon,
+    TopAppBarRow,
+    TopAppBarTitle,
+    Snackbar as UnstyledSnackbar,
+    SnackbarAction,
+} from 'rmwc'
 import styled from 'styled-components'
 import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
-import '/imports/ui/UIState.js'
+import UIState from '/imports/ui/UIState.js'
 import { Meteor } from 'meteor/meteor';
+import { observer } from 'mobx-react';
 
 const Grid = styled(UnstyledGrid)`
     padding-top: 100px !important;
@@ -14,7 +33,7 @@ const TopAppBar = styled(UnstyledTopAppBar)`
     background-color: #25455b !important;
 `
 
-const Header = () => {
+const Header = observer(() => {
     const [open, setOpen] = React.useState(false);
     return (
         <>
@@ -36,7 +55,7 @@ const Header = () => {
             <SideNav open={open} setOpen={setOpen} />
         </>
     )
-}
+})
 
 const IfLoggedIn = ({ children }) => {
     if (Meteor.userId()) {
