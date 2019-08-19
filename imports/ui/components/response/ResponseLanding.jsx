@@ -3,9 +3,9 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { emailIsValid, regexPattern } from '/imports/ui/UIHelpers.js'
 import { TextField, Button, Typography } from 'rmwc'
-import { prepareAnswerView } from './AnswerCommon.jsx'
+import { prepareResponseView } from './ResponseCommon.jsx'
 
-class AnswerLandingContainer extends React.Component {
+class ResponseLandingContainer extends React.Component {
 
     state = {
         email: this.props.email ? this.props.email : '',
@@ -35,15 +35,15 @@ class AnswerLandingContainer extends React.Component {
         }
 
         return (
-            <div className='centered AnswerQuestionnaireContainer'>
+            <div className='centered ResponseQuestionnaireContainer'>
                 <img src='/icons8-short_hair_girl_question_mark.svg' className='topIcon centered' />
                 <h4><Typography use='headline4'>{this.props.filmstrip.name}</Typography></h4>
                 <p><Typography use='body1'>{this.props.filmstrip.description}</Typography></p>
-                <h6><Typography use='body2'>{t('AnswerEmailConfirmation')}</Typography></h6>
+                <h6><Typography use='body2'>{t('Response.LandingHelp')}</Typography></h6>
                 <form onSubmit={this.handleSubmit}>
-                    <TextField label={t('AnswerLandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern={regexPattern} />
-                    <p className='smallHelp'><Typography use='caption'>{t('AnswerLandingContact')}</Typography></p>
-                    <Button label={t('AnswerStart')} raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
+                    <TextField label={t('Response.LandingTypeEmail')} value={this.state.email} onChange={this.handleChange} className='solitary' outlined pattern={regexPattern} />
+                    <p className='smallHelp'><Typography use='caption'>{t('Response.LandingContact')}</Typography></p>
+                    <Button label={t('Response.Start')} raised className='big' disabled={this.state.email && emailIsValid(this.state.email) ? false : true} />
                 </form>
             </div>
         )
@@ -51,4 +51,4 @@ class AnswerLandingContainer extends React.Component {
 
 }
 
-export const AnswerLanding = prepareAnswerView(AnswerLandingContainer)
+export const ResponseLanding = prepareResponseView(ResponseLandingContainer)

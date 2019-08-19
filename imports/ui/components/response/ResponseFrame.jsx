@@ -4,7 +4,7 @@ import { List, ListItem, ListItemText, ListItemPrimaryText, ListItemSecondaryTex
 import VideoRecorder from '../VideoRecorder'
 import ReactFilestack from 'filestack-react'
 
-export class AnswerFrame extends React.Component {
+export class ResponseFrame extends React.Component {
 
     constructor(props) {
 
@@ -18,26 +18,26 @@ export class AnswerFrame extends React.Component {
             this.state = {
                 showVideoRecorder: false,
                 text: null,
-                link: "",
+                link: '',
                 files: []
             }
         }
 
     }
 
-    handleLinkAnswer = (event) => {
+    handleLinkResponse = (event) => {
         this.updateLocalStorageState({
             link: event.target.value
         })
     }
 
-    handleTextAnswer = (event) => {
+    handleTextResponse = (event) => {
         this.updateLocalStorageState({
             text: event.target.value
         })
     }
 
-    answerUploadSave = (res) => {
+    responseUploadSave = (res) => {
         const stateFiles = this.state.files ? this.state.files : []
         const files = stateFiles.concat(res.filesUploaded)
         //console.log(res, files)
@@ -54,7 +54,7 @@ export class AnswerFrame extends React.Component {
     render() {
         const { t } = this.props
         const frame = this.props.frame
-        let files, link, textAnswer, linkAnswer, fileAnswer
+        let files, link, textResponse, linkResponse, fileResponse
 
         if (frame.files && frame.files.length) {
             files = <>
@@ -75,13 +75,13 @@ export class AnswerFrame extends React.Component {
         }
 
         if(frame.allowText) {
-            textAnswer = <>
-                <h6><Typography use='subtitle2'>{t('AnswerText')}</Typography></h6>
+            textResponse = <>
+                <h6><Typography use='subtitle2'>{t('Response.Text')}</Typography></h6>
                 <TextField
-                    label={t('AnswerText')}
-                    className='AnswerField'
+                    label={t('Response.Text')}
+                    className='ResponseField'
                     fullwidth
-                    onChange={this.handleTextAnswer}
+                    onChange={this.handleTextResponse}
                     defaultValue={this.state.text}
                     outlined
                     rows={4}
@@ -90,12 +90,12 @@ export class AnswerFrame extends React.Component {
         }
 
         if (frame.allowLinks) {
-            linkAnswer = <>
-                    <h6><Typography use='subtitle2'>{t('AnswerAddLink')}</Typography></h6>
+            linkResponse = <>
+                    <h6><Typography use='subtitle2'>{t('Response.AddLink')}</Typography></h6>
                     <TextField
                     label={t('URL')}
-                    className='AnswerField'
-                    onChange={this.handleLinkAnswer}
+                    className='ResponseField'
+                    onChange={this.handleLinkResponse}
                     defaultValue={this.state.link}
                     fullwidth
                     outlined />
@@ -103,8 +103,8 @@ export class AnswerFrame extends React.Component {
         }
 
         if (frame.allowFiles) {
-            fileAnswer = <div className='FileUploadContainer'>
-                    <h6><Typography use='subtitle2'>{t('AnswerUploadFiles')}</Typography></h6>
+            fileResponse = <div className='FileUploadContainer'>
+                    <h6><Typography use='subtitle2'>{t('Response.UploadFiles')}</Typography></h6>
                     <List>
                         {
                             this.state.files ? this.state.files.map(file => {
@@ -114,7 +114,7 @@ export class AnswerFrame extends React.Component {
                                             <ListItemPrimaryText>{file.filename}</ListItemPrimaryText>
                                             <ListItemSecondaryText>{Math.round(file.size/1024)}kB</ListItemSecondaryText>
                                         </ListItemText>
-                                        <ListItemMeta icon="delete" />
+                                        <ListItemMeta icon='delete' />
                                     </ListItem>
                                 )
                             }) : ''
@@ -122,7 +122,7 @@ export class AnswerFrame extends React.Component {
                     </List>
                     <ReactFilestack
                         apikey={Meteor.settings.public.filestack.apikey}
-                        onSuccess={(res) => this.answerUploadSave(res, files)}
+                        onSuccess={(res) => this.responseUploadSave(res, files)}
                         render={({ onPick }) => (
                             <Button label={t('PickFile')} raised onClick={onPick} />
                         )}
@@ -132,26 +132,26 @@ export class AnswerFrame extends React.Component {
 
         return (
             <>
-                <Card className="AnswerCardDetails">
+                <Card className='ResponseCardDetails'>
                     <h5>
-                        <Typography use="headline5">
+                        <Typography use='headline5'>
                             {this.props.currentFrameIndex + 1}/
-                            {this.props.filmstrip.frames.length}:{" "}
+                            {this.props.filmstrip.frames.length}:{' '}
                             {frame.title}
                         </Typography>
                     </h5>
                     <p>
-                        <Typography use="body1">
+                        <Typography use='body1'>
                             {frame.description}
                         </Typography>
                     </p>
                     {files}
                     {link}
                 </Card>
-                <Card className="AnswerCard" outlined>
-                    <h6 className="noMarginTop">
-                        <Typography use="subtitle2">
-                            {t("AnswerVideo")}
+                <Card className='ResponseCard' outlined>
+                    <h6 className='noMarginTop'>
+                        <Typography use='subtitle2'>
+                            {t('Response.Video')}
                         </Typography>
                     </h6>
                     {this.state.cloudinaryPublicId &&
@@ -175,19 +175,19 @@ export class AnswerFrame extends React.Component {
                     )}
                     {!this.state.showVideoRecorder && (
                         <Button
-                            label={t("AnswerRecordButton")}
+                            label={t('Response.RecordButton')}
                             raised
                             onClick={() =>
                                 this.setState({
                                     showVideoRecorder: true
                                 })
                             }
-                            className="big"
+                            className='big'
                         />
                     )}
-                    {textAnswer}
-                    {linkAnswer}
-                    {fileAnswer}
+                    {textResponse}
+                    {linkResponse}
+                    {fileResponse}
                 </Card>
             </>
         );

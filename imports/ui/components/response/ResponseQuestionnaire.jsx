@@ -1,17 +1,17 @@
 import { Meteor } from 'meteor/meteor'
-import { Random } from 'meteor/random'
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { TextField, Button, Typography } from 'rmwc'
-import { AnswerFrame } from './AnswerFrame.jsx'
-import { prepareAnswerView } from './AnswerCommon.jsx'
+import { ResponseFrame } from './ResponseFrame.jsx'
+import { prepareResponseView } from './ResponseCommon.jsx'
+import { ResponseSave } from '/imports/methods/Response.js'
 
-class AnswerQuestionnaireContainer extends React.Component {
+class ResponseQuestionnaireContainer extends React.Component {
 
     state = {
         email: this.props.email,
         currentFrameIndex: 0,
-        answers: []
+        responses: []
     }
 
     handleChange = (event) => {
@@ -29,7 +29,7 @@ class AnswerQuestionnaireContainer extends React.Component {
         })
     }
 
-    getAnswersFromLocalStorage = () => {
+    getResponsesFromLocalStorage = () => {
     }
 
     nextQuestion = (event) => {
@@ -39,24 +39,22 @@ class AnswerQuestionnaireContainer extends React.Component {
             const frames = this.props.filmstrip.frames.map(frame => {
 
                 return Object.assign({
-                    _id: Random.id(),
                     no: frame.no,
-                    answerToFrameId: frame._id,
-                    answerToFilmstripId: this.props.filmstrip._id
+                    responseToFrameId: frame._id,
+                    responseToFilmstripId: this.props.filmstrip._id
                 }, JSON.parse(localStorage.getItem(frame._id)))
 
             })
 
             const filmstrip = {
-                answerToFilmstripId: this.props.filmstrip._id,
+                responseToFilmstripId: this.props.filmstrip._id,
                 name: this.props.filmstrip.name,
-                frameIds: frames.map(f => f._id),
                 email: this.props.email
             }
 
             console.log("Finished", frames)
 
-            Meteor.call('answer.save', {
+            ResponseSave.call({
                 filmstrip,
                 frames
             }, (err, res) => {
@@ -65,6 +63,7 @@ class AnswerQuestionnaireContainer extends React.Component {
                     //localStorage.clear()
                     console.log(res)
                     this.setState({
+                        createdFilmstripId: res,
                         toFinish: true
                     })
                 }
@@ -89,23 +88,23 @@ class AnswerQuestionnaireContainer extends React.Component {
         const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
 
         if (this.state.toFinish === true) {
-            const url = `/a/${filmstrip._id}/${btoa(this.props.email)}/finish`;
+            const url = `/a/${filmstrip._id}/${btoa(this.props.email)}/${this.state.createdFilmstripId}/finish`;
             return <Redirect to={url} />
         }
 
         return (
-            <div className='centered AnswerQuestionnaireContainer AnswerQuestionnaireContainerPad'>
+            <div className='centered ResponseQuestionnaireContainer ResponseQuestionnaireContainerPad'>
                 <h5><Typography use='headline5'>{filmstrip.name}</Typography></h5>
-                <AnswerFrame key={currentFrame._id} frame={currentFrame} t={t} filmstrip={filmstrip} currentFrameIndex={this.state.currentFrameIndex} />
-                <div className='AnswerNavigationButtons'>
+                <ResponseFrame key={currentFrame._id} frame={currentFrame} t={t} filmstrip={filmstrip} currentFrameIndex={this.state.currentFrameIndex} />
+                <div className='ResponseNavigationButtons'>
                     <a onClick={this.prevQuestion} className={prevQuestionClass}>
                         <Typography use='button'>
-                            { t('AnswerPrevQuestion') }
+                            { t('Response.PrevQuestion') }
                         </Typography>
                     </a>
                     <a onClick={this.nextQuestion}>
                         <Typography use='button'>
-                            { this.state.currentFrameIndex + 1 === frames.length ? t('AnswerFinish') : t('AnswerNextQuestion') }
+                            { this.state.currentFrameIndex + 1 === frames.length ? t('Response.Finish') : t('Response.NextQuestion') }
                         </Typography>
                     </a>
                 </div>
@@ -116,4 +115,4 @@ class AnswerQuestionnaireContainer extends React.Component {
 
 }
 
-export const AnswerQuestionnaire = prepareAnswerView(AnswerQuestionnaireContainer)
+export const ResponseQuestionnaire = prepareResponseView(ResponseQuestionnaireContainer)
