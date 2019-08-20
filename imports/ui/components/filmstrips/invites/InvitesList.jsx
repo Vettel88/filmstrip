@@ -79,7 +79,6 @@ const InvitesListWrapper = withRouter(observer(({}) => {
 }))
 
 export const InvitesList = UI.withTranslation()(withTracker(({filmstripId, setInvitesCount}) => {
-    console.log(InvitesStore)
     InvitesStore.filmstripId = filmstripId
     Meteor.subscribe('Invites', () => {
         InvitesStore.invites = Invites.find({filmstripId}).fetch()

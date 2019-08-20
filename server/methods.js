@@ -3,6 +3,13 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
 
+// TODO move to separate file to instantiate postmark several times
+import Postmark from 'postmark'
+let postmark;
+if(Meteor.isServer) {
+  postmark = new Postmark.ServerClient(Meteor.settings.postmark.apikey)
+}
+
 Meteor.methods({
     'filmstrip.create'() {
         const filmstripId = Filmstrips.insert({})
@@ -95,12 +102,31 @@ Filmstrip.io`
         check(email, String)
         // TODO move invites into the filmstrips document
         // TODO throw when duplicate email is inserted, maybe just a unique index will do
-        return Invites.insert({filmstripId, name, email})
+        const inviteId = Invites.insert({filmstripId, name, email})
+
+        const filmstrip = Filmstrips.findOne(filmstripId)
+        const username = Meteor.user().username || 'a great filmstrip user'
+        const emailBase64 = new Buffer(email).toString('base64')
+        const link = Meteor.absoluteUrl(`a/${filmstripId}/${emailBase64}`)
+        // TODO i18n
+        postmark.sendEmail({
+            "From": Meteor.settings.postmark.sender,
+            "To": email,
+            "Subject": `You are invited to respond to ${filmstrip.name}`,
+            "TextBody": `Congratulations,
+
+you have been invited by ${username} to respond to the film strip "${filmstrip.name}".
+
+Click here to answer: ${link}
+
+Yours,
+Filmstrip.io`
+        })
+        return inviteId
     },
     'filmstrip.invite.remove'($in) {
         console.log({_id: {$in}, createdBy: Meteor.userId()})
         check($in, [String])
         return Invites.remove({_id: {$in}, createdBy: Meteor.userId()})
     },
-});
-  
+})

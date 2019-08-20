@@ -37,7 +37,6 @@ export const createStandardPublications = (collection, plural, singular) => {
     if (Meteor.isClient) return
     const pluralName = plural || collection._name
     const singularName = singular || pluralName.substring(0, pluralName.length - 1)
-    // console.log("publishing", pluralName, singularName)
     Meteor.publish(pluralName, function() { 
         return this.userId && collection.find({createdBy: this.userId}) 
     })

@@ -17,11 +17,12 @@ export const SignIn = () => {
                 const emailValid = validateEmail(email)
                 setIsEmailInvalid(!emailValid)
                 const password = document.querySelector('[name="password"]').value
-                const passwordValid = !validatePassword(password)
+                const passwordValid = validatePassword(password)
                 setIsPasswordInvalid(!passwordValid)
                 if (emailValid && passwordValid) {
-                    Meteor.loginWithPassword(email, password)
-                    history.push('/' )
+                    Meteor.loginWithPassword(email, password, () => {
+                        history.push('/' )
+                    })
                 }
             }    
 
