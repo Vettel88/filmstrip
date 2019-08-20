@@ -15,7 +15,6 @@ import { ResponseFinish, ResponseConfirm, ResponseConfirmationSent } from '/impo
 import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
 import { FilmstripsItemNavigation } from '/imports/ui/components/filmstrips/FilmstripsItemNavigation.jsx'
 import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
-import { CreateInvite } from '/imports/ui/components/filmstrips/invites/InvitesList.jsx'
 import { ThemeProvider } from 'rmwc'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
@@ -74,7 +73,6 @@ export default App = () =>
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
             <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
-            <PrivateRoute path="/filmstrip/:filmstripId/createInvite" component={CreateInvite} layout={ModalLayout} />
         </Router>
     </ThemeProvider>
 

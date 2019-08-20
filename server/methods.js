@@ -93,6 +93,7 @@ Filmstrip.io`
         check(name, String)
         check(email, String)
         // TODO move invites into the filmstrips document
+        // TODO throw when duplicate email is inserted, maybe just a unique index will do
         return Invites.insert({name, email})
     },
     'filmstrip.invite.remove'($in) {
