@@ -3,12 +3,13 @@ import { CircularProgress } from 'rmwc'
 import '@rmwc/circular-progress/circular-progress.css'
 import i18next from 'i18next'
 import { withTranslation as withTranslationOrig } from 'react-i18next'
-import { Notifications } from '/imports/ui/components/Layout'
+import { Notifications } from '/imports/ui/components/layouts/Layout'
 
 export const loadingWrapper = (isLoading, fn) =>
     isLoading ? <CircularProgress />  : fn()
 
 export const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const regexPattern = '^[^\s@]+@[^\s@]+\.[^\s@]+$' // For input elements, without the //
 
 // methods starting with validate return only a truthy/falsy value
 export const validateEmail = email => !!email.match(regexEmail)

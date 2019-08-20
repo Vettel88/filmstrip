@@ -4,6 +4,11 @@
         "sender": "Filmstrip Support <support@filmstrip.io>"
     },
     "public": {
+        "support": {
+            "productName": "Filmstrip",
+            "productUrl": "https://filmstrip.io",
+            "email": "support@filmstrip.io"
+        },
         "cloudinary": {
             "uploadPreset": "filmstrip_1",
             "cloudName": "incnition"

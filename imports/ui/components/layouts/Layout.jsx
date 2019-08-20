@@ -1,25 +1,28 @@
 import { Meteor } from 'meteor/meteor'
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
-import { Button, Grid as UnstyledGrid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, Snackbar, SnackbarAction, TopAppBar as UnstyledTopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
+import { Grid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, 
+    TopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
 import { createSnackbarQueue, SnackbarQueue } from '@rmwc/snackbar'
 import styled from 'styled-components'
 import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
+import UIState from '/imports/ui/UIState.js'
+import { observer } from 'mobx-react';
 import '/imports/ui/UIState.js'
 
-const Grid = styled(UnstyledGrid)`
+const StyledGrid = styled(Grid)`
     padding-top: 100px !important;
 `
 
-const TopAppBar = styled(UnstyledTopAppBar)`
+const StyledTopAppBar = styled(TopAppBar)`
     background-color: #25455b !important;
 `
 
-const Header = () => {
+const Header = observer(() => {
     const [open, setOpen] = React.useState(false);
     return (
         <>
-            <TopAppBar fixed={false}>
+            <StyledTopAppBar fixed={false}>
                 <TopAppBarRow>
                     <TopAppBarSection>
                         <TopAppBarNavigationIcon icon="menu" onClick={() => setOpen(true)} />
@@ -33,11 +36,11 @@ const Header = () => {
                         <MenuUser />
                     </TopAppBarSection>
                 </TopAppBarRow>
-            </TopAppBar>
+            </StyledTopAppBar>
             <SideNav open={open} setOpen={setOpen} />
         </>
     )
-}
+})
 
 const IfLoggedIn = ({ children }) => {
     if (Meteor.userId()) {
@@ -73,11 +76,11 @@ export default class Layout extends Component {
             <>
                 <Header />
                 <SnackbarQueue messages={Notifications.messages} leading timeout={10000}/>
-                <Grid>
+                <StyledGrid>
                     <GridCell span={12}>
                         {this.props.children}
                     </GridCell>
-                </Grid>
+                </StyledGrid>
             </>
         )
     }

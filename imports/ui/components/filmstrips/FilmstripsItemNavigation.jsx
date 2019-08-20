@@ -1,9 +1,9 @@
 import React from 'react';
 import { TabBar, Tab, GridCell, GridInner } from 'rmwc'
-import { addTranslations, t, withTranslation, changeLanguage } from '/imports/ui/UIHelpers.js'
-import { FilmstripsItem as Settings } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
+import { addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
 import { InvitesList } from '/imports/ui/components/filmstrips/invites/InvitesList.jsx'
 import { Invites } from '/imports/db/invites.js'
+import Settings from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
 import '/imports/ui/components/filmstrips/FilmstripsItem.less'
 
 const Done = (props) => <div>Done</div>
@@ -14,6 +14,7 @@ const renderContent = (tab, props, setInvitesCount) => {
     const baseUrl = `/filmstrip/${filmstripId}/${frameId}/`
     switch(tab) {
         case 1:
+            // TODO set URL correctly
             // history.replace(`${baseUrl}/invites`)
             const arguments = Object.assign({}, props, {setInvitesCount})
             return <InvitesList {...arguments}/>
@@ -30,7 +31,6 @@ const renderContent = (tab, props, setInvitesCount) => {
 export const FilmstripsItemNavigation = withTranslation()((props) => {
     const [activeTab, setActiveTab] = React.useState(0)
 
-    // TODO get this numbers once the collection is there
     const [invitesCount, setInvitesCount] = React.useState(0)
     const [doneCount, setDoneCount] = React.useState(0)
     Meteor.subscribe('Invites', () => {

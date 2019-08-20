@@ -1,17 +1,16 @@
 import React from 'react'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import Layout from './components/Layout'
-import ModalLayout from './components/ModalLayout'
+import Layout from './components/layouts/Layout'
+import ModalLayout from './components/layouts/ModalLayout'
+import FilmstripLayout from './components/layouts/FilmstripLayout'
 
 import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
 import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
 
-import AnswerLayout from '/imports/ui/components/answer/AnswerLayout.jsx'
-import { AnswerLanding } from '/imports/ui/components/answer/AnswerLanding.jsx'
-import { AnswerQuestionnaire } from '/imports/ui/components/answer/AnswerQuestionnaire.jsx'
-import { AnswerFinish } from '/imports/ui/components/answer/AnswerFinish.jsx'
-import { AnswerSent } from '/imports/ui/components/answer/AnswerSent.jsx'
-import { AnswerConfirm } from '/imports/ui/components/answer/AnswerConfirm.jsx'
+import { ResponseLayout } from '/imports/ui/components/response/ResponseCommon.jsx'
+import { ResponseLanding } from '/imports/ui/components/response/ResponseLanding.jsx'
+import { ResponseQuestionnaire } from '/imports/ui/components/response/ResponseQuestionnaire.jsx'
+import { ResponseFinish, ResponseConfirm, ResponseConfirmationSent } from '/imports/ui/components/response/ResponseFinish.jsx'
 
 import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
 import { FilmstripsItemNavigation } from '/imports/ui/components/filmstrips/FilmstripsItemNavigation.jsx'
@@ -65,13 +64,13 @@ export default App = () =>
                 <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
                 <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
                 <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
-                <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItemNavigation} layout={Layout} />
-                <AppRoute exact path="/a/:id" component={AnswerLanding} layout={AnswerLayout} />
-                <AppRoute exact path="/a/:id/:emailBase64" component={AnswerLanding} layout={AnswerLayout} />
-                <AppRoute exact path="/a/:id/:emailBase64/q" component={AnswerQuestionnaire} layout={AnswerLayout} />
-                <AppRoute exact path="/a/:id/:emailBase64/finish" component={AnswerFinish} layout={AnswerLayout} />
-                <AppRoute exact path="/a/:id/:emailBase64/sent" component={AnswerSent} layout={AnswerLayout} />
-                <AppRoute exact path="/confirm/:id/:emailBase64" component={AnswerConfirm} layout={AnswerLayout} />
+                <AppRoute exact path="/a/:id" component={ResponseLanding} layout={ResponseLayout} />
+                <AppRoute exact path="/a/:id/:emailBase64" component={ResponseLanding} layout={ResponseLayout} />
+                <AppRoute exact path="/a/:id/:emailBase64/q" component={ResponseQuestionnaire} layout={ResponseLayout} />
+                <AppRoute exact path="/a/:id/:emailBase64/:createdFilmstripId/finish" component={ResponseFinish} layout={ResponseLayout} />
+                <AppRoute exact path="/a/:id/:emailBase64/sent" component={ResponseConfirmationSent} layout={ResponseLayout} />
+                <AppRoute exact path="/confirm/:createdFilmstripId/:emailBase64/:confirmationKey" component={ResponseConfirm} layout={ResponseLayout} />
+                <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItemNavigation} layout={FilmstripLayout} />
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
             <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
