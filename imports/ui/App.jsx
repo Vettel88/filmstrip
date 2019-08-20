@@ -16,11 +16,11 @@ import { AnswerConfirm } from '/imports/ui/components/answer/AnswerConfirm.jsx'
 import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
 import { FilmstripsItemNavigation } from '/imports/ui/components/filmstrips/FilmstripsItemNavigation.jsx'
 import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
+import { CreateInvite } from '/imports/ui/components/filmstrips/invites/InvitesList.jsx'
 import { ThemeProvider } from 'rmwc'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
 import 'material-components-web/dist/material-components-web.min.css'
-
 
 const AppRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest }) => (
     <Route {...rest} render={props => (
@@ -75,6 +75,7 @@ export default App = () =>
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
             <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
+            <PrivateRoute path="/filmstrip/:filmstripId/createInvite" component={CreateInvite} layout={ModalLayout} />
         </Router>
     </ThemeProvider>
 

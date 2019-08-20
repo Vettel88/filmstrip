@@ -2,15 +2,14 @@ import { check } from 'meteor/check'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import Postmark from 'postmark'
+import { Invites } from '../imports/db/invites';
 
 const postmark = new Postmark.ServerClient(Meteor.settings.postmark.apikey)
 
 Meteor.methods({
     'filmstrip.create'() {
-        console.log('filmstrip.create')
         const filmstripId = Filmstrips.insert({})
         const frameId = Frames.insert({filmstripId, no: 1})
-        console.log(filmstripId, frameId)
         return { filmstripId, frameId }
     },
     'filmstrip.remove'(filmstripId) {
@@ -33,6 +32,11 @@ Meteor.methods({
         check(frameId, String)
         check(cloudinaryPublicId, String)
         Frames.upsert(frameId, {$set: {cloudinaryPublicId}})
+    },
+    'filmstrip.invite.create'({name, email}) {
+        check(name, String)
+        check(email, String)
+        Invites.insert({name, email})
     },
     'answer.save'({ filmstrip, frames }) {
         check(filmstrip, Object)

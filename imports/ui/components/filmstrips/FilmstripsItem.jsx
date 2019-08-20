@@ -194,7 +194,6 @@ const FilmstripWrapper = ({isLoading, filmstrip, frames, filmstripId, frameId}) 
     </div>
 
 export const FilmstripsItem = withTranslation()(withTracker(({ match }) => {
-    console.log(match)
     const handle = Meteor.subscribe('Filmstrip', match.params.filmstripId)
     const { filmstripId, frameId } = match.params
 

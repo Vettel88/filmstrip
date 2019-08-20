@@ -1,10 +1,11 @@
+import { Meteor } from 'meteor/meteor'
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
-import { Grid as UnstyledGrid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, GridInner, TopAppBar as UnstyledTopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
+import { Button, Grid as UnstyledGrid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, Snackbar, SnackbarAction, TopAppBar as UnstyledTopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
+import { createSnackbarQueue, SnackbarQueue } from '@rmwc/snackbar'
 import styled from 'styled-components'
 import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
 import '/imports/ui/UIState.js'
-import { Meteor } from 'meteor/meteor';
 
 const Grid = styled(UnstyledGrid)`
     padding-top: 100px !important;
@@ -64,11 +65,14 @@ const SideNav = ({ open, setOpen }) => <>
 
 const ListItem = ({ setOpen, children }) => <LI onClick={() => setOpen(false)}>{children}</LI>
 
+export const Notifications = createSnackbarQueue()
+
 export default class Layout extends Component {
     render() {
         return (
             <>
                 <Header />
+                <SnackbarQueue messages={Notifications.messages} leading timeout={10000}/>
                 <Grid>
                     <GridCell span={12}>
                         {this.props.children}
