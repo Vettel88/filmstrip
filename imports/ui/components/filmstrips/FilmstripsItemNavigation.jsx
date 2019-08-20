@@ -16,7 +16,7 @@ const renderContent = (tab, props, setInvitesCount) => {
         case 1:
             // TODO set URL correctly
             // history.replace(`${baseUrl}/invites`)
-            const arguments = Object.assign({}, props, {setInvitesCount})
+            const arguments = Object.assign({}, props, {filmstripId, setInvitesCount})
             return <InvitesList {...arguments}/>
             // return <InvitesList {...props}/>
         case 2:

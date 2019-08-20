@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Button, IconButton, TextField, GridCell, GridInner, Fab, Typography, Checkbox, Avatar, Dialog, DialogContent, List, ListItem } from 'rmwc'
+import { Button, TextField, GridCell, GridInner, Fab, Typography, Checkbox, Avatar, Dialog, DialogContent, List, ListItem } from 'rmwc'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
@@ -78,9 +78,11 @@ const InvitesListWrapper = withRouter(observer(({}) => {
     </div>)
 }))
 
-export const InvitesList = UI.withTranslation()(withTracker(({setInvitesCount}) => {
+export const InvitesList = UI.withTranslation()(withTracker(({filmstripId, setInvitesCount}) => {
+    console.log(InvitesStore)
+    InvitesStore.filmstripId = filmstripId
     Meteor.subscribe('Invites', () => {
-        InvitesStore.invites = Invites.find().fetch()
+        InvitesStore.invites = Invites.find({filmstripId}).fetch()
         InvitesStore.isInvitesLoading = false
     })
     return { setInvitesCount }
@@ -94,7 +96,7 @@ export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreat
         try {
             UI.checkMandatory(name, { field: t('Invites.Name') })
             UI.checkEmail(email, { field: t('Invites.Email') })
-            InvitesStore.addInvite({ name, email })
+            InvitesStore.createInvite({ name, email })
             setIsCreateInvite(false)
         } catch(error) {
             console.error(error.message)

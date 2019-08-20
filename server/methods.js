@@ -89,12 +89,13 @@ Filmstrip.io`
 
         return true
     },
-    'filmstrip.invite.create'({name, email}) {
+    'filmstrip.invite.create'({filmstripId, name, email}) {
+        check(filmstripId, String)
         check(name, String)
         check(email, String)
         // TODO move invites into the filmstrips document
         // TODO throw when duplicate email is inserted, maybe just a unique index will do
-        return Invites.insert({name, email})
+        return Invites.insert({filmstripId, name, email})
     },
     'filmstrip.invite.remove'($in) {
         console.log({_id: {$in}, createdBy: Meteor.userId()})
