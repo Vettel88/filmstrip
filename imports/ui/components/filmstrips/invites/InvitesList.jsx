@@ -1,38 +1,33 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Button, TextField, GridCell, GridInner, Fab, Typography, Checkbox, Avatar, Dialog, DialogContent, List, ListItem } from 'rmwc'
+import { Button, IconButton, TextField, GridCell, GridInner, Fab, Typography, Checkbox, Avatar, Dialog, DialogContent, List, ListItem } from 'rmwc'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
+import { observer } from 'mobx-react'
 import { Invites } from '/imports/db/invites.js'
 import * as UI from '/imports/ui/UIHelpers.js'
 import { t } from '/imports/ui/UIHelpers.js'
+import { InvitesStore } from '/imports/store/InvitesStore.js'
 
-
-const InvitesListItem = withRouter(({history, invite}) => {
-    
-    const [checked, setChecked] = React.useState(false)
-    document.addEventListener('Invites.selectAll', () => setChecked(true))
-
-    return <ListItem>
-        <GridInner>
-            <GridCell span={2} style={({textAlign: 'center'})}>
-                <Avatar  size="xsmall" name={invite.name}/>
-            </GridCell>
-            <GridCell span={9}>
-                <Typography use="headline7">{invite.name || t('Invites.undefined')}</Typography>
-                <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
-            </GridCell>
-            <GridCell span={1}>
-                <Checkbox label="" checked={checked} onChange={evt => setChecked(evt.currentTarget.checked)}/>
-            </GridCell>
-        </GridInner>
-    </ListItem>
-})
+const InvitesListItem = withRouter(observer(({history, invite}) => <ListItem>
+    <GridInner>
+        <GridCell span={2} style={({textAlign: 'center'})} onClick={() => InvitesStore.selectInvite(invite)}>
+            <Avatar  size="xsmall" name={invite.name}/>
+        </GridCell>
+        <GridCell span={9} onClick={() => InvitesStore.selectInvite(invite)}>
+            <Typography use="headline7">{invite.name || t('Invites.undefined')}</Typography>
+            <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
+        </GridCell>
+        <GridCell span={1}>
+            <Checkbox label="" checked={InvitesStore.selectedInviteIDs.includes(invite._id)} onChange={() => InvitesStore.selectInvite(invite)}/>
+        </GridCell>
+    </GridInner>
+</ListItem>))
 
 const setter = set => event => set(event.target.value)
 
-const InvitesListWrapper = withRouter(({history, isLoading, invites}) => {
+const InvitesListWrapper = withRouter(observer(({}) => {
     const [filter, setFilter] = React.useState('')
     const inviteFilter = invite => {
         const email = get(invite, 'email', '').toLowerCase()
@@ -40,47 +35,55 @@ const InvitesListWrapper = withRouter(({history, isLoading, invites}) => {
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
-    const filteredInvites = () => invites.filter(inviteFilter)
+    const filteredInvites = () => InvitesStore.invites.filter(inviteFilter)
     const [isCreateInvite, setIsCreateInvite] = React.useState(false)
-    const createInvite = event => setIsCreateInvite(true)
-    const selectAll = () => document.dispatchEvent(new Event('Invites.selectAll'))
+    const createInvite = () => setIsCreateInvite(true)
+    const removeInvite = () => {
+        if(confirm(t('Invites.confirmRemoval'))) {
+            InvitesStore.removeSelectedInvites()
+        }
+    }
+    const renderRemoveButton = show => show ? <Fab icon="delete" onClick={removeInvite}/> : <></>
     
     return (<div className="InvitesList">
         <GridInner>
-            <GridCell span={12}>
+            <GridCell span={9}>
                 <TextField placeholder={t('Invites.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
             </GridCell>
-            <GridCell span={11}>
+            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
+                {renderRemoveButton(InvitesStore.hasSelectedInvites)}
+                <Fab icon="add" onClick={createInvite}/>
+            </GridCell>
+            <GridCell span={9}>
                 <Typography use="headline5">{t('Invites.Invited')}</Typography>
             </GridCell>
-            <GridCell span={1}>
-                <Button label={t('Invites.SelectAll')} onClick={selectAll} />
+            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
+                <Button label={InvitesStore.hasSelectedInvites ? t('Invites.DeselectAll') : t('Invites.SelectAll')} onClick={() => InvitesStore.selectAllInvites()} />
             </GridCell>
         </GridInner>
         <List>
-            {UI.loadingWrapper(isLoading, () => 
+            {UI.loadingWrapper(InvitesStore.isInvitesLoading, () => 
                 filteredInvites().map(invite => <InvitesListItem key={invite._id} invite={invite}/>)
             )}
         </List>
         {/* user a grid to right align as we should not use flexbox - sniff */}
         <GridInner>
-            <GridCell span={11}>
+            <GridCell span={9}>
             </GridCell>
-            <GridCell span={1}>
+            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
                 <Fab icon="add" onClick={createInvite}/>
             </GridCell>
         </GridInner>
         {CreateInvite({isCreateInvite, setIsCreateInvite})}
     </div>)
-})
+}))
 
 export const InvitesList = UI.withTranslation()(withTracker(({setInvitesCount}) => {
-    const handle = Meteor.subscribe('Invites')
-    return {
-        isLoading: !handle.ready(),
-        invites: Invites.find().fetch(),
-        setInvitesCount,
-    }
+    Meteor.subscribe('Invites', () => {
+        InvitesStore.invites = Invites.find().fetch()
+        InvitesStore.isInvitesLoading = false
+    })
+    return { setInvitesCount }
 })(InvitesListWrapper))
 
 export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreateInvite}) => {
@@ -91,9 +94,7 @@ export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreat
         try {
             UI.checkMandatory(name, { field: t('Invites.Name') })
             UI.checkEmail(email, { field: t('Invites.Email') })
-            Meteor.call('filmstrip.invite.create', {name, email}, (error, result) => {
-                if (error) return console.error(error)
-            })
+            InvitesStore.addInvite({ name, email })
             setIsCreateInvite(false)
         } catch(error) {
             console.error(error.message)
@@ -117,10 +118,13 @@ Meteor.startup(() => {
             Invited: 'Invited',
             TypeToSearch: 'Type to filter',
             SelectAll: 'Select All',
+            DeselectAll: 'Deselect All',
             promptEmail: 'Enter an email of a person you want to invite',
             Name: 'Name',
             Email: 'Email',
             Save: 'Save',
+            Delete: 'Delete',
+            confirmRemoval: 'Do you want to delete the invite(s)?',
         }
     })
     UI.addTranslations('es', {
@@ -128,11 +132,14 @@ Meteor.startup(() => {
             undefined: 'Todavia sin nombre',
             Invited: 'Invitado',
             TypeToSearch: 'Ingresar filtro',
-            SelectAll: 'Seleccionar todos',
+            SelectAll: 'Seleccionar todo',
+            DeselectAll: 'Deseleccionar todo',
             promptEmail: 'Ingresa el email de una persona que quieres invitar',
             Name: 'Nombre',
             Email: 'Correo electrónico',
             Save: 'Save',
+            Delete: 'Borrar',
+            confirmRemoval: 'Quieres borrar el/los invitado(s)',
         }
     })
 })

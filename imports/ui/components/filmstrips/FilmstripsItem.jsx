@@ -2,21 +2,7 @@ import { Meteor } from 'meteor/meteor'
 import React from 'react';
 import ReactFilestack from 'filestack-react'
 import { Image } from 'cloudinary-react'
-import {
-    TextField,
-    Button,
-    Icon,
-    List,
-    ListItem,
-    Card as MUICard,
-    GridCell,
-    Grid,
-    Fab,
-    CardPrimaryAction,
-    Snackbar,
-    SnackbarAction,
-    Switch
-} from "rmwc";
+import { TextField, Button, Icon, List, ListItem, Card as MUICard, GridCell, Grid, Fab, CardPrimaryAction, Snackbar, SnackbarAction, Switch} from "rmwc";
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
@@ -232,21 +218,21 @@ const FrameItem = observer(({frameId}) => {
                         <Switch
                             checked={frame.allowTextAnswer || false}
                             onClick={(e) => store.setFrameValue(frame, 'allowTextAnswer', e.currentTarget.checked)}
-                            label="Allow text answer"
+                            label={t('FramestripsItem.allowTextAnswers')}
                         />
                     </FormField>
                     <FormField>
                         <Switch
                             checked={frame.allowAddingLinks || false}
                             onClick={(e) => store.setFrameValue(frame, 'allowAddingLinks', e.currentTarget.checked)}
-                            label="Allow adding links"
+                            label={t('FramestripsItem.allowAddingLinks')}
                         />
                     </FormField>
                     <FormField>
                         <Switch
                             checked={frame.allowAddingFiles || false}
                             onClick={(e) => store.setFrameValue(frame, 'allowAddingFiles', e.currentTarget.checked)}
-                            label="Allow adding files"
+                            label={t('FramestripsItem.allowAddingFiles')}
                         />
                     </FormField>
                 </CardPrimaryAction>
@@ -278,8 +264,6 @@ const FileItem = ({filmstrip, frame, no, file, files}) => <Grid>
         </GridCell>
     </Grid>
 
-// export const FilmstripsItem = withTranslation()(withTracker(({ match }) => {
-    // const handle = Meteor.subscribe('Filmstrip', match.params.filmstripId)
 const FilmstripItem = observer((props) => {
     const { frameId, filmstripId } = props
     return (
@@ -289,11 +273,11 @@ const FilmstripItem = observer((props) => {
                     <Snackbar
                         open={store.isDirty}
                         onClose={e => store.isDirty = false}
-                        message="You have unsaved changes"
+                        message={t('FramestripsItem.messageUnsavedChanges')}
                         timeout={100000000000000000000} // ms => 3.17 x 10^9 years
                         action={
                             <SnackbarAction
-                                label="SAVE"
+                                label={t('FramestripsItem.Save')}
                                 onClick={saveFilmstrip}
                             />
                         }
@@ -339,6 +323,10 @@ Meteor.startup(() => {
             Remove: 'Remove',
             'Do you want to delete the frame?': 'Do you want to delete the frame?',
             'Wait for the future to come!': 'Wait for the future to come!',
+            messageUnsavedChanges: 'You have unsaved changes',
+            allowTextAnswers: 'Allow text answers',
+            allowAddingLinks: 'Allow adding links',
+            allowAddingFiles: 'Allow adding files',
         }
     })
     addTranslations('es', {
@@ -353,6 +341,10 @@ Meteor.startup(() => {
             Remove: 'Remover',
             'Do you want to delete the frame?': 'Quieres borrarlo?',
             'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
+            messageUnsavedChanges: 'Tienes cambios no guardados',
+            allowTextAnswers: 'Allow text answers',
+            allowAddingLinks: 'Allow adding links',
+            allowAddingFiles: 'Allow adding files',
         }
     })
 })

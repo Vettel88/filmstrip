@@ -3,12 +3,12 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom"
 import { Grid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, 
     TopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
-import { createSnackbarQueue, SnackbarQueue } from '@rmwc/snackbar'
+import { SnackbarQueue } from '@rmwc/snackbar'
 import styled from 'styled-components'
 import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
 import UIState from '/imports/ui/UIState.js'
-import { observer } from 'mobx-react';
-import '/imports/ui/UIState.js'
+import { observer } from 'mobx-react'
+import { Notifications } from '/imports/ui/components/layouts/Notifications.jsx'
 
 const StyledGrid = styled(Grid)`
     padding-top: 100px !important;
@@ -67,8 +67,6 @@ const SideNav = ({ open, setOpen }) => <>
 </>
 
 const ListItem = ({ setOpen, children }) => <LI onClick={() => setOpen(false)}>{children}</LI>
-
-export const Notifications = createSnackbarQueue()
 
 export default class Layout extends Component {
     render() {

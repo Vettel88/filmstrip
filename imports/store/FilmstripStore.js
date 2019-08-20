@@ -13,7 +13,7 @@ export default class FilmstripStore {
     @observable filmstripHandle
     @observable framesHandle
 
-    @computed get isLoading(){
+    @computed get isLoading() {
         return (typeof this.filmstrip === 'undefined' || !this.frames.length)
     }
 
@@ -21,26 +21,26 @@ export default class FilmstripStore {
         return this.frames.find(frame => frame._id === this.frameId)
     }
 
-    toggleLive(){
+    toggleLive() {
         this.filmstrip.live = !this.filmstrip.live
         Meteor.call('filmstrip.setLive', this.filmstrip, this.filmstrip.live)
     }
 
-    getFrame(frameId){
+    getFrame(frameId) {
         return this.frames.find(frame => frame._id === frameId)
     }
 
-    setFilmstripValue(attribute, value){
+    setFilmstripValue(attribute, value) {
         this.isDirty = true
         this.filmstrip[attribute] = value
     }
 
-    setFrameValue(frame, attribute, value){
+    setFrameValue(frame, attribute, value) {
         this.isDirty = true
         this.getFrame(frame._id)[attribute] = value
     }
 
-    persist(){
+    persist() {
         Meteor.call('filmstrip.saveWithFrames', this.filmstrip, this.frames)
     }
 }

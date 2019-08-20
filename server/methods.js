@@ -1,6 +1,7 @@
 import { check } from 'meteor/check'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import { Invites } from '/imports/db/invites.js'
 
 Meteor.methods({
     'filmstrip.create'() {
@@ -43,11 +44,6 @@ Meteor.methods({
         check(frameId, String)
         check(cloudinaryPublicId, String)
         Frames.upsert(frameId, {$set: {cloudinaryPublicId}})
-    },
-    'filmstrip.invite.create'({name, email}) {
-        check(name, String)
-        check(email, String)
-        Invites.insert({name, email})
     },
     'answer.save'({ filmstrip, frames }) {
         check(filmstrip, Object)
@@ -92,6 +88,17 @@ Filmstrip.io`
 
 
         return true
+    },
+    'filmstrip.invite.create'({name, email}) {
+        check(name, String)
+        check(email, String)
+        // TODO move invites into the filmstrips document
+        return Invites.insert({name, email})
+    },
+    'filmstrip.invite.remove'($in) {
+        console.log({_id: {$in}, createdBy: Meteor.userId()})
+        check($in, [String])
+        return Invites.remove({_id: {$in}, createdBy: Meteor.userId()})
     },
 });
   
