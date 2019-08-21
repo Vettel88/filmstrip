@@ -10,15 +10,18 @@ import { Invites } from '/imports/db/invites.js'
 const insertFilmstrip = o => Filmstrips.insert(o)
 const insertFrame = o => Frames.insert(o)
 const insertInvite = o => Invites.insert(o)
+const filmstripId =  '9T75Ko4B8Hj7tBFP3'
 
 Meteor.startup(() => {
   // bootstrap
-  //Filmstrips.remove({})
-  //Frames.remove({})
+  if (!Meteor.isDevelopment) return
+
+  Filmstrips.remove({})
+  Frames.remove({})
 
   if (Filmstrips.find().count() === 0) {
     insertFilmstrip({
-      _id: '1',
+      _id: filmstripId,
       name: 'Filmstrip 1',
       description: 'Description of Filmstrip 1',
       live: true,
@@ -30,7 +33,7 @@ Meteor.startup(() => {
       _id: "abc1",
       no: 1,
       title: 'Frame1',
-      filmstripId: '1',
+      filmstripId,
       description: 'Description 1',
       link: 'https://filmstrip.com',
       allowText: true,
@@ -60,7 +63,7 @@ Meteor.startup(() => {
       _id: "def2",
       no: 2,
       title: 'Frame2',
-      filmstripId: '1',
+      filmstripId,
       description: 'Description 2',
       link: 'https://filmstrip.com/2',
       allowText: true,
@@ -69,11 +72,11 @@ Meteor.startup(() => {
     })
   }
 
-  // Invites.remove({})
+  Invites.remove({})
   if (Invites.find().count() === 0) {
-    insertInvite({ name: 'Steve Skrysak', email: 'steve@kaizenrecruit.com' })
-    insertInvite({ name: 'David Young', email: 'david@kaizenrecruit.com', invitedAt: new Date() })
-    insertInvite({ name: 'Chuck Carpenter', email: 'chuck@kaizenrecruit.com', invitedAt: new Date(), completedAt: new Date() })
+    insertInvite({ filmstripId, name: 'Steve Skrysak', email: 'steve@kaizenrecruit.com' })
+    insertInvite({ filmstripId, name: 'David Young', email: 'david@kaizenrecruit.com', invitedAt: new Date() })
+    insertInvite({ filmstripId, name: 'Chuck Carpenter', email: 'chuck@kaizenrecruit.com', invitedAt: new Date(), completedAt: new Date() })
   }
 
 
