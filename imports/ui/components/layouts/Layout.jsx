@@ -1,35 +1,20 @@
+import { Meteor } from 'meteor/meteor'
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
-import {
-    Grid as UnstyledGrid,
-    Drawer,
-    List,
-    ListItem as LI,
-    DrawerHeader,
-    DrawerContent,
-    DrawerSubtitle,
-    DrawerTitle,
-    GridCell,
-    GridInner,
-    TopAppBar as UnstyledTopAppBar,
-    TopAppBarSection,
-    TopAppBarNavigationIcon,
-    TopAppBarRow,
-    TopAppBarTitle,
-    Snackbar as UnstyledSnackbar,
-    SnackbarAction,
-} from 'rmwc'
+import { Grid, Drawer, List, ListItem as LI, DrawerHeader, DrawerContent, DrawerSubtitle, DrawerTitle, GridCell, 
+    TopAppBar, TopAppBarSection, TopAppBarNavigationIcon, TopAppBarRow, TopAppBarTitle } from 'rmwc'
+import { SnackbarQueue } from '@rmwc/snackbar'
 import styled from 'styled-components'
 import { MenuUser } from '/imports/ui/components/users/MenuUser.jsx'
 import UIState from '/imports/ui/UIState.js'
-import { Meteor } from 'meteor/meteor';
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react'
+import { Notifications } from '/imports/ui/components/layouts/Notifications.jsx'
 
-const Grid = styled(UnstyledGrid)`
+const StyledGrid = styled(Grid)`
     padding-top: 100px !important;
 `
 
-const TopAppBar = styled(UnstyledTopAppBar)`
+const StyledTopAppBar = styled(TopAppBar)`
     background-color: #25455b !important;
 `
 
@@ -37,7 +22,7 @@ const Header = observer(() => {
     const [open, setOpen] = React.useState(false);
     return (
         <>
-            <TopAppBar fixed={false}>
+            <StyledTopAppBar fixed={false}>
                 <TopAppBarRow>
                     <TopAppBarSection>
                         <TopAppBarNavigationIcon icon="menu" onClick={() => setOpen(true)} />
@@ -51,7 +36,7 @@ const Header = observer(() => {
                         <MenuUser />
                     </TopAppBarSection>
                 </TopAppBarRow>
-            </TopAppBar>
+            </StyledTopAppBar>
             <SideNav open={open} setOpen={setOpen} />
         </>
     )
@@ -88,11 +73,12 @@ export default class Layout extends Component {
         return (
             <>
                 <Header />
-                <Grid>
+                <SnackbarQueue messages={Notifications.messages} timeout={10000}/>
+                <StyledGrid>
                     <GridCell span={12}>
                         {this.props.children}
                     </GridCell>
-                </Grid>
+                </StyledGrid>
             </>
         )
     }

@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { TabBar, Tab, GridCell, GridInner } from 'rmwc'
-import { loadingWrapper, addTranslations, t, withTranslation, changeLanguage } from '/imports/ui/UIHelpers.js'
+import { addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
+import { InvitesList } from '/imports/ui/components/filmstrips/invites/InvitesList.jsx'
+import { Invites } from '/imports/db/invites.js'
 import Settings from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
-import './FilmstripsItem.less'
+import '/imports/ui/components/filmstrips/FilmstripsItem.less'
 
-const Invites = (props) => <div>Invites</div>
 const Done = (props) => <div>Done</div>
 
-const renderContent = (tab, props) => {
+const renderContent = (tab, props, setInvitesCount) => {
+    const { history, match } = props
+    const { filmstripId, frameId } = match.params
+    const baseUrl = `/filmstrip/${filmstripId}/${frameId}/`
     switch(tab) {
         case 1:
-            return <Invites {...props}/>
+            // TODO set URL correctly
+            // history.replace(`${baseUrl}/invites`)
+            const arguments = Object.assign({}, props, {filmstripId, setInvitesCount})
+            return <InvitesList {...arguments}/>
+            // return <InvitesList {...props}/>
         case 2:
+            // history.replace(`${baseUrl}/done`)
             return <Done {...props}/>
         default:
+            // history.replace(`${baseUrl}/settings`)
             return <Settings {...props}/>
     }
 }
 
 export const FilmstripsItemNavigation = withTranslation()((props) => {
     const [activeTab, setActiveTab] = React.useState(0)
-
-    // TODO get this numbers once the collection is there
-    const invitesCount = 0
-    const doneCount = 0
+    const [invitesCount, setInvitesCount] = React.useState(0)
+    const [doneCount, setDoneCount] = React.useState(0)
+    Meteor.subscribe('Invites', () => {
+        setInvitesCount(Invites.find().count())
+        setDoneCount(Invites.find({completedAt: {$exists: true}}).count())
+    })
 
     return <>
         <GridInner>

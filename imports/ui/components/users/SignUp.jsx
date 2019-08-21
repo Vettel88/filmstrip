@@ -18,7 +18,7 @@ export const SignUp = () => {
                 setIsEmailInvalid(!emailValid)
                 const password = document.querySelector('[name="password"]').value
                 const passwordValid = validatePassword(password)
-                setIsPasswordInvalid(!passwordValid)
+                setIsPasswordInvalid(passwordValid)
                 if (emailValid && passwordValid) {
                     Accounts.createUser({ email, password }, (error, result) => {
                         history.push('/' )

@@ -2,32 +2,16 @@ import { Meteor } from 'meteor/meteor'
 import React from 'react';
 import ReactFilestack from 'filestack-react'
 import { Image } from 'cloudinary-react'
-import {
-    TextField,
-    Button,
-    Icon,
-    List,
-    ListItem,
-    Card as MUICard,
-    GridCell,
-    Grid,
-    Fab,
-    CardPrimaryAction,
-    Snackbar,
-    SnackbarAction,
-    Switch
-} from "rmwc";
+import { TextField, Button, Icon, List, ListItem, Card as MUICard, GridCell, Grid, Fab, CardPrimaryAction, Snackbar, SnackbarAction, Switch} from "rmwc";
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
 import { observer } from 'mobx-react'
-
 import { loadingWrapper, addTranslations, t, withTranslation, changeLanguage } from '/imports/ui/UIHelpers.js'
 import Video from '/imports/ui/components/VideoPlayer.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
-
 import stores from '/imports/store'
 const store = stores.filmstripStore
 
@@ -91,24 +75,19 @@ const FilmstripSettings = observer((props) => {
     );
 })
 
-
 const FrameEditorItem = withRouter((props) => {
     const { history, match, frame } = props
     const removeFrame = (event) => {
-        changeLanguage('es')
         if(confirm(t('FramestripsItem.Do you want to delete the frame?'))) {
-            alert(t('FramestripsItem.Wait for the future to come!'))
+            store.removeFrame(frame)
         }
     }
-    const addVideo = (event) => {
-        console.log('addVideo', history, `/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
-        return history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo/`)
-    }
-
+    const addVideo = () => history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo/`)
+    const createFrame = () => store.createFrame(frame.filmstripId)
     const publicId = get(frame, 'cloudinaryPublicId')
     const imageOrVideo = publicId
         ? <Video publicId={publicId} width="300"/>
-        : <Image cloudName="demo" publicId="sample" width="300" crop="scale"/>
+        : <img src="https://via.placeholder.com/300x200" onClick={addVideo}/>
 
     // All frames will be rendered but only the currently selected will be visible
     const { frameId } = match.params
@@ -120,7 +99,7 @@ const FrameEditorItem = withRouter((props) => {
         {imageOrVideo}
         <div className="actions">
             <Fab icon="clear" data-no={frame.no} onClick={removeFrame} style={{ backgroundColor: 'var(--mdc-theme-error)' }} theme={['onError']}  mini={true}/>
-            <Fab icon="add" data-no={frame.no} onClick={addVideo} mini={true}/>
+            <Fab icon="add" data-no={frame.no} onClick={createFrame} mini={true}/>
         </div>
     </div>)
 })
@@ -160,95 +139,93 @@ const FrameItem = observer(({frameId}) => {
 
     return (
         <>
-            <Card>
-                <CardPrimaryAction>
-                    <GridCell span={12}>
-                        <TextField
-                            label={t('FramestripsItem.Frame Title')}
-                            name="title"
-                            value={frame.title}
-                            onChange={(e) => store.setFrameValue(frame, 'title', e.currentTarget.value)}
-                            maxLength={50}
-                            characterCount
-                        />
-                    </GridCell>
-                    <GridCell span={12}>
-                        <TextField
-                            textarea
-                            outlined
-                            fullwidth
-                            label={t('FramestripsItem.Frame Description')}
-                            rows={3}
-                            maxLength={120}
-                            characterCount
-                            value={frame.description}
-                            onChange={(e) => store.setFrameValue(frame, 'description', e.currentTarget.value)}
-                        />
-                    </GridCell>
-                    <GridCell span={12}>
-                        <TextField
-                            textarea
-                            label={t('FramestripsItem.Link')}
-                            defaultValue={frame.link}
-                            onChange={(e) => store.setFrameValue(frame, 'link', e.currentTarget.value)}
-                        />
-                    </GridCell>
-                    <GridCell span={12}>
-                        <h3>{t('FramestripsItem.Files')}</h3>
-                        <StyledReactFilestack
-                            apikey={Meteor.settings.public.filestack.apikey}
-                            onSuccess={({filesUploaded}) => {
-                                const newFiles = [].concat(frame.files)
-                                filesUploaded.forEach(f => newFiles.push(f))
-                                store.setFrameValue(frame, 'files', newFiles)
-                            }}
-                            componentDisplayMode={{
-                                type: 'link',
-                                customText: t('FramestripsItem.Upload'),
-                            }}
-                            render={({ onPick }) => (
-                                <Button label='' onClick={onPick} />
-                            )}
-                        />
-                    </GridCell>
-                    <GridCell span={12}>
-                        <List>
-                            {frame.files && frame.files.map((file, i) => 
-                                <FileItem
-                                    key={i}
-                                    file={file}
-                                    filmstrip={store.filmstrip}
-                                    frame={frame}
-                                    no={frame.no}
-                                    files={frame.files}
-                                    setFiles={console.log}
-                                />)
-                            }
-                        </List>
-                    </GridCell>
-                </CardPrimaryAction>
-            </Card>
+            <CardPrimaryAction>
+                <GridCell span={12}>
+                    <TextField
+                        label={t('FramestripsItem.Frame Title')}
+                        name="title"
+                        value={frame.title}
+                        onChange={(e) => store.setFrameValue(frame, 'title', e.currentTarget.value)}
+                        maxLength={50}
+                        characterCount
+                    />
+                </GridCell>
+                <GridCell span={12}>
+                    <TextField
+                        textarea
+                        outlined
+                        fullwidth
+                        label={t('FramestripsItem.Frame Description')}
+                        rows={3}
+                        maxLength={120}
+                        characterCount
+                        value={frame.description}
+                        onChange={(e) => store.setFrameValue(frame, 'description', e.currentTarget.value)}
+                    />
+                </GridCell>
+                <GridCell span={12}>
+                    <TextField
+                        textarea
+                        label={t('FramestripsItem.Link')}
+                        defaultValue={frame.link}
+                        onChange={(e) => store.setFrameValue(frame, 'link', e.currentTarget.value)}
+                    />
+                </GridCell>
+                <GridCell span={12}>
+                    <h3>{t('FramestripsItem.Files')}</h3>
+                    <StyledReactFilestack
+                        apikey={Meteor.settings.public.filestack.apikey}
+                        onSuccess={({filesUploaded}) => {
+                            const newFiles = [].concat(frame.files)
+                            filesUploaded.forEach(f => newFiles.push(f))
+                            store.setFrameValue(frame, 'files', newFiles)
+                        }}
+                        componentDisplayMode={{
+                            type: 'link',
+                            customText: t('FramestripsItem.Upload'),
+                        }}
+                        render={({ onPick }) => (
+                            <Button label='' onClick={onPick} />
+                        )}
+                    />
+                </GridCell>
+                <GridCell span={12}>
+                    <List>
+                        {frame.files && frame.files.map((file, i) => 
+                            <FileItem
+                                key={i}
+                                file={file}
+                                filmstrip={store.filmstrip}
+                                frame={frame}
+                                no={frame.no}
+                                files={frame.files}
+                                setFiles={console.log}
+                            />)
+                        }
+                    </List>
+                </GridCell>
+            </CardPrimaryAction>
             <Card>
                 <CardPrimaryAction>
                     <FormField>
                         <Switch
                             checked={frame.allowTextAnswer || false}
                             onClick={(e) => store.setFrameValue(frame, 'allowTextAnswer', e.currentTarget.checked)}
-                            label="Allow text answer"
+                            label={t('FramestripsItem.allowTextAnswers')}
                         />
                     </FormField>
                     <FormField>
                         <Switch
                             checked={frame.allowAddingLinks || false}
                             onClick={(e) => store.setFrameValue(frame, 'allowAddingLinks', e.currentTarget.checked)}
-                            label="Allow adding links"
+                            label={t('FramestripsItem.allowAddingLinks')}
                         />
                     </FormField>
                     <FormField>
                         <Switch
                             checked={frame.allowAddingFiles || false}
                             onClick={(e) => store.setFrameValue(frame, 'allowAddingFiles', e.currentTarget.checked)}
-                            label="Allow adding files"
+                            label={t('FramestripsItem.allowAddingFiles')}
                         />
                     </FormField>
                 </CardPrimaryAction>
@@ -289,11 +266,11 @@ const FilmstripItem = observer((props) => {
                     <Snackbar
                         open={store.isDirty}
                         onClose={e => store.isDirty = false}
-                        message="You have unsaved changes"
+                        message={t('FramestripsItem.messageUnsavedChanges')}
                         timeout={100000000000000000000} // ms => 3.17 x 10^9 years
                         action={
                             <SnackbarAction
-                                label="SAVE"
+                                label={t('FramestripsItem.Save')}
                                 onClick={saveFilmstrip}
                             />
                         }
@@ -303,19 +280,21 @@ const FilmstripItem = observer((props) => {
                             <FilmstripSettings filmstripId={filmstripId} />
                         </CardPrimaryAction>
                     </Card>
-                    <h1>{t("FramestripsItem.Frames")}</h1>
-                    <div style={{ textAlign: "center" }}>
-                        {store.frames.map(frame => <FrameEditorItem key={frame.no} frame={frame} />)}
-                        {store.frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} />)}
-                    </div>
-                    <FrameItem frameId={frameId} />
+                    <Card>
+                        <h1>{t("FramestripsItem.Frames")}</h1>
+                        <div style={{ textAlign: "center" }}>
+                            {store.frames.map(frame => <FrameEditorItem key={frame.no} frame={frame} />)}
+                            {store.frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} />)}
+                        </div>
+                        <FrameItem frameId={frameId} />
+                    </Card>
                 </>
             )}
         </div>
     )
 })
 
-const FilmstripItemContainer = withTranslation()(withTracker(({match}) => {
+export default FilmstripItemContainer = withTranslation()(withTracker(({match}) => {
     const { filmstripId, frameId } = match.params
     Meteor.subscribe('Filmstrip', filmstripId, () => {
         store.filmstrip = Filmstrips.findOne(filmstripId)
@@ -325,8 +304,6 @@ const FilmstripItemContainer = withTranslation()(withTracker(({match}) => {
     })
     return ({ filmstripId, frameId })
 })(FilmstripItem))
-
-export default FilmstripItemContainer
 
 Meteor.startup(() => {
     addTranslations('en', {    
@@ -340,7 +317,10 @@ Meteor.startup(() => {
             Save: 'Save',
             Remove: 'Remove',
             'Do you want to delete the frame?': 'Do you want to delete the frame?',
-            'Wait for the future to come!': 'Wait for the future to come!',
+            messageUnsavedChanges: 'You have unsaved changes',
+            allowTextAnswers: 'Allow text answers',
+            allowAddingLinks: 'Allow adding links',
+            allowAddingFiles: 'Allow adding files',
         }
     })
     addTranslations('es', {
@@ -354,7 +334,10 @@ Meteor.startup(() => {
             Save: 'Guardar',
             Remove: 'Remover',
             'Do you want to delete the frame?': 'Quieres borrarlo?',
-            'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
+            messageUnsavedChanges: 'Tienes cambios no guardados',
+            allowTextAnswers: 'Allow text answers',
+            allowAddingLinks: 'Allow adding links',
+            allowAddingFiles: 'Allow adding files',
         }
     })
 })
