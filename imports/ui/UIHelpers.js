@@ -21,7 +21,7 @@ export const emailIsValid = (email) => {
 
 // methods starting with assert will validate and if the result is false display a message to the user
 const showAndThrowError = (title) => {
-    Notifications.notify({ title, icon: 'error', })
+    Notifications.notify({ title, icon: 'error' })
     throw new Error(title)
 }
 // TODO make this work with numbers that are 0
@@ -36,6 +36,8 @@ export const changeLanguage = (language, callback) => i18next.changeLanguage(lan
 export const withTranslation = withTranslationOrig // TODO test
 
 export const dateToString = (date) => date && date.toLocaleDateString()
+
+export { Notifications } from '/imports/ui/components/layouts/Notifications.jsx'
 
 Meteor.startup(() => {
     addTranslations('en', {

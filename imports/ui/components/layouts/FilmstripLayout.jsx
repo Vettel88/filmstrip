@@ -52,7 +52,7 @@ export default class Layout extends Component {
         return (
             <>
                 <Header />
-                <SnackbarQueue messages={Notifications.messages} leading timeout={10000}/>
+                <SnackbarQueue messages={Notifications.messages} timeout={10000}/>
                 <Grid>
                     <GridCell span={12}>
                         {this.props.children}

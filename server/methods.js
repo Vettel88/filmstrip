@@ -40,6 +40,12 @@ Meteor.methods({
             }, {$set: {...frame}})
         })
     },
+    'filmstrip.frame.create'({ filmstripId, no }) {
+        check(filmstripId, String)
+        check(no, Number)
+        const frameId = Frames.insert({ filmstripId, no })
+        return Frames.findOne(frameId)
+    },
     'filmstrip.frame.save'({filmstripId, no, frame}) {
         check(filmstripId, String)
         check(frame, Object)
