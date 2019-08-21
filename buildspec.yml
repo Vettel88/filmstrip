@@ -22,6 +22,7 @@ phases:
       - cd ../../../
       - cp package.json ./bundle/package.json
       - cp .npmrc ./bundle/.npmrc
+      - aws s3 cp s3://filmstrip-config.s3-us-west-1.amazonaws.com/settings.dev.json ./bundle/settings.json
       - ls -la
       - ls -la ./bundle/
       - echo Build completed on `date`
