@@ -49,7 +49,16 @@ export default class FilmstripStore {
         const no = this.getMaxFrameNo() + 1
         Meteor.call('filmstrip.frame.create', { filmstripId, no }, (error, frame) => {
             if (error) return Notifications.error('Frame could not be created', error) // TODO i18n
-            this.frames.push(frame)    
+            this.frames.push(frame)
+            this.frameId = frame._id
+        })
+    }
+
+    removeFrame(frame) {
+        Meteor.call('filmstrip.frame.remove', frame._id, (error) => {
+            if (error) return Notifications.error('Frame could not be deleted', error) // TODO i18n
+            this.frames = this.frames.filter(f => f._id !== frame._id)
+            this.frameId = this.frames[0]._id
         })
     }
 

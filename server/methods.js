@@ -43,7 +43,7 @@ Meteor.methods({
     'filmstrip.frame.create'({ filmstripId, no }) {
         check(filmstripId, String)
         check(no, Number)
-        const frameId = Frames.insert({ filmstripId, no })
+        const frameId = Frames.insert({ filmstripId, no, title: '', description: `${no}`})
         return Frames.findOne(frameId)
     },
     'filmstrip.frame.save'({filmstripId, no, frame}) {
@@ -57,6 +57,11 @@ Meteor.methods({
         check(frameId, String)
         check(cloudinaryPublicId, String)
         Frames.upsert(frameId, {$set: {cloudinaryPublicId}})
+    },
+    'filmstrip.frame.remove'(_id) {
+        console.log('remove', _id)
+        check(_id, String)
+        Frames.remove({ _id })
     },
     'answer.save'({ filmstrip, frames }) {
         check(filmstrip, Object)

@@ -75,13 +75,11 @@ const FilmstripSettings = observer((props) => {
     );
 })
 
-
 const FrameEditorItem = withRouter((props) => {
     const { history, match, frame } = props
     const removeFrame = (event) => {
-        changeLanguage('es')
         if(confirm(t('FramestripsItem.Do you want to delete the frame?'))) {
-            alert(t('FramestripsItem.Wait for the future to come!'))
+            store.removeFrame(frame)
         }
     }
     const addVideo = () => history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo/`)
@@ -319,7 +317,6 @@ Meteor.startup(() => {
             Save: 'Save',
             Remove: 'Remove',
             'Do you want to delete the frame?': 'Do you want to delete the frame?',
-            'Wait for the future to come!': 'Wait for the future to come!',
             messageUnsavedChanges: 'You have unsaved changes',
             allowTextAnswers: 'Allow text answers',
             allowAddingLinks: 'Allow adding links',
@@ -337,7 +334,6 @@ Meteor.startup(() => {
             Save: 'Guardar',
             Remove: 'Remover',
             'Do you want to delete the frame?': 'Quieres borrarlo?',
-            'Wait for the future to come!': 'Espera hasta que el futuro vendra!',
             messageUnsavedChanges: 'Tienes cambios no guardados',
             allowTextAnswers: 'Allow text answers',
             allowAddingLinks: 'Allow adding links',

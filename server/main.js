@@ -16,8 +16,8 @@ Meteor.startup(() => {
   // bootstrap
   if (!Meteor.isDevelopment) return
 
-  Filmstrips.remove({})
-  Frames.remove({})
+  // Filmstrips.remove({})
+  // Frames.remove({})
 
   if (Filmstrips.find().count() === 0) {
     insertFilmstrip({
@@ -72,16 +72,13 @@ Meteor.startup(() => {
     })
   }
 
-  Invites.remove({})
+  // Invites.remove({})
   if (Invites.find().count() === 0) {
     insertInvite({ filmstripId, name: 'Steve Skrysak', email: 'steve@kaizenrecruit.com' })
     insertInvite({ filmstripId, name: 'David Young', email: 'david@kaizenrecruit.com', invitedAt: new Date() })
     insertInvite({ filmstripId, name: 'Chuck Carpenter', email: 'chuck@kaizenrecruit.com', invitedAt: new Date(), completedAt: new Date() })
   }
 
-
-
   // console.log(JSON.stringify(Filmstrips.find().fetch(), null, 2))
   // console.log(JSON.stringify(Frames.find().fetch(), null, 2))
-
 });
