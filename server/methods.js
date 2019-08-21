@@ -10,6 +10,14 @@ if(Meteor.isServer) {
   postmark = new Postmark.ServerClient(Meteor.settings.postmark.apikey)
 }
 
+// this check needs to be called with `call` from a method to have `Meteor.userId` available
+const checkFilmstripOwner = ({ filmstrip, filmstripId }) => {
+    const filmstripToInvestigate = filmstrip || Filmstrips.findOne(filmstripId, { fields: { createdBy: 1 } })
+    if (Meteor.userId() !== filmstripToInvestigate.createdBy) {
+        throw `User ${Meteor.userId()} cannot access filmstrip ${filmstripToInvestigate._id}`
+    }
+}
+
 Meteor.methods({
     'filmstrip.create'() {
         const filmstripId = Filmstrips.insert({})
@@ -18,17 +26,20 @@ Meteor.methods({
     },
     'filmstrip.remove'(filmstripId) {
         check(filmstripId, String)
+        checkFilmstripOwner.call(this, { filmstripId })
         Frames.remove({filmstripId})
         Filmstrips.remove({_id: filmstripId})
     },
     'filmstrip.setLive'(filmstrip, live) {
         check(filmstrip, Object)
+        checkFilmstripOwner.call(this, { filmstripId })
         check(live, Boolean)
         Filmstrips.update({_id: filmstrip._id}, {$set: { live }})
     },
     'filmstrip.saveWithFrames'(filmstrip, frames){
         check(filmstrip, Object)
         check(frames, [Object])
+        checkFilmstripOwner.call(this, { filmstripId })
 
         const { _id, name, description } = filmstrip
         Filmstrips.update({_id}, {$set: {name, description}})
@@ -43,29 +54,34 @@ Meteor.methods({
     'filmstrip.frame.create'({ filmstripId, no }) {
         check(filmstripId, String)
         check(no, Number)
-        const frameId = Frames.insert({ filmstripId, no, title: '', description: `${no}`})
+        checkFilmstripOwner.call(this, { filmstripId })
+        const frameId = Frames.insert({ filmstripId, no, title: ``, description: ``})
         return Frames.findOne(frameId)
     },
     'filmstrip.frame.save'({filmstripId, no, frame}) {
         check(filmstripId, String)
         check(frame, Object)
         check(no, Number)
+        checkFilmstripOwner.call(this, { filmstripId })
         Frames.upsert({filmstripId, no}, {$set: {...frame}})
     },
     'filmstrip.frame.saveVideo'({filmstripId, frameId, cloudinaryPublicId}) {
         check(filmstripId, String)
         check(frameId, String)
         check(cloudinaryPublicId, String)
+        checkFilmstripOwner.call(this, { filmstripId })
         Frames.upsert(frameId, {$set: {cloudinaryPublicId}})
     },
     'filmstrip.frame.remove'(_id) {
-        console.log('remove', _id)
         check(_id, String)
+        const frame = Frames.findOne(_id, { $fields: { filmstripId: 1 } })
+        checkFilmstripOwner.call(this, { filmstripId: frame.filmstripId })
         Frames.remove({ _id })
     },
     'answer.save'({ filmstrip, frames }) {
         check(filmstrip, Object)
         check(frames, [Object])
+        checkFilmstripOwner.call(this, { filmstripId: filmstrip._id })
         Filmstrips.insert(filmstrip)
         frames.forEach(frame => Frames.insert(frame))        
         return true
@@ -73,6 +89,7 @@ Meteor.methods({
     'answer.sendConfirmation': async function ({ filmstripId, email }) {
         check(filmstripId, String)
         check(email, String)
+        checkFilmstripOwner.call(this, { filmstripId })
 
         const filmstrip = Filmstrips.findOne(filmstripId)
         
@@ -111,6 +128,7 @@ Filmstrip.io`
         check(filmstripId, String)
         check(name, String)
         check(email, String)
+        checkFilmstripOwner.call(this, { filmstripId })
         // TODO move invites into the filmstrips document
         // TODO throw when duplicate email is inserted, maybe just a unique index will do
         const inviteId = Invites.insert({filmstripId, name, email})
@@ -136,8 +154,9 @@ Filmstrip.io`
         return inviteId
     },
     'filmstrip.invite.remove'($in) {
-        console.log({_id: {$in}, createdBy: Meteor.userId()})
         check($in, [String])
+        const invite = Invites.findOne($in[0], { fields: { filmstripId: 1 } })
+        checkFilmstripOwner.call(this, { filmstripId: invite.filmstripId })
         return Invites.remove({_id: {$in}, createdBy: Meteor.userId()})
     },
 })
