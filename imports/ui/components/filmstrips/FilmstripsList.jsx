@@ -18,7 +18,7 @@ const popupMenu = (filmstrip) => {
     const viewInvites = () => alert('TODO')
     const viewCompleted = () => alert('TODO')
     const toggleLiveText = () => filmstrip.live ? t('FramestripsList.SetAsNotLive') : t('FramestripsList.SetAsLive')
-    const toggleLive = () => Meteor.call('filmstrip.toggleLive', filmstrip)
+    const toggleLive = () => Meteor.call('filmstrip.setLive', filmstrip, !filmstrip.live)
     const removeFilmstrip = event => {
         if(confirm(t('FramestripsList.confirmRemoval'))) {
             Meteor.call('filmstrip.remove', filmstrip._id, (error) => {
