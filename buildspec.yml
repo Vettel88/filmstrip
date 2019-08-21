@@ -17,9 +17,11 @@ phases:
       - meteor npm install
       - meteor build . --allow-superuser --directory
       - cd bundle/programs/server && npm install --production 
+  post_build:
+    commands:
+      - cd ../../../
       - cp package.json ./bundle/package.json
       - echo Build completed on `date`
-      - ls -la
 artifacts:
   base-directory: bundle # Bundle contains the built code
   files:
