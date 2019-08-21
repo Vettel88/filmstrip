@@ -24,7 +24,7 @@ const Header = withRouter(observer(({history}) => {
             <TopAppBar fixed={false}>
                 <TopAppBarRow>
                     <TopAppBarSection>
-                        <TopAppBarNavigationIcon icon="keyboard_arrow_left" onClick={() => history.goBack()} />
+                        <TopAppBarNavigationIcon icon="keyboard_arrow_left" onClick={() => history.push('/')} />
                     </TopAppBarSection>
                     <TopAppBarSection>
                         <TopAppBarTitle>
@@ -52,7 +52,7 @@ export default class Layout extends Component {
         return (
             <>
                 <Header />
-                <SnackbarQueue messages={Notifications.messages} leading timeout={10000}/>
+                <SnackbarQueue messages={Notifications.messages} timeout={10000}/>
                 <Grid>
                     <GridCell span={12}>
                         {this.props.children}
