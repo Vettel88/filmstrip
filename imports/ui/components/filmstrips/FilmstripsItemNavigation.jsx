@@ -30,7 +30,6 @@ const renderContent = (tab, props, setInvitesCount) => {
 
 export const FilmstripsItemNavigation = withTranslation()((props) => {
     const [activeTab, setActiveTab] = React.useState(0)
-
     const [invitesCount, setInvitesCount] = React.useState(0)
     const [doneCount, setDoneCount] = React.useState(0)
     Meteor.subscribe('Invites', () => {

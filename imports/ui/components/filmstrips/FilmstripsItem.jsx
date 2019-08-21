@@ -84,10 +84,9 @@ const FrameEditorItem = withRouter((props) => {
             alert(t('FramestripsItem.Wait for the future to come!'))
         }
     }
-    const addVideo = (event) => {
-        console.log('addVideo', history, `/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo`)
-        return history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo/`)
-    }
+    const addVideo = (event) =>
+        history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo/`)
+
 
     const publicId = get(frame, 'cloudinaryPublicId')
     const imageOrVideo = publicId

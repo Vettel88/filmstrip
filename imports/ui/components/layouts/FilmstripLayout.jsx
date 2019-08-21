@@ -24,7 +24,7 @@ const Header = withRouter(observer(({history}) => {
             <TopAppBar fixed={false}>
                 <TopAppBarRow>
                     <TopAppBarSection>
-                        <TopAppBarNavigationIcon icon="keyboard_arrow_left" onClick={() => history.goBack()} />
+                        <TopAppBarNavigationIcon icon="keyboard_arrow_left" onClick={() => history.push('/')} />
                     </TopAppBarSection>
                     <TopAppBarSection>
                         <TopAppBarTitle>
