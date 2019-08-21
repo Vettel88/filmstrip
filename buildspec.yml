@@ -21,6 +21,8 @@ phases:
     commands:
       - cd ../../../
       - cp package.json ./bundle/package.json
+      - ls -la
+      - ls -la ./bundle/
       - echo Build completed on `date`
 artifacts:
   base-directory: bundle # Bundle contains the built code
