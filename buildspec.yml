@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      nodejs: 10
+      nodejs: 8.16.0
     commands:
       - echo Installing Meteor
       - curl https://install.meteor.com/ | sh
@@ -21,6 +21,7 @@ phases:
     commands:
       - cd ../../../
       - cp package.json ./bundle/package.json
+      - cp .npmrc ./bundle/.npmrc
       - ls -la
       - ls -la ./bundle/
       - echo Build completed on `date`
