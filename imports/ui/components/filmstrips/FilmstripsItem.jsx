@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react';
 import ReactFilestack from 'filestack-react'
-import { Image } from 'cloudinary-react'
 import { TextField, Button, Icon, List, ListItem, Card as MUICard, GridCell, Grid, Fab, CardPrimaryAction, Snackbar, SnackbarAction, Switch} from "rmwc";
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'

@@ -26,18 +26,29 @@ export const InvitesStore = observable({
         return this.selectedInviteIDs.length > 0
     },
 
+    // unfortunatly doesn't work, so do it all by hand
+    // get invitesCount() {
+    //     console.log(this.invites.length)
+    //     console.log(this.invites)
+    //     return this.invites.length
+    //     // return Invites.find().count()
+    // },
+    invitesCount: 0,
+    completedCount: 0,
+
     createInvite({ name, email }) {
         Meteor.call('filmstrip.invite.create', {filmstripId: this.filmstripId, name, email}, (error, _id) => {
             if (error) return console.error(error)
             const invite = Invites.findOne(_id)
             this.invites.push(invite)
-            this.isDirty = false
+            this.invitesCount = this.invites.length
         })
     },
 
     removeSelectedInvites() {
         Meteor.call('filmstrip.invite.remove', this.selectedInviteIDs)
         this.invites = this.invites.filter(invite => !this.selectedInviteIDs.includes(invite._id))
+        this.invitesCount = this.invites.length
         this.selectedInviteIDs = []
     },
 })
