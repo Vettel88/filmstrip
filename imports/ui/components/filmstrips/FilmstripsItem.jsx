@@ -34,7 +34,7 @@ const FilmstripSettings = observer((props) => {
                 <Switch
                     checked={store.filmstrip.live}
                     onClick={() => store.toggleLive()}
-                    label="Make this filmstrip live"
+                    label="Make this filmstrip live" // TODO i18n
                 />
             </FormField>
             <FormField>
@@ -58,7 +58,7 @@ const FilmstripSettings = observer((props) => {
                     textarea
                     outlined
                     fullwidth
-                    label={"Description"}
+                    label={"Description"} // TODO i18n
                     rows={3}
                     maxLength={120}
                     characterCount

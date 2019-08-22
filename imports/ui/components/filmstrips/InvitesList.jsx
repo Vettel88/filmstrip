@@ -37,7 +37,7 @@ const InvitesListWrapper = withRouter(observer(({}) => {
     }
     const filteredInvites = () => InvitesStore.invites.filter(inviteFilter)
     const [isCreateInvite, setIsCreateInvite] = React.useState(false)
-    const createInvite = () => setIsCreateInvite(true)
+    // const showCreateInvite = () => setIsCreateInvite(true)
     const removeInvite = () => {
         if(confirm(t('Invites.confirmRemoval'))) {
             InvitesStore.removeSelectedInvites()
@@ -52,7 +52,7 @@ const InvitesListWrapper = withRouter(observer(({}) => {
             </GridCell>
             <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
                 {renderRemoveButton(InvitesStore.hasSelectedInvites)}
-                <Fab icon="add" onClick={createInvite}/>
+                <Fab icon="add" onClick={() => setIsCreateInvite(true)}/>
             </GridCell>
             <GridCell span={9}>
                 <Typography use="headline5">{t('Invites.Invited')}</Typography>
@@ -71,7 +71,7 @@ const InvitesListWrapper = withRouter(observer(({}) => {
             <GridCell span={9}>
             </GridCell>
             <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                <Fab icon="add" onClick={createInvite}/>
+                <Fab icon="add" onClick={() => setIsCreateInvite(true)}/>
             </GridCell>
         </GridInner>
         {CreateInvite({isCreateInvite, setIsCreateInvite})}

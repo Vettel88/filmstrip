@@ -8,6 +8,10 @@ export const InvitesStore = observable({
     isInvitesLoading: true,
     selectedInviteIDs: [],
 
+    invitesResponded: [],
+    isInvitesRespondedLoading: true,
+    selectedInvitesRespondedIDs: [],
+
     selectInvite(invite) {
         if (this.selectedInviteIDs.includes(invite._id)) {
             return this.selectedInviteIDs = this.selectedInviteIDs.filter(id => id !== invite._id)
@@ -25,6 +29,34 @@ export const InvitesStore = observable({
     get hasSelectedInvites() {
         return this.selectedInviteIDs.length > 0
     },
+
+    selectInviteResponded(invite) {
+        if (this.selectedInvitesRespondedIDs.includes(invite._id)) {
+            return this.selectedInvitesRespondedIDs = this.selectedInvitesRespondedIDs.filter(id => id !== invite._id)
+        }
+        this.selectedInvitesRespondedIDs.push(invite._id)
+    },
+
+    selectAllInvitesResponded() {
+        if (this.selectedInvitesRespondedIDs.length) {
+            return this.selectedInvitesRespondedIDs = []
+        }
+        this.selectedInvitesRespondedIDs = this.invitesResponded.map(invite => invite._id)
+    },
+
+    get hasSelectedInvitesResponded() {
+        return this.selectedInvitesRespondedIDs.length > 0
+    },
+
+    // unfortunatly doesn't work, so do it all by hand
+    // get invitesCount() {
+    //     console.log(this.invites.length)
+    //     console.log(this.invites)
+    //     return this.invites.length
+    //     // return Invites.find().count()
+    // },
+    invitesCount: 0,
+    responedCount: 0,
 
     createInvite({ name, email }) {
         Meteor.call('filmstrip.invite.create', {filmstripId: this.filmstripId, name, email}, (error, _id) => {
