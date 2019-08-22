@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { TextField, Button, Typography } from 'rmwc'

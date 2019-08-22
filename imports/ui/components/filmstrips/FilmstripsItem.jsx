@@ -293,16 +293,18 @@ const FilmstripItem = observer((props) => {
     )
 })
 
-export default FilmstripItemContainer = withTranslation()(withTracker(({match}) => {
-    const { filmstripId, frameId } = match.params
-    Meteor.subscribe('Filmstrip', filmstripId, () => {
-        store.filmstrip = Filmstrips.findOne(filmstripId)
-    })
-    Meteor.subscribe('Frames', { filmstripId: filmstripId }, () => {
-        store.frames = Frames.find({ filmstripId }).fetch()
-    })
-    return ({ filmstripId, frameId })
-})(FilmstripItem))
+export default withTranslation()(
+    withTracker(({match}) => {
+        const { filmstripId, frameId } = match.params
+        Meteor.subscribe('Filmstrip', filmstripId, () => {
+            store.filmstrip = Filmstrips.findOne(filmstripId)
+        })
+        Meteor.subscribe('Frames', { filmstripId: filmstripId }, () => {
+            store.frames = Frames.find({ filmstripId }).fetch()
+        })
+        return ({ filmstripId, frameId })
+    })(FilmstripItem)
+)
 
 Meteor.startup(() => {
     addTranslations('en', {    

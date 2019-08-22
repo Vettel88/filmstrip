@@ -1,4 +1,5 @@
 import React from 'react'
+import { Meteor } from 'meteor/meteor'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import Layout from './components/layouts/Layout'
 import ModalLayout from './components/layouts/ModalLayout'
@@ -35,7 +36,7 @@ const PrivateRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest 
             : <Redirect to='/signIn' />
     )} />
 
-export default App = () =>
+const App = () =>
     <ThemeProvider
         options={{
             'primary': '#1c5784',
@@ -76,4 +77,6 @@ export default App = () =>
         </Router>
     </ThemeProvider>
 
-const NoMatch = (props) => <div>404 - sorry, nothing found</div>
+const NoMatch = (_props) => <div>404 - sorry, nothing found</div>
+
+export default App

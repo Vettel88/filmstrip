@@ -52,30 +52,27 @@ const ResponseWrapper = ({ Component, isLoading, filmstrip, email, t, createdFil
  * Reactive with withTracker and passes down translation as {t}.
  * @param {React.Component} Component Component to render after data has loaded
  */
-export const prepareResponseView = (Component) => {
-    return withTranslation()(withTracker(({ match }) => {
+export const prepareResponseView = (Component) => withTranslation()(withTracker(({ match }) => {
 
-        const id = match && match.params && match.params.id ? match.params.id : '-1'
-        const createdFilmstripId = match && match.params && match.params.createdFilmstripId ? match.params.createdFilmstripId : null
-        const handle = Meteor.subscribe('ResponseFilmstrip', id)
+    const id = match && match.params && match.params.id ? match.params.id : '-1'
+    const createdFilmstripId = match && match.params && match.params.createdFilmstripId ? match.params.createdFilmstripId : null
+    const handle = Meteor.subscribe('ResponseFilmstrip', id)
 
-        const frames = Frames.find({
-            filmstripId: id
-        }).fetch()
+    const frames = Frames.find({
+        filmstripId: id
+    }).fetch()
 
-        const filmstrip = Filmstrips.findOne({
-            _id: id
-        })
+    const filmstrip = Filmstrips.findOne({
+        _id: id
+    })
 
-        if (filmstrip) filmstrip.frames = frames
+    if (filmstrip) filmstrip.frames = frames
 
-        return {
-            Component,
-            filmstrip,
-            isLoading: !handle.ready(),
-            email: match.params.emailBase64 ? atob(match.params.emailBase64) : '',
-            createdFilmstripId
-        }
-
-    })(ResponseWrapper))
-}
+    return {
+        Component,
+        filmstrip,
+        isLoading: !handle.ready(),
+        email: match.params.emailBase64 ? atob(match.params.emailBase64) : '',
+        createdFilmstripId
+    }
+})(ResponseWrapper))

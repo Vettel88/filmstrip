@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { observable, computed } from 'mobx'
 import { Notifications } from '/imports/ui/UIHelpers.js'
 
