@@ -1,14 +1,9 @@
 import { check } from 'meteor/check'
+import i18next from 'i18next'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
-
-// TODO move to separate file to instantiate postmark several times
-import Postmark from 'postmark'
-let postmark;
-if(Meteor.isServer) {
-  postmark = new Postmark.ServerClient(Meteor.settings.postmark.apikey)
-}
+import { Postmark, sendEmail } from '/server/postmark.js'
 
 // this check needs to be called with `call` from a method to have `Meteor.userId` available
 const checkFilmstripOwner = ({ filmstrip, filmstripId }) => {
@@ -101,7 +96,7 @@ Meteor.methods({
         if(filmstrip) {
 
             try {
-                await postmark.sendEmail({
+                await Postmark.sendEmail({
                     "From": Meteor.settings.postmark.sender,
                     "To": email,
                     "Subject": `Confirm your answers to ${filmstrip.name}`,
@@ -124,22 +119,24 @@ Filmstrip.io`
 
         return true
     },
-    'filmstrip.invite.create'({filmstripId, name, email}) {
+    async 'filmstrip.invite.create'({filmstripId, name, email}) {
         check(filmstripId, String)
         check(name, String)
         check(email, String)
         checkFilmstripOwner.call(this, { filmstripId })
-        // TODO move invites into the filmstrips document
-        // TODO throw when duplicate email is inserted, maybe just a unique index will do
         const inviteId = Invites.insert({filmstripId, name, email})
-
         const filmstrip = Filmstrips.findOne(filmstripId)
         const username = Meteor.user().username || 'a great filmstrip user'
         const emailBase64 = new Buffer(email).toString('base64')
         const link = Meteor.absoluteUrl(`a/${filmstripId}/${emailBase64}`)
-        // TODO i18n
-        postmark.sendEmail({
-            "From": Meteor.settings.postmark.sender,
+        // TODO i18n - the following doesn't work: TypeError: i18next.addResourceBundle is not a function
+        // sendEmail({
+        //     From: Meteor.settings.postmark.sender,
+        //     To: email,
+        //     Subject: t('Emails.filmstrip.invite.create.Subject', filmstrip, username, link),
+        //     Body: t('Emails.filmstrip.invite.create.Body', filmstrip, username, link),
+        // })
+        await sendEmail({
             "To": email,
             "Subject": `You are invited to respond to ${filmstrip.name}`,
             "TextBody": `Congratulations,
@@ -160,3 +157,41 @@ Filmstrip.io`
         return Invites.remove({_id: {$in}, createdBy: Meteor.userId()})
     },
 })
+
+const addTranslations = (language, translations, ns = 'translation') => 
+    // TODO this results in: TypeError: i18next.addResourceBundle is not a function
+    // it seems i18next can not be used for SSR
+    i18next.addResourceBundle(language, ns, translations, true, true)
+
+// Meteor.startup(() => {
+//     addTranslations('en', {
+//         Emails: {
+//             'filmstrip.invite.create': {
+//                 'Subject': '`You are invited to respond to {{filmstrip.name}}`',
+//                 'Body': `Congratulations,
+
+//                 you have been invited by {{username}} to respond to the film strip "{{filmstrip.name}}".
+                
+//                 Click here to answer: {{link}}
+                
+//                 Yours,
+//                 Filmstrip.io`,
+//             },
+//         },
+//     })
+//     addTranslations('es', {
+//         Emails: {
+//             'filmstrip.invite.create': {
+//                 'Subject': '`You are invited to respond to {{filmstrip.name}}`',
+//                 'Body': `Congratulations,
+
+//                 you have been invited by {{username}} to respond to the film strip "{{filmstrip.name}}".
+                
+//                 Click here to answer: {{link}}
+                
+//                 Yours,
+//                 Filmstrip.io`,
+//             },
+//         },
+//     })
+// })
