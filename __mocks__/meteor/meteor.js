@@ -1,5 +1,6 @@
 const Meteor = {
     publish: jest.fn(),
+    subscribe: jest.fn(),
     startup: jest.fn(),
     isServer: false,
     settings: {

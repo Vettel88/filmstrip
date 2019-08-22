@@ -20,15 +20,12 @@ const renderContent = (tab, props) => {
     const propsWithFilmstripId = Object.assign({}, props, {filmstripId})
     switch(tab) {
         case 1:
-            // TODO set URL correctly
-            // history.replace(`${baseUrl}/invites`)
             const args = Object.assign({}, props, {filmstripId, setInvitesCount})
             return <InvitesList {...propsWithFilmstripId}/>
         case 2:
             // history.replace(`${baseUrl}/done`)
             return <InvitesRespondedList {...propsWithFilmstripId}/>
         default:
-            // history.replace(`${baseUrl}/settings`)
             return <Settings {...props}/>
     }
 }

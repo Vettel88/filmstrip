@@ -1,4 +1,5 @@
-// import React from 'react'
-class ValidatedMethod { }
+class ValidatedMethod {
+    call(){}
+}
 
 module.exports = { ValidatedMethod }
