@@ -2,27 +2,24 @@ import React from 'react'
 import { shallow } from 'enzyme'
 import { ResponseFinish, ResponseConfirmationSent, ResponseConfirm } from '../ResponseFinish'
 
-let props = { }
 describe('<ResponseFinish />', () => {
-  const responseFinish = shallow(<ResponseFinish {...props} />)
+  const responseFinish = shallow(<ResponseFinish />)
 
   it('<ResponseFinish /> should render', () => {
     expect(responseFinish.exists()).toBe(true)
   })
 })
 
-props = { }
 describe('<ResponseConfirmationSent />', () => {
-  const responseConfirmationSent = shallow(<ResponseConfirmationSent {...props} />)
+  const responseConfirmationSent = shallow(<ResponseConfirmationSent />)
 
   it('<ResponseConfirmationSent /> should render', () => {
     expect(responseConfirmationSent.exists()).toBe(true)
   })
 })
 
-props = { }
 describe('<ResponseConfirm />', () => {
-  const responseConfirm = shallow(<ResponseConfirm {...props} />)
+  const responseConfirm = shallow(<ResponseConfirm />)
 
   it('<ResponseConfirm /> should render', () => {
     expect(responseConfirm.exists()).toBe(true)
