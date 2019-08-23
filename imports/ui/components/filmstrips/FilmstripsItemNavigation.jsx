@@ -20,7 +20,7 @@ const renderContent = (tab, props, setInvitesCount) => {
             return <InvitesList {...arguments}/>
             // return <InvitesList {...props}/>
         case 2:
-            // history.replace(`${baseUrl}/done`)
+            // history.replace(`${baseUrl}/responded`)
             return <Done {...props}/>
         default:
             // history.replace(`${baseUrl}/settings`)
@@ -31,10 +31,10 @@ const renderContent = (tab, props, setInvitesCount) => {
 export const FilmstripsItemNavigation = withTranslation()((props) => {
     const [activeTab, setActiveTab] = React.useState(0)
     const [invitesCount, setInvitesCount] = React.useState(0)
-    const [doneCount, setDoneCount] = React.useState(0)
+    const [respondedCount, setRespondedCount] = React.useState(0)
     Meteor.subscribe('Invites', () => {
         setInvitesCount(Invites.find().count())
-        setDoneCount(Invites.find({completedAt: {$exists: true}}).count())
+        setRespondedCount(Invites.find({respondedAt: {$exists: true}}).count())
     })
 
     return <>
@@ -43,7 +43,7 @@ export const FilmstripsItemNavigation = withTranslation()((props) => {
                 <TabBar activeTabIndex={activeTab} onActivate={evt => setActiveTab(evt.detail.index)}>
                     <Tab>{t('FilmstripsItemNavigation.Settings')}</Tab>
                     <Tab>{t('FilmstripsItemNavigation.Invites')} ({invitesCount})</Tab>
-                    <Tab>{t('FilmstripsItemNavigation.Done')} ({doneCount})</Tab>
+                    <Tab>{t('FilmstripsItemNavigation.Responded')} ({respondedCount})</Tab>
                 </TabBar>
             </GridCell>
             <GridCell span={12}>
@@ -58,14 +58,14 @@ Meteor.startup(() => {
         FilmstripsItemNavigation: {
             Settings: 'Settings',
             Invites: 'Invites',
-            Done: 'Done',
+            Responded: 'Responded',
         }
     })
     addTranslations('es', {
         FilmstripsItemNavigation: {
             Settings: 'Ajustes',
             Invites: 'Invitados',
-            Done: 'Hecho',
+            Responded: 'Respondido',
         }
     })
 })

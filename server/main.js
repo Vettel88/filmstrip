@@ -76,7 +76,7 @@ Meteor.startup(() => {
   if (Invites.find().count() === 0) {
     insertInvite({ filmstripId, name: 'Steve Skrysak', email: 'steve@kaizenrecruit.com' })
     insertInvite({ filmstripId, name: 'David Young', email: 'david@kaizenrecruit.com', invitedAt: new Date() })
-    insertInvite({ filmstripId, name: 'Chuck Carpenter', email: 'chuck@kaizenrecruit.com', invitedAt: new Date(), completedAt: new Date() })
+    insertInvite({ filmstripId, name: 'Chuck Carpenter', email: 'chuck@kaizenrecruit.com', invitedAt: new Date(), respondedAt: new Date() })
   }
 
   // console.log(JSON.stringify(Filmstrips.find().fetch(), null, 2))
