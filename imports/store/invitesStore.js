@@ -1,7 +1,7 @@
 import { observable, computed, observe } from 'mobx'
 import { Invites } from '/imports/db/invites.js'
 
-export const InvitesStore = observable({
+export const invitesStore = observable({
     isDirty: false,
     filmstripId: undefined,
     invites: [],
@@ -48,13 +48,6 @@ export const InvitesStore = observable({
         return this.selectedInvitesRespondedIDs.length > 0
     },
 
-    // unfortunatly doesn't work, so do it all by hand
-    // get invitesCount() {
-    //     console.log(this.invites.length)
-    //     console.log(this.invites)
-    //     return this.invites.length
-    //     // return Invites.find().count()
-    // },
     invitesCount: 0,
     responedCount: 0,
 

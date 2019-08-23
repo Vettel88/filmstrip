@@ -4,6 +4,7 @@ import { addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
 import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
 import { InvitesRespondedList } from '/imports/ui/components/filmstrips/InvitesRespondedList.jsx'
 import { Invites } from '/imports/db/invites.js'
+import { invitesStore } from '/imports/store/invitesStore.js'
 import Settings from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
 import '/imports/ui/components/filmstrips/FilmstripsItem.less'
 
@@ -13,16 +14,16 @@ const renderContent = (tab, props) => {
     const { history, match } = props
     const { filmstripId, frameId } = match.params
     const baseUrl = `/filmstrip/${filmstripId}/${frameId}/`
-    const arguments = Object.assign({}, props, {filmstripId})
+    const propsWithFilmstripId = Object.assign({}, props, {filmstripId})
     switch(tab) {
         case 1:
             // TODO set URL correctly
             // history.replace(`${baseUrl}/invites`)
-            return <InvitesList {...arguments}/>
+            return <InvitesList {...propsWithFilmstripId}/>
             // return <InvitesList {...props}/>
         case 2:
             // history.replace(`${baseUrl}/done`)
-            return <InvitesRespondedList {...arguments}/>
+            return <InvitesRespondedList {...propsWithFilmstripId}/>
         default:
             // history.replace(`${baseUrl}/settings`)
             return <Settings {...props}/>
@@ -34,8 +35,8 @@ export const FilmstripsItemNavigation = withTranslation()((props) => {
     const { filmstripId } = props.match.params
     Meteor.subscribe('Invites', () => {
         const invites = Invites.find({ filmstripId })
-        InvitesStore.invitesCount = invites.count()
-        InvitesStore.responedCount = invites.fetch().filter(i => i.respondedAt).length // done
+        invitesStore.invitesCount = invites.count()
+        invitesStore.responedCount = invites.fetch().filter(i => i.respondedAt).length // done
     })
 
     return <>
@@ -43,8 +44,8 @@ export const FilmstripsItemNavigation = withTranslation()((props) => {
             <GridCell span={12}>
                 <TabBar activeTabIndex={activeTab} onActivate={evt => setActiveTab(evt.detail.index)}>
                     <Tab>{t('FilmstripsItemNavigation.Settings')}</Tab>
-                    <Tab>{t('FilmstripsItemNavigation.Invites')} ({InvitesStore.invitesCount})</Tab>
-                    <Tab>{t('FilmstripsItemNavigation.Done')} ({InvitesStore.responedCount})</Tab>
+                    <Tab>{t('FilmstripsItemNavigation.Invites')} ({invitesStore.invitesCount})</Tab>
+                    <Tab>{t('FilmstripsItemNavigation.Done')} ({invitesStore.responedCount})</Tab>
                 </TabBar>
             </GridCell>
             <GridCell span={12}>

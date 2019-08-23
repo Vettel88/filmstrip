@@ -8,19 +8,19 @@ import { observer } from 'mobx-react'
 import { Invites } from '/imports/db/invites.js'
 import * as UI from '/imports/ui/UIHelpers.js'
 import { t } from '/imports/ui/UIHelpers.js'
-import { InvitesStore } from '/imports/store/InvitesStore.js'
+import { invitesStore } from '/imports/store/invitesStore.js'
 
 const InvitesListItem = withRouter(observer(({history, invite}) => <ListItem>
     <GridInner>
-        <GridCell span={2} style={({textAlign: 'center'})} onClick={() => InvitesStore.selectInvite(invite)}>
+        <GridCell span={2} style={({textAlign: 'center'})} onClick={() => invitesStore.selectInvite(invite)}>
             <Avatar  size="xsmall" name={invite.name}/>
         </GridCell>
-        <GridCell span={9} onClick={() => InvitesStore.selectInvite(invite)}>
+        <GridCell span={9} onClick={() => invitesStore.selectInvite(invite)}>
             <Typography use="headline7">{invite.name || t('Invites.undefined')}</Typography>
             <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
         </GridCell>
         <GridCell span={1}>
-            <Checkbox label="" checked={InvitesStore.selectedInviteIDs.includes(invite._id)} onChange={() => InvitesStore.selectInvite(invite)}/>
+            <Checkbox label="" checked={invitesStore.selectedInviteIDs.includes(invite._id)} onChange={() => invitesStore.selectInvite(invite)}/>
         </GridCell>
     </GridInner>
 </ListItem>))
@@ -35,12 +35,11 @@ const InvitesListWrapper = withRouter(observer(({}) => {
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
-    const filteredInvites = () => InvitesStore.invites.filter(inviteFilter)
+    const filteredInvites = () => invitesStore.invites.filter(inviteFilter)
     const [isCreateInvite, setIsCreateInvite] = React.useState(false)
-    // const showCreateInvite = () => setIsCreateInvite(true)
     const removeInvite = () => {
         if(confirm(t('Invites.confirmRemoval'))) {
-            InvitesStore.removeSelectedInvites()
+            invitesStore.removeSelectedInvites()
         }
     }
     const renderRemoveButton = show => show ? <Fab icon="delete" onClick={removeInvite}/> : <></>
@@ -51,18 +50,18 @@ const InvitesListWrapper = withRouter(observer(({}) => {
                 <TextField placeholder={t('Invites.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
             </GridCell>
             <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                {renderRemoveButton(InvitesStore.hasSelectedInvites)}
+                {renderRemoveButton(invitesStore.hasSelectedInvites)}
                 <Fab icon="add" onClick={() => setIsCreateInvite(true)}/>
             </GridCell>
             <GridCell span={9}>
                 <Typography use="headline5">{t('Invites.Invited')}</Typography>
             </GridCell>
             <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                <Button label={InvitesStore.hasSelectedInvites ? t('Invites.DeselectAll') : t('Invites.SelectAll')} onClick={() => InvitesStore.selectAllInvites()} />
+                <Button label={invitesStore.hasSelectedInvites ? t('Invites.DeselectAll') : t('Invites.SelectAll')} onClick={() => invitesStore.selectAllInvites()} />
             </GridCell>
         </GridInner>
         <List>
-            {UI.loadingWrapper(InvitesStore.isInvitesLoading, () => 
+            {UI.loadingWrapper(invitesStore.isInvitesLoading, () => 
                 filteredInvites().map(invite => <InvitesListItem key={invite._id} invite={invite}/>)
             )}
         </List>
@@ -79,10 +78,10 @@ const InvitesListWrapper = withRouter(observer(({}) => {
 }))
 
 export const InvitesList = UI.withTranslation()(withTracker(({filmstripId, setInvitesCount}) => {
-    InvitesStore.filmstripId = filmstripId
+    invitesStore.filmstripId = filmstripId
     Meteor.subscribe('Invites', () => {
-        InvitesStore.invites = Invites.find({filmstripId}).fetch()
-        InvitesStore.isInvitesLoading = false
+        invitesStore.invites = Invites.find({filmstripId}).fetch()
+        invitesStore.isInvitesLoading = false
     })
     return { setInvitesCount }
 })(InvitesListWrapper))
@@ -95,7 +94,7 @@ export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreat
         try {
             UI.checkMandatory(name, { field: t('Invites.Name') })
             UI.checkEmail(email, { field: t('Invites.Email') })
-            InvitesStore.createInvite({ name, email })
+            invitesStore.createInvite({ name, email })
             setIsCreateInvite(false)
         } catch(error) {
             console.error(error.message)

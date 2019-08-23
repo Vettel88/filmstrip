@@ -9,20 +9,20 @@ import { observer } from 'mobx-react'
 import { Invites } from '/imports/db/invites.js'
 import * as UI from '/imports/ui/UIHelpers.js'
 import { t } from '/imports/ui/UIHelpers.js'
-import { InvitesStore } from '/imports/store/InvitesStore.js'
+import { invitesStore } from '/imports/store/invitesStore.js'
 import './InvitesRespondedList.less'
 
 const InvitesRespondedListItem = withRouter(observer(({invite}) => <ListItem>
     <GridInner>
-        <GridCell span={2} style={({textAlign: 'center'})} onClick={() => InvitesStore.selectInviteResponded(invite)}>
+        <GridCell span={2} style={({textAlign: 'center'})} onClick={() => invitesStore.selectInviteResponded(invite)}>
             <Avatar  size="xsmall" name={invite.name}/>
         </GridCell>
-        <GridCell span={9} onClick={() => InvitesStore.selectInviteResponded(invite)}>
+        <GridCell span={9} onClick={() => invitesStore.selectInviteResponded(invite)}>
             <Typography use="headline7">{invite.name || t('InvitesResponded.undefined')}</Typography>
             <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
         </GridCell>
         <GridCell span={1}>
-            <Checkbox label="" checked={InvitesStore.selectedInvitesRespondedIDs.includes(invite._id)} onChange={() => InvitesStore.selectInviteResponded(invite)}/>
+            <Checkbox label="" checked={invitesStore.selectedInvitesRespondedIDs.includes(invite._id)} onChange={() => invitesStore.selectInviteResponded(invite)}/>
         </GridCell>
     </GridInner>
 </ListItem>))
@@ -38,7 +38,7 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
-    const filteredInvites = () => InvitesStore.invitesResponded.filter(inviteFilter)
+    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
     const [showShareInvite, setShowShareInvite] = React.useState(false)
     const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)}/> : <></>
     
@@ -48,17 +48,17 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
                 <TextField placeholder={t('InvitesResponded.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
             </GridCell>
             <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                {renderShareButton(InvitesStore.hasSelectedInvitesResponded)}
+                {renderShareButton(invitesStore.hasSelectedInvitesResponded)}
             </GridCell>
             <GridCell span={9}>
                 <Typography use="headline5">{t('InvitesResponded.Responded')}</Typography>
             </GridCell>
             <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                <Button label={InvitesStore.hasSelectedInvitesResponded ? t('InvitesResponded.DeselectAll') : t('InvitesResponded.SelectAll')} onClick={() => InvitesStore.selectAllInvitesResponded()} />
+                <Button label={invitesStore.hasSelectedInvitesResponded ? t('InvitesResponded.DeselectAll') : t('InvitesResponded.SelectAll')} onClick={() => invitesStore.selectAllInvitesResponded()} />
             </GridCell>
         </GridInner>
         <List>
-            {UI.loadingWrapper(InvitesStore.isInvitesRespondedLoading, () => 
+            {UI.loadingWrapper(invitesStore.isInvitesRespondedLoading, () => 
                 filteredInvites().map(invite => <InvitesRespondedListItem key={invite._id} invite={invite}/>)
             )}
         </List>
@@ -67,10 +67,10 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
 }))
 
 export const InvitesRespondedList = UI.withTranslation()(withTracker(({filmstripId, setInvitesRespondedCount}) => {
-    InvitesStore.filmstripId = filmstripId
+    invitesStore.filmstripId = filmstripId
     Meteor.subscribe('Invites', () => {
-        InvitesStore.invitesResponded = Invites.find({filmstripId, respondedAt: { $exists: true } }).fetch()
-        InvitesStore.isInvitesRespondedLoading = false
+        invitesStore.invitesResponded = Invites.find({filmstripId, respondedAt: { $exists: true } }).fetch()
+        invitesStore.isInvitesRespondedLoading = false
     })
     return { setInvitesRespondedCount }
 })(InvitesRespondedListWrapper))
@@ -88,13 +88,13 @@ export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowSha
             if (file) {
                 bodyWithFile = `${body}\n\n${t('InvitesResponded.email.fileMsg', {file})}`
             }
-            Meteor.call('filmstrip.invite.shareRespondedInvites', { inviteIDs: InvitesStore.selectedInvitesRespondedIDs, subject, body: bodyWithFile, file }, (error) => {
+            Meteor.call('filmstrip.invite.shareRespondedInvites', { inviteIDs: invitesStore.selectedInvitesRespondedIDs, subject, body: bodyWithFile, file }, (error) => {
                 if (error) return console.error(error)
                 setShowShareInvite(false)
                 UI.Notifications.success(t('InvitesResponded.email.messageResponsesSent'))
             })    
         } catch(error) {
-            console.error(error)
+            UI.Notifications.error(t('InvitesResponded.errorShare'), error)
         }
     }
     return showShareInvite ? <Dialog open={open} onClose={_ => {setShowShareInvite(false)}} className="CreateInviteDialog">
@@ -136,6 +136,7 @@ Meteor.startup(() => {
                 fileMsg: 'The file <a href="{{file.url}}">{{file.filename}}</a> has been added to this email.',
                 messageResponsesSent: 'The response(s) have been shared',
             },
+            errorShare: 'The response(s) could not be shared',
         }
     })
     UI.addTranslations('es', {
@@ -159,6 +160,7 @@ Meteor.startup(() => {
                 fileMsg: 'El archivo <a href="{{file.url}}">{{file.filename}}</a> ha sido agregado a este email.',
                 messageResponsesSent: 'Las respuestas han sido inviadas',
             },
+            errorShare: 'The response(s) could not be shared',
         }
     })
 })
