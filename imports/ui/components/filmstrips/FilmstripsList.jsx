@@ -1,22 +1,21 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Image } from 'cloudinary-react'
-import { GridCell, GridInner, Fab, Chip, MenuSurfaceAnchor, Menu, MenuItem, Typography } from 'rmwc'
+import { GridCell, GridInner, Fab, Elevation, MenuSurfaceAnchor, Menu, MenuItem, Typography, TextField } from 'rmwc'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
+import ClipboardJS from '/node_modules/clipboard/dist/clipboard.min.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import { Invites } from '/imports/db/invites.js'
 import { loadingWrapper, addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
-import Video from '/imports/ui/components/VideoPlayer.js';
+import Video from '/imports/ui/components/VideoPlayer.js'
 import './FilmstripsList.less'
 
-const popupMenu = (filmstrip) => {
+const popupMenu = (history, filmstrip, frameId) => {
     const [open, setOpen] = React.useState(false)
-
-    const copyPublicLink = () => alert('TODO')
-    const viewInvites = () => alert('TODO')
-    const viewCompleted = () => alert('TODO')
+    const viewInvites = () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/invites`)
+    const viewCompleted = () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/responded`)
     const toggleLiveText = () => filmstrip.live ? t('FramestripsList.SetAsNotLive') : t('FramestripsList.SetAsLive')
     const toggleLive = () => Meteor.call('filmstrip.toggleLive', filmstrip)
     const removeFilmstrip = event => {
@@ -26,56 +25,59 @@ const popupMenu = (filmstrip) => {
             })
         }
     }
+    const linkId = `link-${filmstrip._id}`
 
-    return (
-        <MenuSurfaceAnchor>
-            <Menu open={open}onClose={evt => setOpen(false)}>
-                <MenuItem onClick={copyPublicLink}>{t('FramestripsList.CopyPublicLink')}</MenuItem>
-                <MenuItem onClick={viewInvites}>{t('FramestripsList.ViewInvites')}</MenuItem>
-                <MenuItem onClick={viewCompleted}>{t('FramestripsList.ViewCompleted')}</MenuItem>
-                <MenuItem onClick={toggleLive}>{toggleLiveText()}</MenuItem>
-                <MenuItem onClick={removeFilmstrip}>{t('FramestripsList.DeleteFilmstrip')}</MenuItem>
-            </Menu>
-            <Fab icon="more_horiz" onClick={evt => setOpen(!open)} mini={true} theme={['textPrimaryOnLight', 'background']}/>
-        </MenuSurfaceAnchor>
-    )
+    return (<MenuSurfaceAnchor>
+        {/* render the field off canvas, `display: 'hidden` doesn't work as react won't render it all then */}
+        <TextField id={linkId} defaultValue={Meteor.absoluteUrl(`/a/${filmstrip._id}`)} style={{position: 'fixed', bottom: '-100px'}}/>
+        <Menu open={open}onClose={evt => setOpen(false)}>
+            <MenuItem className="publicLink" data-clipboard-target={`#${linkId}`}>{t('FramestripsList.CopyPublicLink')}</MenuItem>
+            <MenuItem onClick={viewInvites}>{t('FramestripsList.ViewInvites')}</MenuItem>
+            <MenuItem onClick={viewCompleted}>{t('FramestripsList.ViewCompleted')}</MenuItem>
+            <MenuItem onClick={toggleLive}>{toggleLiveText()}</MenuItem>
+            <MenuItem onClick={removeFilmstrip}>{t('FramestripsList.DeleteFilmstrip')}</MenuItem>
+        </Menu>
+        <Fab icon="more_horiz" onClick={evt => setOpen(!open)} mini={true} theme={['textPrimaryOnLight', 'background']}/>
+    </MenuSurfaceAnchor>)
 }
 
 const FilmstripsListItem = withRouter(({history, filmstrip}) => {
     const firstFrame = Frames.findOne({ filmstripId: filmstrip._id, no: 1 })
-    const frameId = firstFrame && firstFrame._id ? firstFrame._id : '-1'
+    const frameId = get(firstFrame, '_id', '')
 
     const gotoFirstFrame = event => {
         event.preventDefault()
         history.push(`/filmstrip/${filmstrip._id}/${frameId}/settings`)
     }
-    const getInviteesCount = filmstrip => 0
-    const getAnswersDoneCount = filmstrip => 0
+    // TODO maybe move this to the store
+    const getInviteesCount = filmstrip => Invites.find({filmstripId: filmstrip._id}).count()
+    const getAnswersDoneCount = filmstrip => Invites.find({filmstripId: filmstrip._id, respondedAt: {$exists: true}}).count()
+    
     const imageOrVideo = () => {
         const publicId = get(firstFrame, 'video.public_id')
         return publicId
             ? <Video publicId={publicId} width="48"/>
-            : <Image cloudName="demo" publicId="sample" width="48" crop="scale"/>
+            : <img src="https://via.placeholder.com/48x32"/>
     }
 
-    return <li>
+    return <li><Elevation z={1}>
         <GridInner>
             <GridCell span={2} style={({textAlign: 'center'})} onClick={gotoFirstFrame}>
-                {imageOrVideo()}
-                <Chip 
-                    label={filmstrip.live ? t('FramestripsList.Live') : t('FramestripsList.NotLive')} 
-                    style={({backgroundColor: filmstrip.live ? 'green' : 'red'})} />
+                <div>{imageOrVideo()}</div>
+                <Typography use="caption" style={({color: filmstrip.live ? 'green' : 'red'})}>
+                    {filmstrip.live ? t('FramestripsList.Live') : t('FramestripsList.NotLive')}
+                </Typography>
             </GridCell>
-            <GridCell span={9} onClick={gotoFirstFrame}>
+            <GridCell span={7} onClick={gotoFirstFrame}>
                 <Typography use="headline7">{filmstrip.name || t('FramestripsList.undefined')}</Typography>
                 <p>{filmstrip.description}</p>
-                <p>{getInviteesCount(filmstrip)} invitees, {getAnswersDoneCount(filmstrip)} done</p>
+                <p>{getInviteesCount(filmstrip)} {t('FramestripsList.invitees')}, {getAnswersDoneCount(filmstrip)} {t('FramestripsList.responded')}</p>
             </GridCell>
-            <GridCell span={1}>
-                {popupMenu(filmstrip)}
+            <GridCell span={3}>
+                {popupMenu(history, filmstrip, frameId)}
             </GridCell>
         </GridInner>
-    </li>
+    </Elevation></li>
 })
 
 const FilmstripsListWrapper = withRouter(({history, isLoading, filmstrips}) => {
@@ -110,8 +112,10 @@ export const FilmstripsList = withTranslation()(withTracker(() => {
     const handle = Meteor.subscribe('Filmstrips')
     // TODO limit subscribtion to only get the _id of the first frame
     const handleFrames = Meteor.subscribe('Frames')
+    const handleInvites = Meteor.subscribe('Invites')
+    new ClipboardJS(`.publicLink`)
     return {
-        isLoading: !handle.ready() || !handleFrames.ready(),
+        isLoading: !handle.ready() || !handleFrames.ready() || !handleInvites.ready(),
         filmstrips: Filmstrips.find().fetch()
     }
 })(FilmstripsListWrapper))
@@ -130,6 +134,8 @@ Meteor.startup(() => {
             SetAsLive: 'Set as live',
             SetAsNotLive: 'Set as not live',
             DeleteFilmstrip: 'Delete filmstrip',
+            invitees: 'invitees',
+            responded: 'responded',
         }
     })
     addTranslations('es', {
@@ -145,6 +151,8 @@ Meteor.startup(() => {
             SetAsLive: 'Set as live',
             SetAsNotLive: 'Set as not live',
             DeleteFilmstrip: 'Delete filmstrip',
+            invitees: 'invitees',
+            responded: 'responded',
         }
     })
 })
