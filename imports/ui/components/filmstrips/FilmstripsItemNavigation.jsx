@@ -32,6 +32,8 @@ const renderContent = (tab, props) => {
     }
 }
 
+const setActiveTabHandler = setActiveTab => event => setActiveTab(event.detail.index)
+
 export const FilmstripsItemNavigation = withTranslation()(observer((props) => {
     const [activeTab, setActiveTab] = React.useState(0)
     const { filmstripId } = props.match.params
@@ -44,7 +46,7 @@ export const FilmstripsItemNavigation = withTranslation()(observer((props) => {
     return <>
         <GridInner>
             <GridCell span={12}>
-                <TabBar activeTabIndex={activeTab} onActivate={evt => setActiveTab(evt.detail.index)}>
+                <TabBar activeTabIndex={activeTab} onActivate={setActiveTabHandler(setActiveTab)}>
                     <Tab>{t('FilmstripsItemNavigation.Settings')}</Tab>
                     <Tab>{t('FilmstripsItemNavigation.Invites')} ({InvitesStore.invitesCount})</Tab>
                     <Tab>{t('FilmstripsItemNavigation.Done')} ({InvitesStore.responedCount})</Tab>
