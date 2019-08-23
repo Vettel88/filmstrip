@@ -33,14 +33,14 @@ Meteor.methods({
     },
     'filmstrip.setLive'(filmstrip, live) {
         check(filmstrip, Object)
-        checkFilmstripOwner.call(this, { filmstripId: filmstrip._id })
+        checkFilmstripOwner.call(this, { filmstrip })
         check(live, Boolean)
         Filmstrips.update({_id: filmstrip._id}, {$set: { live }})
     },
     'filmstrip.saveWithFrames'(filmstrip, frames){
         check(filmstrip, Object)
         check(frames, [Object])
-        checkFilmstripOwner.call(this, { filmstripId })
+        checkFilmstripOwner.call(this, { filmstrip })
 
         const { _id, name, description } = filmstrip
         Filmstrips.update({_id}, {$set: {name, description}})
@@ -82,7 +82,7 @@ Meteor.methods({
     'answer.save'({ filmstrip, frames }) {
         check(filmstrip, Object)
         check(frames, [Object])
-        checkFilmstripOwner.call(this, { filmstripId: filmstrip._id })
+        checkFilmstripOwner.call(this, { filmstrip })
         Filmstrips.insert(filmstrip)
         frames.forEach(frame => Frames.insert(frame))        
         return true
