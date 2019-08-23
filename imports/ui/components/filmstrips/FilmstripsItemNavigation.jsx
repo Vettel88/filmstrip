@@ -16,16 +16,16 @@ const renderContent = (tab, props) => {
     const { history, match } = props
     const { filmstripId, frameId } = match.params
     const baseUrl = `/filmstrip/${filmstripId}/${frameId}/`
-    const arguments = Object.assign({}, props, {filmstripId})
+    const propsWithFilmstripId = Object.assign({}, props, {filmstripId})
     switch(tab) {
         case 1:
             // TODO set URL correctly
             // history.replace(`${baseUrl}/invites`)
-            return <InvitesList {...arguments}/>
+            return <InvitesList {...propsWithFilmstripId}/>
             // return <InvitesList {...props}/>
         case 2:
             // history.replace(`${baseUrl}/done`)
-            return <InvitesRespondedList {...arguments}/>
+            return <InvitesRespondedList {...propsWithFilmstripId}/>
         default:
             // history.replace(`${baseUrl}/settings`)
             return <Settings {...props}/>
