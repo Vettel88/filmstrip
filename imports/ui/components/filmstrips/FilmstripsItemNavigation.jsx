@@ -31,12 +31,13 @@ const renderContent = (tab, props) => {
 }
 
 export const FilmstripsItemNavigation = withTranslation()((props) => {
-    const [activeTab, setActiveTab] = React.useState(0)
     const { filmstripId } = props.match.params
+    const [activeTab, setActiveTab] = React.useState(0)
+    const [invitesCount, setInvitesCount] = React.useState(0)
+    const [respondedCount, setRespondedCount] = React.useState(0)
     Meteor.subscribe('Invites', () => {
-        const invites = Invites.find({ filmstripId })
-        invitesStore.invitesCount = invites.count()
-        invitesStore.responedCount = invites.fetch().filter(i => i.respondedAt).length // done
+        setInvitesCount(Invites.find({ filmstripId }).count())
+        setRespondedCount(Invites.find({respondedAt: {$exists: true}}).count())
     })
 
     return <>
@@ -44,8 +45,8 @@ export const FilmstripsItemNavigation = withTranslation()((props) => {
             <GridCell span={12}>
                 <TabBar activeTabIndex={activeTab} onActivate={evt => setActiveTab(evt.detail.index)}>
                     <Tab>{t('FilmstripsItemNavigation.Settings')}</Tab>
-                    <Tab>{t('FilmstripsItemNavigation.Invites')} ({invitesStore.invitesCount})</Tab>
-                    <Tab>{t('FilmstripsItemNavigation.Done')} ({invitesStore.responedCount})</Tab>
+                    <Tab>{t('FilmstripsItemNavigation.Invites')} ({invitesCount})</Tab>
+                    <Tab>{t('FilmstripsItemNavigation.Responded')} ({respondedCount})</Tab>
                 </TabBar>
             </GridCell>
             <GridCell span={12}>
@@ -60,14 +61,14 @@ Meteor.startup(() => {
         FilmstripsItemNavigation: {
             Settings: 'Settings',
             Invites: 'Invites',
-            Done: 'Responded',
+            Responded: 'Responded',
         }
     })
     addTranslations('es', {
         FilmstripsItemNavigation: {
             Settings: 'Ajustes',
             Invites: 'Invitados',
-            Done: 'Respondido',
+            Responded: 'Respondido',
         }
     })
 })
