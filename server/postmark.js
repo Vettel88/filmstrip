@@ -12,5 +12,9 @@ export const sendEmail = async params => {
     const email = Object.assign({}, { 
         From: Meteor.settings.postmark.sender,
     }, params)
-    return await Postmark.sendEmail(email)
+    try {
+        return await Postmark.sendEmail(email)
+    } catch(error) {
+        console.error(error)
+    }
 }

@@ -129,13 +129,6 @@ Filmstrip.io`
         const username = Meteor.user().username || 'a great filmstrip user'
         const emailBase64 = new Buffer(email).toString('base64')
         const link = Meteor.absoluteUrl(`a/${filmstripId}/${emailBase64}`)
-        // TODO i18n - the following doesn't work: TypeError: i18next.addResourceBundle is not a function
-        // sendEmail({
-        //     From: Meteor.settings.postmark.sender,
-        //     To: email,
-        //     Subject: t('Emails.filmstrip.invite.create.Subject', filmstrip, username, link),
-        //     Body: t('Emails.filmstrip.invite.create.Body', filmstrip, username, link),
-        // })
         await sendEmail({
             "To": email,
             "Subject": `You are invited to respond to ${filmstrip.name}`,
@@ -157,41 +150,3 @@ Filmstrip.io`
         return Invites.remove({_id: {$in}, createdBy: Meteor.userId()})
     },
 })
-
-const addTranslations = (language, translations, ns = 'translation') => 
-    // TODO this results in: TypeError: i18next.addResourceBundle is not a function
-    // it seems i18next can not be used for SSR
-    i18next.addResourceBundle(language, ns, translations, true, true)
-
-// Meteor.startup(() => {
-//     addTranslations('en', {
-//         Emails: {
-//             'filmstrip.invite.create': {
-//                 'Subject': '`You are invited to respond to {{filmstrip.name}}`',
-//                 'Body': `Congratulations,
-
-//                 you have been invited by {{username}} to respond to the film strip "{{filmstrip.name}}".
-                
-//                 Click here to answer: {{link}}
-                
-//                 Yours,
-//                 Filmstrip.io`,
-//             },
-//         },
-//     })
-//     addTranslations('es', {
-//         Emails: {
-//             'filmstrip.invite.create': {
-//                 'Subject': '`You are invited to respond to {{filmstrip.name}}`',
-//                 'Body': `Congratulations,
-
-//                 you have been invited by {{username}} to respond to the film strip "{{filmstrip.name}}".
-                
-//                 Click here to answer: {{link}}
-                
-//                 Yours,
-//                 Filmstrip.io`,
-//             },
-//         },
-//     })
-// })
