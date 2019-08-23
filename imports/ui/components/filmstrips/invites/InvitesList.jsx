@@ -4,16 +4,20 @@ import { Button, TextField, GridCell, GridInner, Fab, Typography, Checkbox, Avat
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
+import upperFirst from 'lodash/upperFirst'
 import { observer } from 'mobx-react'
 import { Invites } from '/imports/db/invites.js'
 import * as UI from '/imports/ui/UIHelpers.js'
 import { t } from '/imports/ui/UIHelpers.js'
 import { InvitesStore } from '/imports/store/InvitesStore.js'
 
+// Avatar needs words starting with uppercase letters, so do that for every word of name
+const getAvatarName = name => (name || 'No Name').split(' ').map(w => upperFirst(w)).join(' ')
+
 const InvitesListItem = withRouter(observer(({history, invite}) => <ListItem>
     <GridInner>
         <GridCell span={2} style={({textAlign: 'center'})} onClick={() => InvitesStore.selectInvite(invite)}>
-            <Avatar  size="xsmall" name={invite.name}/>
+            <Avatar size="xsmall" name={getAvatarName(invite.name)}/>
         </GridCell>
         <GridCell span={9} onClick={() => InvitesStore.selectInvite(invite)}>
             <Typography use="headline7">{invite.name || t('Invites.undefined')}</Typography>
