@@ -1,39 +1,108 @@
 import { Meteor } from 'meteor/meteor'
 import React, { useState } from 'react'
-import { Link, Route } from "react-router-dom"
-import { TextField, Button } from 'rmwc'
-import { validateEmail, validatePassword } from '/imports/ui/UIHelpers.js'
-import './users.less'
+import { Link, Redirect } from 'react-router-dom'
+import { Icon, TextField, Typography } from 'rmwc'
+import {
+  validatePassword,
+  loadingWrapper
+} from '/imports/ui/UIHelpers.js'
+import { withTranslation } from 'react-i18next'
+import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
+import { Form, BigButton as Button, ErrorNotice } from '/imports/ui/components/Forms.jsx'
 
-export const SignIn = () => {
-    const [isEmailInvalid, setIsEmailInvalid] = useState(false)
-    const [isPasswordInvalid, setIsPasswordInvalid] = useState(false)
+const SignInForm = ({ t }) => {
 
-    return (
-        <Route render={({ history }) => {
-            const submit = (event) => {
-                event.preventDefault()
-                const email = document.querySelector('[name="email"]').value
-                const emailValid = validateEmail(email)
-                setIsEmailInvalid(!emailValid)
-                const password = document.querySelector('[name="password"]').value
-                const passwordValid = validatePassword(password)
-                setIsPasswordInvalid(!passwordValid)
-                if (emailValid && passwordValid) {
-                    Meteor.loginWithPassword(email, password, () => {
-                        history.push('/' )
-                    })
-                }
-            }    
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isPasswordInvalid, setIsPasswordInvalid] = useState(false)
+  const [hasError, setHasError] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [toHome, redirectToHome] = useState(false)
 
-            return (<>
-                <form>
-                    <TextField name="email" type="email" label="E-Mail" invalid={isEmailInvalid}/>
-                    <TextField name="password" type="password" label="Password" invalid={isPasswordInvalid}/>
-                    <Button label="Sign in" onClick={submit} raised/>
-                </form>
-                <Button><Link to="/signUp">Sign up</Link></Button>
-            </>)
-        }} />
-    )
+  const handlePassword = event => {
+    setPassword(event.target.value)
+    const passwordValid = validatePassword(event.target.value)
+    setIsPasswordInvalid(!passwordValid)
+  }
+
+  const handleSubmit = event => {
+    event.preventDefault()
+
+    setIsLoading(true)
+
+    Meteor.loginWithPassword(email, password, (err, res) => {
+
+      setIsLoading(false)
+
+      if(err) {
+        console.error(err)
+        setHasError(true)
+      }
+      else {
+        redirectToHome(true)
+      }
+    })
+  }
+
+  if (toHome) {
+    return <Redirect push to='/' />
+  }
+
+  return (
+    <>
+      <Form fullWidth onSubmit={handleSubmit}>
+        {hasError ? <>
+          <ErrorNotice
+            text={t('SignIn.Error')}
+          />
+        </> : ''}
+        <TextField
+          outlined
+          name='email'
+          type='email'
+          onChange={(event) => setEmail(event.target.value.trim().toLowerCase())}
+          label={t('Signup.Email')}
+        />
+        <TextField
+          outlined
+          name='password'
+          type='password'
+          onChange={handlePassword}
+          label={t('Signup.Password')}
+          invalid={isPasswordInvalid}
+        />
+        { loadingWrapper(isLoading, () => <Button
+          label={t('SignIn.Button')}
+          disabled={
+              email &&
+              password &&
+              !isPasswordInvalid
+              ? false
+              : true
+          }
+          raised
+          /> )
+        }
+      </Form>
+    </>
+  )
 }
+
+export const SignIn = withTranslation()(({ t }) => {
+  return (
+    <>
+      <Card>
+        <Typography use='headline4' tag='h4'>
+          {t('SignIn.Header')}
+          <Icon icon='arrow_right_alt' />
+        </Typography>
+        <SignInForm t={t} />
+        <Typography tag='p' use='body2'>
+          <Link to='/signUp'>
+            {t('SignIn.SignupLink')}
+          </Link>
+        </Typography>
+      </Card>
+    </>
+  )
+})

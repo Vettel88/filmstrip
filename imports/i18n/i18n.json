@@ -6,6 +6,29 @@
       "Links": "Links",
       "Link": "Link",
       "URL": "URL",
+      "SignIn": {
+        "Button": "Sign in",
+        "Header": "Sign in",
+        "SignupLink": "No account yet? Create one",
+        "Error": "No account was found with that e-mail address or your password was incorrect. Please check your details."
+      },
+      "Signup": {
+        "Errors": {
+          "403": "You've already signed up with that e-mail. Try signing in instead.",
+          "500": "A server error occurred. Please try again."
+        },
+        "SignIn": "Sign in",
+        "SignInLink": "Have an account? Sign in",
+        "Header": "Sign up",
+        "Copy": "Start creating your own Filmstrips immediately.",
+        "Firstname": "First name",
+        "Lastname": "Last name",
+        "Email": "E-mail address",
+        "Phone": "Phone number",
+        "Button": "Sign up",
+        "Password": "Password",
+        "PasswordHelp": "Please make your password minimum 6 characters."
+      },
       "Response": {
         "Text": "Your Text Response",
         "LandingHelp": "You will use your camera and microphone to record your responses. Please make sure you are in a quiet location and have 5-10 minutes of free time.",
