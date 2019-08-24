@@ -102,6 +102,7 @@ export const ResponseFinish = prepareResponseView(ResponseFinishContainer)
  */
 const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId }) => {
 
+<<<<<<< HEAD
   const [loading, setLoading] = React.useState(true)
   const [isConfirmed, setConfirmed] = React.useState(false)
 
@@ -135,6 +136,40 @@ const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId 
           </Grid>
         )}
       </>
+=======
+    const [ loading, setLoading ] = React.useState(true)
+    const [ isConfirmed, setConfirmed] = React.useState(false)
+
+    ResponseVerifyConfirmation.call({
+        filmstripId: createdFilmstripId,
+        email,
+        confirmationKey
+    }, (err, res) => {
+        if (err) {
+            console.error(err)
+            setLoading(false)
+        }
+        else {
+            setLoading(false)
+            setConfirmed(res)
+        }
+    })
+
+    return (
+        <div>
+            {loadingWrapper(loading, () =>
+                isConfirmed ? (
+                    <div className='centered ResponseQuestionnaireContainer'>
+                        <img src='/icons8-checked.svg' className='topIcon centered' />
+                        <h4><Typography use='headline4'>{t('Response.Confirmed')}</Typography></h4>
+                        <Card>
+                            <SignupForm email={email} t={t} />
+                        </Card>
+                    </div>
+                ) : <ResponseFilmstripNotFound t={t} />
+            )}
+        </div>
+>>>>>>> Signup form with firstname, lastname and email. Split login form into route and form itself. Added general styled form components and a styled card component to handle these forms.
     )
 
 }
