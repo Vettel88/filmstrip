@@ -13,8 +13,9 @@ export const regexPattern = '^[^\s@]+@[^\s@]+\.[^\s@]+$' // For input elements, 
 
 // methods starting with validate return only a truthy/falsy value
 export const validateEmail = email => !!email.match(regexEmail)
-export const validatePassword = password => password !== ''
-
+export const validatePassword = password => {
+    return password.length > 6
+}
 export const emailIsValid = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }

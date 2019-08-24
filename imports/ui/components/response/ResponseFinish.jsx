@@ -9,7 +9,8 @@ import { withTranslation } from 'react-i18next'
 import { withTracker } from 'meteor/react-meteor-data'
 import { ResponseFilmstripNotFound } from './ResponseCommon.jsx'
 import { loadingWrapper } from '/imports/ui/UIHelpers.js'
-import { SignupForm } from '/imports/ui/components/signup/SignupForm.jsx'
+import { SignupForm } from '/imports/ui/components/users/SignUp.jsx'
+import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
 
 class ResponseFinishContainer extends React.Component {
 
@@ -110,7 +111,9 @@ const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId 
                     <div className='centered ResponseQuestionnaireContainer'>
                         <img src='/icons8-checked.svg' className='topIcon centered' />
                         <h4><Typography use='headline4'>{t('Response.Confirmed')}</Typography></h4>
-                        <SignupForm email={email} t={t} />
+                        <Card>
+                            <SignupForm email={email} t={t} />
+                        </Card>
                     </div>
                 ) : <ResponseFilmstripNotFound t={t} />
             )}
