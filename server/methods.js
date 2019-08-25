@@ -1,5 +1,5 @@
 import { check } from 'meteor/check'
-import i18next from 'i18next'
+import get from 'lodash/get'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
@@ -129,10 +129,12 @@ Filmstrip.io`
         const username = Meteor.user().username || 'a great filmstrip user'
         const emailBase64 = new Buffer(email).toString('base64')
         const link = Meteor.absoluteUrl(`a/${filmstripId}/${emailBase64}`)
-        await sendEmail({
-            "To": email,
-            "Subject": `You are invited to respond to ${filmstrip.name}`,
-            "TextBody": `Congratulations,
+        // TODO i18n
+        postmark.sendEmail({
+            From: Meteor.settings.postmark.sender,
+            To: email,
+            Subject: `You are invited to respond to ${filmstrip.name}`,
+            TextBody: `Congratulations,
 
 you have been invited by ${username} to respond to the film strip "${filmstrip.name}".
 
@@ -148,5 +150,20 @@ Filmstrip.io`
         const invite = Invites.findOne($in[0], { fields: { filmstripId: 1 } })
         checkFilmstripOwner.call(this, { filmstripId: invite.filmstripId })
         return Invites.remove({_id: {$in}, createdBy: Meteor.userId()})
+    },
+    'filmstrip.invite.shareRespondedInvites'({ inviteIDs, subject, body, file }) {
+        check(inviteIDs, [String])
+        check([subject, body], [String])
+        check(file, Object)
+        const invites = Invites.find({ _id: { $in: inviteIDs }}, { fields: { email: 1 } })
+        const emails = invites.map(({ email }) => ({
+            From: Meteor.settings.postmark.sender,
+            To: email,
+            ReplyTo: get(Meteor.user(), 'emails[0].address') || Meteor.settings.postmark.sender,
+            Subject: subject,
+            TextBody: body
+        }))
+        postmark.sendEmailBatch(emails)
+        Invites.update({ _id: { $in: inviteIDs }}, { $set: { sharedAt: new Date() } })
     },
 })

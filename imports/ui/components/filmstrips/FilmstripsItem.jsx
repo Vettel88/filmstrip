@@ -1,7 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react';
 import ReactFilestack from 'filestack-react'
-import { Image } from 'cloudinary-react'
 import { TextField, Button, Icon, List, ListItem, Card as MUICard, GridCell, Grid, Fab, CardPrimaryAction, Snackbar, SnackbarAction, Switch} from "rmwc";
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
@@ -34,7 +33,7 @@ const FilmstripSettings = observer((props) => {
                 <Switch
                     checked={store.filmstrip.live}
                     onClick={() => store.toggleLive()}
-                    label="Make this filmstrip live"
+                    label="Make this filmstrip live" // TODO i18n
                 />
             </FormField>
             <FormField>
@@ -58,7 +57,7 @@ const FilmstripSettings = observer((props) => {
                     textarea
                     outlined
                     fullwidth
-                    label={"Description"}
+                    label={"Description"} // TODO i18n
                     rows={3}
                     maxLength={120}
                     characterCount
