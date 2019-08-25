@@ -64,14 +64,14 @@ Meteor.startup(() => {
         FilmstripsItemNavigation: {
             Settings: 'Settings',
             Invites: 'Invites',
-            Done: 'Responded',
+            Responded: 'Responded',
         }
     })
     addTranslations('es', {
         FilmstripsItemNavigation: {
             Settings: 'Ajustes',
             Invites: 'Invitados',
-            Done: 'Respondido',
+            Responded: 'Respondido',
         }
     })
 })
