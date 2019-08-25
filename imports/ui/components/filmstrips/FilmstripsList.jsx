@@ -4,7 +4,7 @@ import { GridCell, GridInner, Fab, Elevation, MenuSurfaceAnchor, Menu, MenuItem,
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
-import ClipboardJS from '/node_modules/clipboard/dist/clipboard.min.js'
+import ClipboardJS from 'clipboard/dist/clipboard.min.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
