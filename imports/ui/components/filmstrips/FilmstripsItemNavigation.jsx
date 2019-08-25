@@ -49,7 +49,7 @@ export const FilmstripsItemNavigation = withTranslation()(observer((props) => {
                 <TabBar activeTabIndex={activeTab} onActivate={setActiveTabHandler(setActiveTab)}>
                     <Tab>{t('FilmstripsItemNavigation.Settings')}</Tab>
                     <Tab>{t('FilmstripsItemNavigation.Invites')} ({InvitesStore.invitesCount})</Tab>
-                    <Tab>{t('FilmstripsItemNavigation.Done')} ({InvitesStore.responedCount})</Tab>
+                    <Tab>{t('FilmstripsItemNavigation.Responded')} ({InvitesStore.responedCount})</Tab>
                 </TabBar>
             </GridCell>
             <GridCell span={12}>
