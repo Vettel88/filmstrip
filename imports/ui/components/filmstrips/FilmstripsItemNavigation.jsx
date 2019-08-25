@@ -6,6 +6,7 @@ import { addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
 import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
 import { InvitesRespondedList } from '/imports/ui/components/filmstrips/InvitesRespondedList.jsx'
 import { Invites } from '/imports/db/invites.js'
+import { invitesStore } from '/imports/store/invitesStore.js'
 import Settings from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
 import { InvitesStore } from '/imports/store/InvitesStore.js'
 import '/imports/ui/components/filmstrips/FilmstripsItem.less'
@@ -32,7 +33,8 @@ const renderContent = (tab, props) => {
     }
 }
 
-const setActiveTabHandler = setActiveTab => event => setActiveTab(event.detail.index)
+export const FilmstripsItemNavigation = withTranslation()((props) => {
+    const setActiveTabHandler = setActiveTab => event => setActiveTab(event.detail.index)
 
 export const FilmstripsItemNavigation = withTranslation()(observer((props) => {
     const [activeTab, setActiveTab] = React.useState(0)
