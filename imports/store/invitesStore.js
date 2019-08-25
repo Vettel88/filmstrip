@@ -57,13 +57,14 @@ export const invitesStore = observable({
             if (error) return Notifications.error('Invite could not be created', error) // TODO i18n
             const invite = Invites.findOne(_id)
             this.invites.push(invite)
-            this.isDirty = false
+            this.invitesCount = this.invites.length
         })
     },
 
     removeSelectedInvites() {
         Meteor.call('filmstrip.invite.remove', this.selectedInviteIDs)
         this.invites = this.invites.filter(invite => !this.selectedInviteIDs.includes(invite._id))
+        this.invitesCount = this.invites.length
         this.selectedInviteIDs = []
     },
 })

@@ -100,8 +100,11 @@ export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowSha
     return showShareInvite ? <Dialog open={open} onClose={_ => {setShowShareInvite(false)}} className="CreateInviteDialog">
         <DialogContent>
             <form>
-                <TextField placeholder={t('InvitesResponded.Subject')} name="subject" value={subject} onChange={setter(setSubject)} placeholder={t('InvitesResponded.email.placeholder.Subject')}/>
-                <TextField placeholder={t('InvitesResponded.Body')} name="body" value={body} onChange={setter(setBody)} textarea fullwidth rows={10} placeholder={t('InvitesResponded.email.placeholder.Body', {username: Meteor.user().username || 'Your Filmstrip user'})}/>
+                <TextField placeholder={t('InvitesResponded.Subject')} name="subject" value={subject} 
+                    onChange={setter(setSubject)} placeholder={t('InvitesResponded.email.placeholder.Subject')}/>
+                <TextField placeholder={t('InvitesResponded.Body')} name="body" value={body} 
+                    onChange={setter(setBody)} textarea fullwidth rows={10} 
+                    placeholder={t('InvitesResponded.email.placeholder.Body', {username: Meteor.user().username || 'Your Filmstrip user'})}/> // TODO i18n
                 <ReactFilestack
                     apikey={Meteor.settings.public.filestack.apikey}
                     onSuccess={({filesUploaded}) => setFile(filesUploaded[0])}
