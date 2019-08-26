@@ -57,7 +57,6 @@ const FilmstripsListItem = withRouter(({history, filmstrip}) => {
             <img src={avatarSource} title={firstFrame && firstFrame.title}/>
             <div className="listData">
                 <Typography use="headline6">{filmstrip.name || t('FramestripsList.undefined')}</Typography>
-                <p>{filmstrip.description}</p>
                 <p>{getInviteesCount(filmstrip)} {t('FramestripsList.invitees')}, {getAnswersDoneCount(filmstrip)} {t('FramestripsList.responded')}</p>
             </div>
         </div>
