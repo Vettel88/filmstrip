@@ -67,7 +67,7 @@ const Header = withRouter(observer(({ history }) => <TopAppBar fixed={false}>
         </TopAppBarSection>
         <TopAppBarSection>
             <TopAppBarTitle>
-                {filmstripStore.name}
+                {filmstripStore.filmstrip && filmstripStore.filmstrip.name}
             </TopAppBarTitle>
         </TopAppBarSection>
         <TopAppBarSection alignEnd>

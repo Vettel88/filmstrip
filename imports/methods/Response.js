@@ -1,9 +1,9 @@
-import SimpleSchema from 'simpl-schema'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
-import SimpleSchema from 'simpl-schema'
+import { Meteor } from 'meteor/meteor'
 import { Random } from 'meteor/random'
-
+import SimpleSchema from 'simpl-schema'
+import { ValidatedMethod } from 'meteor/mdg:validated-method'
 let postmark
 
 if (Meteor.isServer) {

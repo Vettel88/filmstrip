@@ -1,6 +1,7 @@
 import React from 'react'
 import { shallow } from 'enzyme'
 import { ResponseFinish, ResponseConfirmationSent, ResponseConfirm } from '../ResponseFinish'
+import { JestEnvironment } from '@jest/environment';
 
 describe('<ResponseFinish />', () => {
   const responseFinish = shallow(<ResponseFinish />)
@@ -11,7 +12,7 @@ describe('<ResponseFinish />', () => {
 })
 
 describe('<ResponseConfirmationSent />', () => {
-  const responseConfirmationSent = shallow(<ResponseConfirmationSent />)
+  const responseConfirmationSent = shallow(<ResponseConfirmationSent t={jest.fn()}/>)
 
   it('<ResponseConfirmationSent /> should render', () => {
     expect(responseConfirmationSent.exists()).toBe(true)

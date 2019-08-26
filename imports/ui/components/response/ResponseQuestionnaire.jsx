@@ -1,7 +1,6 @@
-import { Meteor } from 'meteor/meteor'
 import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
-import { TextField, Button, Typography, Grid, GridCell } from 'rmwc'
+import { Typography, Grid, GridCell } from 'rmwc'
 import { prepareResponseView } from './ResponseCommon.jsx'
 import { ResponseSave } from '/imports/methods/Response.js'
 import { ResponseQuestion } from './ResponseQuestion.jsx'
