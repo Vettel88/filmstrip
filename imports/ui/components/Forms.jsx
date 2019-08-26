@@ -1,7 +1,55 @@
 import { Meteor } from 'meteor/meteor'
 import { Card as UnstyledCard, Button as UnstyledButton, Elevation, Typography, Grid, GridCell } from 'rmwc'
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
+import PhoneInput from 'react-phone-number-input'
+
+/**
+ * Phone input field made to look like an outlined
+ * Material input field.
+ */
+export const PhoneField = styled(PhoneInput)`
+  font-family: 'Roboto', sans-serif;
+  height: 56px;
+  border: 1px solid rgba(0,0,0,.24);
+  border-radius: 4px;
+  transition: border-color 110ms;
+  padding: 1px;
+
+  &:hover {
+    border: 1px solid rgba(0,0,0,.87);
+  }
+
+  .react-phone-number-input__icon {
+    position: relative;
+    top: -1px;
+  }
+
+  .react-phone-number-input__country-select-arrow {
+    position: relative;
+    top: -2px;
+  }
+
+  &.react-phone-number-input--focus {
+    border-width: 2px;
+    border-color: var(--mdc-theme-primary);
+    padding: 0px;
+  }
+
+  .react-phone-number-input__country {
+    padding-left: 12px;
+  }
+
+  input[type=text], input[type=tel] {
+    font-family: 'Roboto', sans-serif;
+    height: 52px;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    border: 0 !important;
+    width: 100%;
+    background: transparent !important;
+  }
+`
 
 /**
  * Big large button, hard to miss
