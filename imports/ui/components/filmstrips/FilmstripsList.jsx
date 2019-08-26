@@ -16,8 +16,6 @@ const popupMenu = (history, filmstrip, frameId) => {
     const [open, setOpen] = React.useState(false)
     const viewInvites = () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/invites`)
     const viewCompleted = () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/responded`)
-    const toggleLiveText = () => filmstrip.live ? t('FramestripsList.SetAsNotLive') : t('FramestripsList.SetAsLive')
-    const toggleLive = () => Meteor.call('filmstrip.setLive', filmstrip, !filmstrip.live)
     const removeFilmstrip = event => {
         if(confirm(t('FramestripsList.confirmRemoval'))) {
             Meteor.call('filmstrip.remove', filmstrip._id, (error) => {
@@ -34,7 +32,6 @@ const popupMenu = (history, filmstrip, frameId) => {
             <MenuItem className="publicLink" data-clipboard-target={`#${linkId}`}>{t('FramestripsList.CopyPublicLink')}</MenuItem>
             <MenuItem onClick={viewInvites}>{t('FramestripsList.ViewInvites')}</MenuItem>
             <MenuItem onClick={viewCompleted}>{t('FramestripsList.ViewCompleted')}</MenuItem>
-            <MenuItem onClick={toggleLive}>{toggleLiveText()}</MenuItem>
             <MenuItem onClick={removeFilmstrip}>{t('FramestripsList.DeleteFilmstrip')}</MenuItem>
         </Menu>
         <Fab icon="more_horiz" onClick={evt => setOpen(!open)} mini={true} theme={['textPrimaryOnLight', 'background']}/>
@@ -64,9 +61,6 @@ const FilmstripsListItem = withRouter(({history, filmstrip}) => {
         <GridInner>
             <GridCell span={2} style={({textAlign: 'center'})} onClick={gotoFirstFrame}>
                 <div>{imageOrVideo()}</div>
-                <Typography use="caption" style={({color: filmstrip.live ? 'green' : 'red'})}>
-                    {filmstrip.live ? t('FramestripsList.Live') : t('FramestripsList.NotLive')}
-                </Typography>
             </GridCell>
             <GridCell span={7} onClick={gotoFirstFrame}>
                 <Typography use="headline7">{filmstrip.name || t('FramestripsList.undefined')}</Typography>
@@ -127,12 +121,9 @@ Meteor.startup(() => {
             undefined: 'No name given yet',
             confirmRemoval: 'Do you want to delete the filmstrip?',
             Live: 'Live',
-            NotLive: 'Not live',
             CopyPublicLink: 'Copy public link',
             ViewInvites: 'View invites',
             ViewCompleted: 'View completed',
-            SetAsLive: 'Set as live',
-            SetAsNotLive: 'Set as not live',
             DeleteFilmstrip: 'Delete filmstrip',
             invitees: 'invitees',
             responded: 'responded',
@@ -144,12 +135,9 @@ Meteor.startup(() => {
             undefined: 'Todavia sin nombre',
             confirmRemoval: 'Quierres borrar el filmstrip?',
             Live: 'Live',
-            NotLive: 'Not live',
             CopyPublicLink: 'Copy public link',
             ViewInvites: 'View invites',
             ViewCompleted: 'View completed',
-            SetAsLive: 'Set as live',
-            SetAsNotLive: 'Set as not live',
             DeleteFilmstrip: 'Delete filmstrip',
             invitees: 'invitees',
             responded: 'responded',
