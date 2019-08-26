@@ -103,6 +103,9 @@ export const ResponseFinish = prepareResponseView(ResponseFinishContainer)
 const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId }) => {
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Response only changes
   const [loading, setLoading] = React.useState(true)
   const [isConfirmed, setConfirmed] = React.useState(false)
 
@@ -136,6 +139,7 @@ const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId 
           </Grid>
         )}
       </>
+<<<<<<< HEAD
 =======
     const [ loading, setLoading ] = React.useState(true)
     const [ isConfirmed, setConfirmed] = React.useState(false)
@@ -170,6 +174,8 @@ const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId 
             )}
         </div>
 >>>>>>> Signup form with firstname, lastname and email. Split login form into route and form itself. Added general styled form components and a styled card component to handle these forms.
+=======
+>>>>>>> Response only changes
     )
 
 }
