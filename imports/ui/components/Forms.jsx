@@ -59,7 +59,6 @@ export const BigButton = styled(UnstyledButton)`
   padding: 20px !important;
   line-height: 1.5rem !important;
   font-size: 1.25rem !important;
-  font-weight: bold !important;
   margin-bottom: 1rem !important;
 `
 
