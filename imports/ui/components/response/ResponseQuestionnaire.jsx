@@ -1,7 +1,6 @@
-import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import { Redirect } from 'react-router-dom'
-import { TextField, Button, Typography } from 'rmwc'
+import { Typography } from 'rmwc'
 import { ResponseFrame } from './ResponseFrame.jsx'
 import { prepareResponseView } from './ResponseCommon.jsx'
 import { ResponseSave } from '/imports/methods/Response.js'
@@ -98,9 +97,7 @@ class ResponseQuestionnaireContainer extends React.Component {
                 </div>
             </div>
         )
-
     }
-
 }
 
 export const ResponseQuestionnaire = prepareResponseView(ResponseQuestionnaireContainer)

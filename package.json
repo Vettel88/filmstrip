@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "start": "meteor run",
-    "test": "jest",
+    "test": "./node_modules/.bin/jest",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "test-watch": "./node_modules/.bin/jest --watchAll",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
   },
   "dependencies": {
@@ -46,17 +47,23 @@
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/plugin-transform-modules-commonjs": "^7.5.0",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-react": "^7.0.0",
-    "babel-jest": "^24.8.0",
+    "@babel/runtime": "^7.3.4",
+    "babel-jest": "^24.9.0",
     "babel-polyfill": "^6.26.0",
     "babel-preset-meteor": "^7.5.5",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.14.0",
     "eslint": "^6.2.1",
     "eslint-config-prettier": "^6.1.0",
-    "jest": "^24.8.0",
-    "meteor-jest-stubs": "^2.0.0",
+    "esm": "^3.2.25",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^24.9.0",
+    "jest-raw-loader": "^1.0.1",
+    "meteor-babel": "^7.5.7",
     "meteor-node-stubs": "^0.4.1",
     "prettier": "^1.18.2"
   }

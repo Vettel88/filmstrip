@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import get from 'lodash/get'
 import { Filmstrips } from '/imports/db/filmstrips.js'

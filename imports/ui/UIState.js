@@ -1,4 +1,6 @@
-// poor mans global state until we maybe need a manager
+import { Meteor } from 'meteor/meteor'
+
+let UIState
 export default (UIState = {
   appName: 'Filmstrip'
 })

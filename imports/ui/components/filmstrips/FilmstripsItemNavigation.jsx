@@ -1,6 +1,7 @@
 import { withTracker } from 'meteor/react-meteor-data'
 import React from 'react';
 import { observer } from 'mobx-react'
+import { Meteor } from 'meteor/meteor'
 import { TabBar, Tab, GridCell, GridInner } from 'rmwc'
 import { addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
 import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
@@ -19,15 +20,12 @@ const renderContent = (tab, props) => {
     const propsWithFilmstripId = Object.assign({}, props, {filmstripId})
     switch(tab) {
         case 1:
-            // TODO set URL correctly
-            // history.replace(`${baseUrl}/invites`)
+            const args = Object.assign({}, props, {filmstripId, setInvitesCount})
             return <InvitesList {...propsWithFilmstripId}/>
-            // return <InvitesList {...props}/>
         case 2:
             // history.replace(`${baseUrl}/done`)
             return <InvitesRespondedList {...propsWithFilmstripId}/>
         default:
-            // history.replace(`${baseUrl}/settings`)
             return <Settings {...props}/>
     }
 }

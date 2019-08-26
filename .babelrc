@@ -1,5 +1,17 @@
 {
-  "presets": ["meteor", "@babel/preset-env", "@babel/preset-react"],
+  "presets": [
+    "@babel/preset-react",
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "esmodules": true,
+          "node": "8"
+        },
+        "loose": true
+      }
+    ]
+  ],
   "plugins": [
     [
       "@babel/plugin-proposal-decorators",
