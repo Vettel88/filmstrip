@@ -26,12 +26,6 @@ Meteor.methods({
         Frames.remove({filmstripId})
         Filmstrips.remove({_id: filmstripId})
     },
-    'filmstrip.setLive'(filmstrip, live) {
-        check(filmstrip, Object)
-        checkFilmstripOwner.call(this, { filmstrip })
-        check(live, Boolean)
-        Filmstrips.update({_id: filmstrip._id}, {$set: { live }})
-    },
     'filmstrip.saveWithFrames'(filmstrip, frames){
         check(filmstrip, Object)
         check(frames, [Object])

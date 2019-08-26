@@ -24,7 +24,6 @@ Meteor.startup(() => {
       _id: filmstripId,
       name: 'Filmstrip 1',
       description: 'Description of Filmstrip 1',
-      live: true,
     })
   }
 

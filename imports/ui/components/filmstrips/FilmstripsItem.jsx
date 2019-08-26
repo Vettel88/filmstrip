@@ -30,13 +30,6 @@ const FilmstripSettings = observer((props) => {
     return (
         <>
             <FormField>
-                <Switch
-                    checked={store.filmstrip.live}
-                    onClick={() => store.toggleLive()}
-                    label="Make this filmstrip live" // TODO i18n
-                />
-            </FormField>
-            <FormField>
                 <TextField
                     label={"Name"}
                     name="filmstripName"

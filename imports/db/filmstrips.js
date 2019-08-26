@@ -25,7 +25,7 @@ if (Meteor.isServer) {
     Meteor.publish('ResponseFilmstrip', function (_id) {
         check([_id], [String])
         return [
-            Filmstrips.find({ _id: _id, live: true }),
+            Filmstrips.find({ _id: _id }),
             Frames.find({ filmstripId: _id })
         ]
     })
