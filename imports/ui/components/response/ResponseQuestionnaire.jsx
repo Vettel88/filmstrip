@@ -1,106 +1,108 @@
 import { Meteor } from 'meteor/meteor'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Redirect } from 'react-router-dom'
-import { TextField, Button, Typography } from 'rmwc'
-import { ResponseFrame } from './ResponseFrame.jsx'
+import { TextField, Button, Typography, Grid, GridCell } from 'rmwc'
 import { prepareResponseView } from './ResponseCommon.jsx'
 import { ResponseSave } from '/imports/methods/Response.js'
+import { ResponseQuestion } from './ResponseQuestion.jsx'
+import { ResponseAnswer } from './ResponseAnswer.jsx'
+import { StickyNav } from '../Forms.jsx'
+import styled from 'styled-components'
 
-class ResponseQuestionnaireContainer extends React.Component {
+const StyledGridCell = styled(GridCell)`
+  background: white;
+`
+export const ResponseQuestionnaire = prepareResponseView(({ filmstrip, t, email, history }) => {
 
-    state = {
-        email: this.props.email,
-        currentFrameIndex: 0,
-        responses: []
+  useEffect(() => {
+    document.body.classList.add('fullWidth')
+    return function cleanup() {
+      document.body.classList.remove('fullWidth')
     }
+  })
 
-    prevQuestion = (event) => {
-        event.preventDefault()
-        this.setState({
-            currentFrameIndex: this.state.currentFrameIndex - 1
-        })
-    }
+  const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
+  const [toFinish, setToFinish] = useState(false)
+  const [createdFilmstripId, setCreatedFilmstripId] = useState(false)
 
-    getResponsesFromLocalStorage = () => {
-    }
+  const prevQuestion = (event) => {
+    event.preventDefault()
+    setCurrentFrameIndex(currentFrameIndex - 1)
+  }
 
-    nextQuestion = (event) => {
+  const nextQuestion = (event) => {
 
-        if(this.state.currentFrameIndex === this.props.filmstrip.frames.length -1) {
+    event.preventDefault()
 
-            const frames = this.props.filmstrip.frames.map(frame => {
+    if (currentFrameIndex === filmstrip.frames.length - 1) {
 
-                return Object.assign({
-                    no: frame.no,
-                    responseToFrameId: frame._id,
-                    responseToFilmstripId: this.props.filmstrip._id
-                }, JSON.parse(localStorage.getItem(frame._id)))
+      const frames = filmstrip.frames.map(frame => {
 
-            })
+        return Object.assign({
+          no: frame.no,
+          responseToFrameId: frame._id,
+          responseToFilmstripId: filmstrip._id
+        }, JSON.parse(localStorage.getItem(frame._id)))
 
-            const filmstrip = {
-                responseToFilmstripId: this.props.filmstrip._id,
-                name: this.props.filmstrip.name,
-                email: this.props.email
-            }
+      })
 
-            ResponseSave.call({
-                filmstrip,
-                frames
-            }, (err, res) => {
-                if(err) console.error(err)
-                else {
-                    this.setState({
-                        createdFilmstripId: res,
-                        toFinish: true
-                    })
-                }
-            })
-
-        }
+      ResponseSave.call({
+        filmstrip: {
+          responseToFilmstripId: filmstrip._id,
+          name: filmstrip.name,
+          email
+        },
+        frames
+      }, (err, res) => {
+        if (err) console.error(err)
         else {
-
-            this.setState({
-                currentFrameIndex: this.state.currentFrameIndex + 1
-            })
-
+          setCreatedFilmstripId(res)
+          setToFinish(true)
         }
+      })
 
     }
-
-    render() {
-        const { t, filmstrip } = this.props
-
-        const frames = filmstrip.frames
-        const currentFrame = frames[this.state.currentFrameIndex];
-        const prevQuestionClass = this.state.currentFrameIndex === 0 ? 'disabled' : '';
-
-        if (this.state.toFinish === true) {
-            const url = `/a/${filmstrip._id}/${btoa(this.props.email)}/${this.state.createdFilmstripId}/finish`;
-            return <Redirect to={url} />
-        }
-
-        return (
-            <div className='centered ResponseQuestionnaireContainer ResponseQuestionnaireContainerPad'>
-                <h5><Typography use='headline5'>{filmstrip.name}</Typography></h5>
-                <ResponseFrame key={currentFrame._id} frame={currentFrame} t={t} filmstrip={filmstrip} currentFrameIndex={this.state.currentFrameIndex} />
-                <div className='ResponseNavigationButtons'>
-                    <a onClick={this.prevQuestion} className={prevQuestionClass}>
-                        <Typography use='button'>
-                            { t('Response.PrevQuestion') }
-                        </Typography>
-                    </a>
-                    <a onClick={this.nextQuestion}>
-                        <Typography use='button'>
-                            { this.state.currentFrameIndex + 1 === frames.length ? t('Response.Finish') : t('Response.NextQuestion') }
-                        </Typography>
-                    </a>
-                </div>
-            </div>
-        )
-
+    else {
+      setCurrentFrameIndex(currentFrameIndex + 1)
     }
+
+  }
+
+  const frames = filmstrip.frames
+  const currentFrame = frames[currentFrameIndex]
+
+  if (toFinish === true) {
+    const url = `/a/${filmstrip._id}/${btoa(email)}/${createdFilmstripId}/finish`
+    return <Redirect push to={url} />
+  }
+
+  return (
+    <>
+      <Grid style={{ paddingBottom: '72px' }}>
+        <GridCell span={12}>
+          <Typography use='headline5' tag='h5'>
+            {filmstrip.name || 'Untitled Filmstrip'}
+          </Typography>
+       </GridCell>
+        <GridCell desktop={6} tablet={4} phone={4}>
+          <ResponseQuestion currentFrame={currentFrame} filmstrip={filmstrip} currentFrameIndex={currentFrameIndex} t={t} />
+        </GridCell>
+        <StyledGridCell desktop={6} tablet={4} phone={4}>
+          <ResponseAnswer key={currentFrame._id} currentFrame={currentFrame} filmstrip={filmstrip} currentFrameIndex={currentFrameIndex} t={t} history={history} email={email} />
+        </StyledGridCell>
+      </Grid>
+      <StickyNav
+        index={currentFrameIndex}
+        max={frames.length}
+        prevTitle={t('Response.PrevQuestion')}
+        nextTitle={t('Response.NextQuestion')}
+        finishTitle={t('Response.Finish')}
+        onPrevious={prevQuestion}
+        onNext={nextQuestion}
+      />
+    </>
+  )
 
 }
 
-export const ResponseQuestionnaire = prepareResponseView(ResponseQuestionnaireContainer)
+)

@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
-import { Card as UnstyledCard, Button as UnstyledButton, Elevation, Typography } from 'rmwc'
+import { Card as UnstyledCard, Button as UnstyledButton, Elevation, Typography, Grid, GridCell } from 'rmwc'
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import PhoneInput from 'react-phone-number-input'
 
 /**
@@ -59,7 +59,6 @@ export const BigButton = styled(UnstyledButton)`
   padding: 20px !important;
   line-height: 1.5rem !important;
   font-size: 1.25rem !important;
-  font-weight: bold !important;
   margin-bottom: 1rem !important;
 `
 
@@ -141,4 +140,53 @@ export const ErrorNotice = styled(Notice)`
     }
   }
 
+`
+
+/**
+ * Full width button
+ */
+export const StickyNavButton = styled(UnstyledButton)`
+  width: 100%;
+  font-weight: bold !important;
+  font-size: 16px !important;
+  line-height: 16px !important;
+  height: 48px !important;
+  padding: 8px 12px !important;
+  &:disabled {
+    background: #ccc;
+  }
+`
+
+export const StickyNav = styled(({ index, max, prevTitle, nextTitle, finishTitle, onPrevious, onNext, className }) => 
+  <Grid className={className}>
+    <GridCell desktop={6} tablet={4} phone={2}>
+      <StickyNavButton
+        disabled={index === 0 ? 'disabled' : ''}
+        onClick={onPrevious}
+        label={prevTitle}
+        unelevated
+      />
+    </GridCell>
+    <GridCell desktop={6} tablet={4} phone={2}>
+      <StickyNavButton
+        onClick={onNext}
+        label={index + 1 === max ? finishTitle : nextTitle}
+        unelevated
+      />
+    </GridCell>
+  </Grid>
+)`
+  padding: 8px !important;  
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  height: 64px;
+  background: white !important;
+
+  .mdc-layout-grid__inner {
+    background: white !important;
+    grid-gap: 8px;
+  }
 `
