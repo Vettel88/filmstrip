@@ -57,14 +57,12 @@ const SignInForm = ({ t }) => {
           />
         </> : ''}
         <TextField
-          outlined
           name='email'
           type='email'
           onChange={(event) => setEmail(event.target.value.trim().toLowerCase())}
           label={t('Signup.Email')}
         />
         <TextField
-          outlined
           name='password'
           type='password'
           onChange={handlePassword}

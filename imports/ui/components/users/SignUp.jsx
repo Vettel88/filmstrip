@@ -7,8 +7,9 @@ import { Link, Redirect } from 'react-router-dom'
 import { Icon, TextField, Typography } from 'rmwc'
 import { Accounts } from 'meteor/accounts-base'
 import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
-import { ErrorNotice, BigButton as Button, Form, PhoneField } from '/imports/ui/components/Forms.jsx'
+import { ErrorNotice, BigButton as Button, Form } from '/imports/ui/components/Forms.jsx'
 import { withTranslation } from 'react-i18next'
+import PhoneInput from 'react-phone-number-input'
 
 export const SignUp = withTranslation()(({ t }) => {
   return (
@@ -98,7 +99,6 @@ export const SignupForm = ({ t, email }) => {
           label={t('Signup.Email')}
           value={userEmail}
           onChange={(event) => setEmail(event.target.value.trim().toLowerCase())}
-          outlined
         />
         <TextField
           invalid={isPasswordInvalid}
@@ -108,7 +108,6 @@ export const SignupForm = ({ t, email }) => {
           type='password'
           label={t('Signup.Password')}
           onChange={handlePassword}
-          outlined
           minLength='6'
         />
         <Typography tag='p' use='caption'>
@@ -121,7 +120,6 @@ export const SignupForm = ({ t, email }) => {
           name='firstname'
           value={firstname}
           onChange={(event) => setFirstname(event.target.value)}
-          outlined
         />
         <TextField
           label={t('Signup.Lastname')}
@@ -129,9 +127,8 @@ export const SignupForm = ({ t, email }) => {
           name='lastname'
           value={lastname}
           onChange={(event) => setLastname(event.target.value)}
-          outlined
         />
-        <PhoneField
+        <PhoneInput
           placeholder={t('Signup.Phone')}
           value={phone}
           name='phone'
