@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { GridCell, GridInner, Fab, Elevation, MenuSurfaceAnchor, Menu, MenuItem, Typography, TextField } from 'rmwc'
+import { Avatar, GridCell, GridInner, Fab, IconButton, List, ListItem, Dialog, MenuSurfaceAnchor, Menu, MenuItem, Typography, TextField } from 'rmwc'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
@@ -27,14 +27,14 @@ const popupMenu = (history, filmstrip, frameId) => {
 
     return (<MenuSurfaceAnchor>
         {/* render the field off canvas, `display: 'hidden` doesn't work as react won't render it all then */}
-        <TextField id={linkId} defaultValue={Meteor.absoluteUrl(`/a/${filmstrip._id}`)} style={{position: 'fixed', bottom: '-100px'}}/>
-        <Menu open={open}onClose={evt => setOpen(false)}>
+        <TextField id={linkId} defaultValue={Meteor.absoluteUrl(`/a/${filmstrip._id}`)} style={{position: 'fixed', bottom: '-1000px'}}/>
+        <Menu open={open} onClose={evt => setOpen(false)}>
             <MenuItem className="publicLink" data-clipboard-target={`#${linkId}`}>{t('FramestripsList.CopyPublicLink')}</MenuItem>
             <MenuItem onClick={viewInvites}>{t('FramestripsList.ViewInvites')}</MenuItem>
             <MenuItem onClick={viewCompleted}>{t('FramestripsList.ViewCompleted')}</MenuItem>
             <MenuItem onClick={removeFilmstrip}>{t('FramestripsList.DeleteFilmstrip')}</MenuItem>
         </Menu>
-        <Fab icon="more_horiz" onClick={evt => setOpen(!open)} mini={true} theme={['textPrimaryOnLight', 'background']}/>
+        <IconButton icon="more_vert" onClick={evt => setOpen(!open)} />
     </MenuSurfaceAnchor>)
 }
 
@@ -50,28 +50,21 @@ const FilmstripsListItem = withRouter(({history, filmstrip}) => {
     const getInviteesCount = filmstrip => Invites.find({filmstripId: filmstrip._id}).count()
     const getAnswersDoneCount = filmstrip => Invites.find({filmstripId: filmstrip._id, respondedAt: {$exists: true}}).count()
     
-    const imageOrVideo = () => {
-        const publicId = get(firstFrame, 'video.public_id')
-        return publicId
-            ? <Video publicId={publicId} width="48"/>
-            : <img src="https://via.placeholder.com/48x32"/>
-    }
+    const avatarSource = 'https://via.placeholder.com/48'
 
-    return <li><Elevation z={1}>
-        <GridInner>
-            <GridCell span={2} style={({textAlign: 'center'})} onClick={gotoFirstFrame}>
-                <div>{imageOrVideo()}</div>
-            </GridCell>
-            <GridCell span={7} onClick={gotoFirstFrame}>
-                <Typography use="headline7">{filmstrip.name || t('FramestripsList.undefined')}</Typography>
+    return <li>
+        <div className="listContent">
+            <img src={avatarSource} title={firstFrame && firstFrame.title}/>
+            <div className="listData">
+                <Typography use="headline6">{filmstrip.name || t('FramestripsList.undefined')}</Typography>
                 <p>{filmstrip.description}</p>
                 <p>{getInviteesCount(filmstrip)} {t('FramestripsList.invitees')}, {getAnswersDoneCount(filmstrip)} {t('FramestripsList.responded')}</p>
-            </GridCell>
-            <GridCell span={3}>
-                {popupMenu(history, filmstrip, frameId)}
-            </GridCell>
-        </GridInner>
-    </Elevation></li>
+            </div>
+        </div>
+        <div className="actions">
+            {popupMenu(history, filmstrip, frameId)}
+        </div>
+    </li>
 })
 
 const FilmstripsListWrapper = withRouter(({history, isLoading, filmstrips}) => {
@@ -91,14 +84,7 @@ const FilmstripsListWrapper = withRouter(({history, isLoading, filmstrips}) => {
                 filmstrips.map(filmstrip => <FilmstripsListItem key={filmstrip._id} filmstrip={filmstrip} />))
             }
         </ul>
-        {/* user a grid to right align as we should not use flexbox - sniff */}
-        <GridInner>
-            <GridCell span={11}>
-            </GridCell>
-            <GridCell span={1}>
-                <Fab icon="add" onClick={createFilmstrip} mini={true}/>
-            </GridCell>
-        </GridInner>
+        <Fab className="footerAction" icon="add" onClick={createFilmstrip} mini={true}/>
     </div>)
 })
 

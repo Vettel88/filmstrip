@@ -8,7 +8,7 @@ import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
 import { InvitesRespondedList } from '/imports/ui/components/filmstrips/InvitesRespondedList.jsx'
 import { Invites } from '/imports/db/invites.js'
 import { invitesStore } from '/imports/store/invitesStore.js'
-import { FilmstripsItem as Settings } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
+import { FilmstripsItem } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
 import '/imports/ui/components/filmstrips/FilmstripsItem.less'
 
 const Done = (props) => <div>Done</div>
@@ -26,7 +26,7 @@ const renderContent = (tab, props) => {
             // history.replace(`${baseUrl}/done`)
             return <InvitesRespondedList {...propsWithFilmstripId}/>
         default:
-            return <Settings {...props}/>
+            return <FilmstripsItem {...props}/>
     }
 }
 
