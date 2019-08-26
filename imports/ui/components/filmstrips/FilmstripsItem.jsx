@@ -293,7 +293,7 @@ const FilmstripItem = observer((props) => {
     )
 })
 
-export default withTranslation()(
+export const FilmstripsItem = withTranslation()(
     withTracker(({match}) => {
         const { filmstripId, frameId } = match.params
         Meteor.subscribe('Filmstrip', filmstripId, () => {

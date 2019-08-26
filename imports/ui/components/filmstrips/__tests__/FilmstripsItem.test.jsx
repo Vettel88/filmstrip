@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-import FilmstripsItem from '../FilmstripsItem'
+import { FilmstripsItem } from '../FilmstripsItem'
 
 describe('<FilmstripsItem />', () => {
   const filmstripsItem = shallow(<FilmstripsItem />)
