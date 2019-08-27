@@ -10,6 +10,7 @@ import { Invites } from '/imports/db/invites.js'
 import * as UI from '/imports/ui/UIHelpers.js'
 import { t } from '/imports/ui/UIHelpers.js'
 import { invitesStore } from '/imports/store/invitesStore.js'
+import './InvitesList.less'
 
 // Avatar needs words starting with uppercase letters, so do that for every word of name
 const getAvatarName = name => (name || 'No Name').split(' ').map(w => upperFirst(w)).join(' ')
@@ -50,12 +51,8 @@ const InvitesListWrapper = withRouter(observer(({}) => {
     
     return (<div className="InvitesList">
         <GridInner>
-            <GridCell span={9}>
+            <GridCell span={12}>
                 <TextField placeholder={t('Invites.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
-            </GridCell>
-            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                {renderRemoveButton(invitesStore.hasSelectedInvites)}
-                <Fab icon="add" onClick={() => setIsCreateInvite(true)}/>
             </GridCell>
             <GridCell span={9}>
                 <Typography use="headline5">{t('Invites.Invited')}</Typography>
@@ -69,14 +66,7 @@ const InvitesListWrapper = withRouter(observer(({}) => {
                 filteredInvites().map(invite => <InvitesListItem key={invite._id} invite={invite}/>)
             )}
         </List>
-        {/* user a grid to right align as we should not use flexbox - sniff */}
-        <GridInner>
-            <GridCell span={9}>
-            </GridCell>
-            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                <Fab icon="add" onClick={() => setIsCreateInvite(true)}/>
-            </GridCell>
-        </GridInner>
+        <Fab icon="add" onClick={() => setIsCreateInvite(true)} mini={true} className="add" />
         {CreateInvite({isCreateInvite, setIsCreateInvite})}
     </div>)
 }))
@@ -101,7 +91,7 @@ export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreat
             invitesStore.createInvite({ name, email })
             setIsCreateInvite(false)
         } catch(error) {
-            console.error(error.message)
+            if (error) return Notifications.error(error.message, error) // TODO i18n
         }
     }
     return isCreateInvite ? <Dialog open={open} onClose={_ => {setIsCreateInvite(false)}} className="CreateInviteDialog">

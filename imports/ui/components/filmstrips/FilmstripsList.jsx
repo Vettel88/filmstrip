@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Avatar, GridCell, GridInner, Fab, IconButton, List, ListItem, Dialog, MenuSurfaceAnchor, Menu, MenuItem, Typography, TextField } from 'rmwc'
+import { Fab, IconButton, MenuSurfaceAnchor, Menu, MenuItem, Typography, TextField } from 'rmwc'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
@@ -9,7 +9,6 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
 import { loadingWrapper, addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
-import Video from '/imports/ui/components/VideoPlayer.js'
 import './FilmstripsList.less'
 
 const toggleOpenMenu = (open, setOpen) => event => {
@@ -17,18 +16,16 @@ const toggleOpenMenu = (open, setOpen) => event => {
     setOpen(!open)
     return false
 }
+const viewInvites = (history, filmstrip, frameId) => () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/invites`)
+const viewCompleted = (history, filmstrip, frameId) => () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/responded`)
+const removeFilmstrip = event => {
+    if(confirm(t('FramestripsList.confirmRemoval'))) {
+        Meteor.call('filmstrip.remove', filmstrip._id)
+    }
+}
 
 const popupMenu = (history, filmstrip, frameId) => {
     const [open, setOpen] = React.useState(false)
-    const viewInvites = () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/invites`)
-    const viewCompleted = () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/responded`)
-    const removeFilmstrip = event => {
-        if(confirm(t('FramestripsList.confirmRemoval'))) {
-            Meteor.call('filmstrip.remove', filmstrip._id, (error) => {
-                if (error) return console.error(error)
-            })
-        }
-    }
     const linkId = `link-${filmstrip._id}`
 
     return (<MenuSurfaceAnchor>
@@ -36,11 +33,10 @@ const popupMenu = (history, filmstrip, frameId) => {
         <TextField id={linkId} defaultValue={Meteor.absoluteUrl(`/a/${filmstrip._id}`)} style={{position: 'fixed', bottom: '-1000px'}}/>
         <Menu open={open} onClose={evt => setOpen(false)}>
             <MenuItem className="publicLink" data-clipboard-target={`#${linkId}`}>{t('FramestripsList.CopyPublicLink')}</MenuItem>
-            <MenuItem onClick={viewInvites}>{t('FramestripsList.ViewInvites')}</MenuItem>
-            <MenuItem onClick={viewCompleted}>{t('FramestripsList.ViewCompleted')}</MenuItem>
+            <MenuItem onClick={viewInvites(history, filmstrip, frameId)}>{t('FramestripsList.ViewInvites')}</MenuItem>
+            <MenuItem onClick={viewCompleted(history, filmstrip, frameId)}>{t('FramestripsList.ViewCompleted')}</MenuItem>
             <MenuItem onClick={removeFilmstrip}>{t('FramestripsList.DeleteFilmstrip')}</MenuItem>
         </Menu>
-        {/* <IconButton icon="more_vert" onClick={evt => setOpen(!open)} /> */}
         <IconButton icon="more_vert" onClick={toggleOpenMenu(open, setOpen)} />
     </MenuSurfaceAnchor>)
 }

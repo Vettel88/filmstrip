@@ -11,8 +11,6 @@ import { invitesStore } from '/imports/store/invitesStore.js'
 import { FilmstripsItem } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
 import '/imports/ui/components/filmstrips/FilmstripsItem.less'
 
-const Done = (props) => <div>Done</div>
-
 const renderContent = (tab, props) => {
     const { history, match } = props
     const { filmstripId, frameId } = match.params
@@ -20,10 +18,8 @@ const renderContent = (tab, props) => {
     const propsWithFilmstripId = Object.assign({}, props, {filmstripId})
     switch(tab) {
         case 1:
-            const args = Object.assign({}, props, {filmstripId, setInvitesCount})
             return <InvitesList {...propsWithFilmstripId}/>
         case 2:
-            // history.replace(`${baseUrl}/done`)
             return <InvitesRespondedList {...propsWithFilmstripId}/>
         default:
             return <FilmstripsItem {...props}/>
@@ -31,10 +27,16 @@ const renderContent = (tab, props) => {
 }
 
 const setActiveTabHandler = setActiveTab => event => setActiveTab(event.detail.index)
+const pathToTab = pathname => {
+    if (pathname.endsWith('/invites')) return 1
+    if (pathname.endsWith('/responded')) return 2
+    return 0
+}
 
 export const FilmstripsItemNavigation = withTranslation()(observer((props) => {
-    const [activeTab, setActiveTab] = React.useState(0)
+    const [activeTab, setActiveTab] = React.useState(pathToTab(props.location.pathname))
     const { filmstripId } = props.match.params
+
     Meteor.subscribe('Invites', () => {
         const invites = Invites.find({ filmstripId })
         invitesStore.invitesCount = invites.count()
