@@ -34,10 +34,11 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
+    
     const [filter, setFilter] = React.useState('')
     const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
     const [showShareInvite, setShowShareInvite] = React.useState(false)
-    
+
     return (<div className="InvitesRespondedList">
         <TextField placeholder={t('InvitesResponded.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
         <div className="listTitle">
