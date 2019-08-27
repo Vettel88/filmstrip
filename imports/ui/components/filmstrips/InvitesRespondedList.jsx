@@ -28,6 +28,8 @@ const renderShareButton = show => show ? <Fab icon="share" onClick={() => setSho
 
 const InvitesRespondedListWrapper = withRouter(observer(({}) => {
     const [filter, setFilter] = React.useState('')
+    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
+    const [showShareInvite, setShowShareInvite] = React.useState(false)
     const inviteFilter = invite => {
         if (!invite.respondedAt) return false
         const email = get(invite, 'email', '').toLowerCase()
@@ -35,10 +37,7 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
-    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
-    const [showShareInvite, setShowShareInvite] = React.useState(false)
-    const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)} className="share" mini={true}/> : <></>
-
+    
     return (<div className="InvitesRespondedList">
         <TextField placeholder={t('InvitesResponded.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
         <div className="listTitle">
