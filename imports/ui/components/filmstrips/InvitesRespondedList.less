@@ -1,4 +1,25 @@
 .InvitesRespondedList {
+    display: flex;
+    flex-direction: column;
+    .listTitle {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+    }
+    li {
+        display: flex;
+        justify-content: space-between;
+        .rmwc-avatar {
+            min-width: 50px;
+        }
+        .description {
+            flex-grow: 2;
+            margin: 0px 15px;
+        }
+        &:hover {
+            background-color: #eee;
+        }
+    }
     .mdc-dialog__container, .mdc-dialog__surface, .mdc-dialog__content {
         width: 100%;
     }

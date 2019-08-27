@@ -1,4 +1,28 @@
 .InvitesList {
+    display: flex;
+    flex-direction: column;
+    // align-items: flex-end;
+    align-content: flex-end;
+    
+    .listTitle {
+        display: flex;
+        justify-content: space-between;
+    }
+    li {
+        display: flex;
+        justify-content: space-between;
+        padding: 3px 0;
+        .rmwc-avatar {
+            min-width: 50px;
+        }
+        .description {
+            flex-grow: 2;
+            margin: 0px 15px;
+        }
+        &:hover {
+            background-color: #eee;
+        }
+    }
     button.add {
         position: fixed;
         bottom: 40px;
