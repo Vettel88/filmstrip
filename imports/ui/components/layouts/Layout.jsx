@@ -19,17 +19,14 @@ const StyledTopAppBar = styled(TopAppBar)`
 `
 
 const Header = observer(() => {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = React.useState(false)
     return (
         <>
             <StyledTopAppBar fixed={false}>
                 <TopAppBarRow>
                     <TopAppBarSection>
-                        <TopAppBarNavigationIcon icon="menu" onClick={() => setOpen(true)} />
-                    </TopAppBarSection>
-                    <TopAppBarSection>
                         <TopAppBarTitle>
-                            {UIState.name}
+                            {UIState.appName}
                         </TopAppBarTitle>
                     </TopAppBarSection>
                     <TopAppBarSection alignEnd>

@@ -40,8 +40,9 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
     }
     const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
     const [showShareInvite, setShowShareInvite] = React.useState(false)
-    const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)}/> : <></>
-    
+    const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)} className="share" mini={true}/> : <></>
+    // <Fab icon="share" onClick={share} mini={true} className="add" />
+
     return (<div className="InvitesRespondedList">
         <GridInner>
             <GridCell span={9}>
@@ -66,13 +67,14 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
     </div>)
 }))
 
-export const InvitesRespondedList = UI.withTranslation()(withTracker(({filmstripId, setInvitesRespondedCount}) => {
+export const InvitesRespondedList = UI.withTranslation()(withTracker(({match}) => {
+    const { filmstripId } = match.params
     invitesStore.filmstripId = filmstripId
     Meteor.subscribe('Invites', () => {
         invitesStore.invitesResponded = Invites.find({filmstripId, respondedAt: { $exists: true } }).fetch()
         invitesStore.isInvitesRespondedLoading = false
     })
-    return { setInvitesRespondedCount }
+    return {}
 })(InvitesRespondedListWrapper))
 
 export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowShareInvite}) => {
@@ -102,15 +104,17 @@ export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowSha
             <form>
                 <TextField placeholder={t('InvitesResponded.Subject')} name="subject" value={subject} 
                     onChange={setter(setSubject)} placeholder={t('InvitesResponded.email.placeholder.Subject')}/>
+                {/* TODO i18n */}
                 <TextField placeholder={t('InvitesResponded.Body')} name="body" value={body} 
                     onChange={setter(setBody)} textarea fullwidth rows={10} 
-                    placeholder={t('InvitesResponded.email.placeholder.Body', {username: Meteor.user().username || 'Your Filmstrip user'})}/> // TODO i18n
+                    placeholder={t('InvitesResponded.email.placeholder.Body', {username: Meteor.user().username || 'Your Filmstrip user'})}/>
                 <ReactFilestack
                     apikey={Meteor.settings.public.filestack.apikey}
                     onSuccess={({filesUploaded}) => setFile(filesUploaded[0])}
                     componentDisplayMode={{ customText: t('InvitesResponded.Upload'), type: 'link' }}
                     render={({ onPick }) => <Button label={t('InvitesResponded.Upload')} raised onClick={onPick} />}
                 />
+                <br/>
                 <Button raised onClick={share}>{t('InvitesResponded.Share')}</Button>
             </form>
         </DialogContent>
