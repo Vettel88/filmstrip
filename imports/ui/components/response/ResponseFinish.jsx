@@ -1,4 +1,3 @@
-import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { emailIsValid, regexPattern } from '/imports/ui/UIHelpers.js'

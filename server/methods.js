@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import get from 'lodash/get'
 import { Filmstrips } from '/imports/db/filmstrips.js'
@@ -24,12 +25,6 @@ Meteor.methods({
         checkFilmstripOwner.call(this, { filmstripId })
         Frames.remove({filmstripId})
         Filmstrips.remove({_id: filmstripId})
-    },
-    'filmstrip.setLive'(filmstrip, live) {
-        check(filmstrip, Object)
-        checkFilmstripOwner.call(this, { filmstrip })
-        check(live, Boolean)
-        Filmstrips.update({_id: filmstrip._id}, {$set: { live }})
     },
     'filmstrip.saveWithFrames'(filmstrip, frames){
         check(filmstrip, Object)

@@ -30,13 +30,6 @@ const FilmstripSettings = observer((props) => {
     return (
         <>
             <FormField>
-                <Switch
-                    checked={store.filmstrip.live}
-                    onClick={() => store.toggleLive()}
-                    label="Make this filmstrip live" // TODO i18n
-                />
-            </FormField>
-            <FormField>
                 <TextField
                     label={"Name"}
                     name="filmstripName"
@@ -293,16 +286,18 @@ const FilmstripItem = observer((props) => {
     )
 })
 
-export default FilmstripItemContainer = withTranslation()(withTracker(({match}) => {
-    const { filmstripId, frameId } = match.params
-    Meteor.subscribe('Filmstrip', filmstripId, () => {
-        store.filmstrip = Filmstrips.findOne(filmstripId)
-    })
-    Meteor.subscribe('Frames', { filmstripId: filmstripId }, () => {
-        store.frames = Frames.find({ filmstripId }).fetch()
-    })
-    return ({ filmstripId, frameId })
-})(FilmstripItem))
+export const FilmstripsItem = withTranslation()(
+    withTracker(({match}) => {
+        const { filmstripId, frameId } = match.params
+        Meteor.subscribe('Filmstrip', filmstripId, () => {
+            store.filmstrip = Filmstrips.findOne(filmstripId)
+        })
+        Meteor.subscribe('Frames', { filmstripId: filmstripId }, () => {
+            store.frames = Frames.find({ filmstripId }).fetch()
+        })
+        return ({ filmstripId, frameId })
+    })(FilmstripItem)
+)
 
 Meteor.startup(() => {
     addTranslations('en', {    

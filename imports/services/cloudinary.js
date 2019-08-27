@@ -1,3 +1,5 @@
+import { Meteor } from 'meteor/meteor'
+
 const { uploadPreset, cloudName } = Meteor.settings.public.cloudinary;
 
 const postUrl = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;

@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor'
 import { observable, computed } from 'mobx'
 import { Notifications } from '/imports/ui/UIHelpers.js'
 
@@ -20,11 +21,6 @@ export default class FilmstripStore {
 
     @computed get currentFrame() {
         return this.frames.find(frame => frame._id === this.frameId)
-    }
-
-    toggleLive() {
-        this.filmstrip.live = !this.filmstrip.live
-        Meteor.call('filmstrip.setLive', this.filmstrip, this.filmstrip.live)
     }
 
     getFrame(frameId) {

@@ -1,4 +1,5 @@
 import React from 'react'
+import { Meteor } from 'meteor/meteor'
 import { CircularProgress } from 'rmwc'
 import '@rmwc/circular-progress/circular-progress.css'
 import i18next from 'i18next'
