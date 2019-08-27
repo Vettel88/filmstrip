@@ -28,8 +28,6 @@ const renderShareButton = show => show ? <Fab icon="share" onClick={() => setSho
 
 const InvitesRespondedListWrapper = withRouter(observer(({}) => {
     const [filter, setFilter] = React.useState('')
-    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
-    const [showShareInvite, setShowShareInvite] = React.useState(false)
     const inviteFilter = invite => {
         if (!invite.respondedAt) return false
         const email = get(invite, 'email', '').toLowerCase()
