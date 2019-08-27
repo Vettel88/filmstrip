@@ -21,7 +21,7 @@ const StyledCard = styled(Card)`
 
 export const PaddedCard = ({ children, ...props }) => {
   return (
-    <Elevation z={4} wrap>
+    <Elevation z={3} wrap>
       <StyledCard {...props}>
         {children}
       </StyledCard>

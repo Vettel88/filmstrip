@@ -65,18 +65,16 @@ const App = () =>
                 <AppRoute exact path="/signUp" component={SignUp} layout={Layout} />
                 <AppRoute exact path="/signIn" component={SignIn} layout={Layout} />
                 <PrivateRoute exact path="/" component={FilmstripsList} layout={Layout} />
-                <AppRoute exact path="/a/:id" component={ResponseLanding} layout={ResponseLayout} />
-                <AppRoute exact path="/a/:id/:emailBase64" component={ResponseLanding} layout={ResponseLayout} />
-                <AppRoute exact path="/a/:id/:emailBase64/:frameId" component={ResponseQuestionnaire} layout={ResponseLayout} />
-                <AppRoute exact path="/a/:id/:emailBase64/:createdFilmstripId/finish" component={ResponseFinish} layout={ResponseLayout} />
+                <AppRoute exact path="/a/:filmstripId" component={ResponseLanding} layout={ResponseLayout} />
+                <AppRoute exact path="/a/:filmstripId/:emailBase64" component={ResponseLanding} layout={ResponseLayout} />
+                <AppRoute exact path="/a/:filmstripId/:emailBase64/:createdFilmstripId/finish" component={ResponseFinish} layout={ResponseLayout} />
                 <AppRoute exact path="/confirm/:createdFilmstripId/:emailBase64/:confirmationKey" component={ResponseConfirm} layout={ResponseLayout} />
+                <AppRoute path="/response/:filmstripId/:frameId/:emailBase64" component={ResponseQuestionnaire} layout={ResponseLayout} />
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId" component={FilmstripsItemNavigation} layout={FilmstripLayout} />
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
-            <Switch>
-                <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
-                <AppRoute path="/a/:filmstripId/:frameId/:emailBase64/recordVideo" component={ResponseVideoRecorder} layout={ModalLayout} />
-            </Switch>
+            <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
+            <AppRoute path="/response/:filmstripId/:frameId/:emailBase64/recordVideo" component={ResponseVideoRecorder} layout={ModalLayout} />
         </Router>
     </ThemeProvider>
 

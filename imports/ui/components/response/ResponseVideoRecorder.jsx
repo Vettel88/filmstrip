@@ -7,7 +7,6 @@ const saveVideo = (filmstripId, frameId, emailBase64, history) => ({ public_id: 
   const serializedCachedState = localStorage.getItem(frameId)
   const cachedState = serializedCachedState ? JSON.parse(serializedCachedState) : {}
   cachedState.cloudinaryPublicId = cloudinaryPublicId
-  console.log('new state', cachedState)
   localStorage.setItem(frameId, JSON.stringify(cachedState))
   history.replace(`/a/${filmstripId}/${emailBase64}/q`)
 }

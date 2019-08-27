@@ -102,10 +102,6 @@ export const ResponseFinish = prepareResponseView(ResponseFinishContainer)
  */
 const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId }) => {
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> Response only changes
   const [loading, setLoading] = React.useState(true)
   const [isConfirmed, setConfirmed] = React.useState(false)
 
@@ -127,57 +123,21 @@ const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId 
   if (!loading && !isConfirmed) return <ResponseFilmstripNotFound t={t} />
 
   return (
-      <>
-        {loadingWrapper(loading, () =>
-          <Grid>
-            <GridCell span={12}>
-              <IconCard image='/icons8-checked.svg' headline={t('Response.Confirmed')} caption={t('Response.ConfirmedCopy', { email })} />
-              <PaddedCard>
-                <SignupForm email={email} t={t} />
-              </PaddedCard>
-            </GridCell>
-          </Grid>
-        )}
-      </>
-<<<<<<< HEAD
-=======
-    const [ loading, setLoading ] = React.useState(true)
-    const [ isConfirmed, setConfirmed] = React.useState(false)
-
-    ResponseVerifyConfirmation.call({
-        filmstripId: createdFilmstripId,
-        email,
-        confirmationKey
-    }, (err, res) => {
-        if (err) {
-            console.error(err)
-            setLoading(false)
-        }
-        else {
-            setLoading(false)
-            setConfirmed(res)
-        }
-    })
-
-    return (
-        <div>
-            {loadingWrapper(loading, () =>
-                isConfirmed ? (
-                    <div className='centered ResponseQuestionnaireContainer'>
-                        <img src='/icons8-checked.svg' className='topIcon centered' />
-                        <h4><Typography use='headline4'>{t('Response.Confirmed')}</Typography></h4>
-                        <Card>
-                            <SignupForm email={email} t={t} />
-                        </Card>
-                    </div>
-                ) : <ResponseFilmstripNotFound t={t} />
-            )}
-        </div>
->>>>>>> Signup form with firstname, lastname and email. Split login form into route and form itself. Added general styled form components and a styled card component to handle these forms.
-=======
->>>>>>> Response only changes
-    )
-
+    <>
+      {loadingWrapper(loading, () =>
+        <Grid>
+          <GridCell desktop={3} tablet={1} phone={0} />
+          <GridCell desktop={6} tablet={6} phone={4}>
+            <IconCard image='/icons8-checked.svg' headline={t('Response.Confirmed')} caption={t('Response.ConfirmedCopy', { email })} />
+            <PaddedCard>
+              <SignupForm email={email} t={t} />
+            </PaddedCard>
+          </GridCell>
+          <GridCell desktop={3} tablet={1} phone={0} />
+        </Grid>
+      )}
+    </>
+  )
 }
 
 export const ResponseConfirm = withTranslation()(withTracker(({ match }) => {
