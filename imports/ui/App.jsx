@@ -72,7 +72,6 @@ const App = () =>
                 <AppRoute exact path="/a/:filmstripId/:emailBase64" component={ResponseLanding} layout={ResponseLayout} />
                 <AppRoute exact path="/a/:filmstripId/:emailBase64/:createdFilmstripId/finish" component={ResponseFinish} layout={ResponseLayout} />
                 <AppRoute exact path="/confirm/:createdFilmstripId/:emailBase64/:confirmationKey" component={ResponseConfirm} layout={ResponseLayout} />
-                <AppRoute path="/response/:filmstripId/:frameId/:emailBase64" component={ResponseQuestionnaire} layout={ResponseLayout} />
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/settings" component={FilmstripsSettings} layout={FilmstripLayout} />
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/frames" component={FilmstripsItem} layout={FilmstripLayout} />
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/invites" component={InvitesList} layout={FilmstripLayout} />
