@@ -1,4 +1,3 @@
-import { withTracker } from 'meteor/react-meteor-data'
 import React from 'react';
 import { observer } from 'mobx-react'
 import { Meteor } from 'meteor/meteor'
@@ -12,10 +11,8 @@ import { FilmstripsItem } from '/imports/ui/components/filmstrips/FilmstripsItem
 import '/imports/ui/components/filmstrips/FilmstripsItem.less'
 
 const renderContent = (tab, props) => {
-    const { history, match } = props
-    const { filmstripId, frameId } = match.params
-    const baseUrl = `/filmstrip/${filmstripId}/${frameId}/`
-    const propsWithFilmstripId = Object.assign({}, props, {filmstripId})
+    const { filmstripId, frameId } = props.match.params
+    const propsWithFilmstripId = Object.assign({}, props, {filmstripId, frameId})
     switch(tab) {
         case 1:
             return <InvitesList {...propsWithFilmstripId}/>
@@ -26,7 +23,14 @@ const renderContent = (tab, props) => {
     }
 }
 
-const setActiveTabHandler = setActiveTab => event => setActiveTab(event.detail.index)
+const setActiveTabHandler = (match, setActiveTab) => event => {
+    setActiveTab(event.detail.index)
+    // replace url without reloading
+    const { filmstripId, frameId } = match.params
+    const tab = ['settings', 'invites', 'responded'][event.detail.index]
+    const url = `/filmstrip/${filmstripId}/${frameId}/${tab}`
+    history.replaceState(history.state, '',`${url}`)
+}
 const pathToTab = pathname => {
     if (pathname.endsWith('/invites')) return 1
     if (pathname.endsWith('/responded')) return 2
@@ -40,13 +44,13 @@ export const FilmstripsItemNavigation = withTranslation()(observer((props) => {
     Meteor.subscribe('Invites', () => {
         const invites = Invites.find({ filmstripId })
         invitesStore.invitesCount = invites.count()
-        invitesStore.responedCount = invites.fetch().filter(i => i.respondedAt).length // done
+        invitesStore.responedCount = invites.fetch().filter(i => i.respondedAt).length
     })
 
     return <>
         <GridInner>
             <GridCell span={12}>
-                <TabBar activeTabIndex={activeTab} onActivate={setActiveTabHandler(setActiveTab)}>
+                <TabBar activeTabIndex={activeTab} onActivate={setActiveTabHandler(props.match, setActiveTab)}>
                     <Tab>{t('FilmstripsItemNavigation.Settings')}</Tab>
                     <Tab>{t('FilmstripsItemNavigation.Invites')} ({invitesStore.invitesCount})</Tab>
                     <Tab>{t('FilmstripsItemNavigation.Responded')} ({invitesStore.responedCount})</Tab>
