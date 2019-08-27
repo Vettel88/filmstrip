@@ -41,7 +41,6 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
     const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
     const [showShareInvite, setShowShareInvite] = React.useState(false)
     const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)} className="share" mini={true}/> : <></>
-    // <Fab icon="share" onClick={share} mini={true} className="add" />
 
     return (<div className="InvitesRespondedList">
         <GridInner>
