@@ -1,51 +1,94 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react'
-import { Link, Route } from "react-router-dom"
-import { MenuSurfaceAnchor, Menu, MenuItem, ListDivider, Button, Icon } from 'rmwc'
+import { Link, Route } from 'react-router-dom'
+import {
+  MenuSurfaceAnchor,
+  Menu as UnstyledMenu,
+  MenuItem,
+  ListDivider,
+  Button,
+  IconButton,
+  Icon,
+  Typography
+} from 'rmwc'
 import styled from 'styled-components'
 import { withTracker } from 'meteor/react-meteor-data'
 
-const StyledLink = styled(Link)`
-  color: white !important;
+const Menu = styled(UnstyledMenu)`
+  min-width: 240px !important;
+  p {
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 6px;
+  }
 `
 
 const loggedIn = () => {
-    const [open, setOpen] = React.useState(false)
-    
-    return (
-        <Route render={({ history }) => {
-            const logout = () => {
-                Meteor.logout()
-                history.push('/signIn' )
-            }
-            
-            return (
-                <MenuSurfaceAnchor>
-                    <Menu open={open}onClose={evt => setOpen(false)}>
-                        {/* <MenuItem>Cookies</MenuItem>
-                        <MenuItem>Pizza</MenuItem>
-                        <ListDivider /> */}
-                        <MenuItem onClick={logout}>Logout</MenuItem>
-                    </Menu>
+  const [open, setOpen] = React.useState(false)
 
-                    <Button raised onClick={evt => setOpen(!open)}>
-                        <Icon icon="account_circle" />
-                    </Button>
-                </MenuSurfaceAnchor>
-            )
-        }} />
-    )
+  return (
+    <Route
+      render={({ history }) => {
+        const logout = () => {
+          Meteor.logout()
+          history.push('/signIn')
+        }
+
+        const user = Meteor.user() || {}
+
+        // HOX test user currently doesnt have these
+        if (user && !user.profile)
+          user.profile = {
+            firstname: 'Test',
+            lastname: 'Data',
+            email: 'test@data.com'
+          }
+
+        return (
+          <MenuSurfaceAnchor>
+            <Menu
+              open={open}
+              onClose={evt => setOpen(false)}
+              anchorCorner='bottomStart'>
+              <Typography tag='p' use='body1'>
+                {user.profile.firstname} {user.profile.lastname}
+              </Typography>
+              <Typography tag='p' use='caption'>
+                {user.profile.email}
+              </Typography>
+              <ListDivider />
+              <MenuItem onClick={logout}>Logout</MenuItem>
+            </Menu>
+
+            <IconButton
+              label='User menu'
+              icon='account_circle'
+              onClick={evt => setOpen(!open)}
+            />
+          </MenuSurfaceAnchor>
+        )
+      }}
+    />
+  )
 }
 
-export const loggedOut = () =>
-    <Button trailingIcon="keyboard_arrow_right" >
-        <StyledLink to="/signIn">Sign in</StyledLink>
-    </Button>
+const WhiteButton = styled(Button)`
+  color: white !important;
+  a {
+    color: white !important;
+  }
+`
+
+export const loggedOut = () => (
+  <WhiteButton trailingIcon='keyboard_arrow_right'>
+    <Link to='/signIn'>Sign in</Link>
+  </WhiteButton>
+)
 
 export const MenuUserWrapper = ({ isLoggedIn }) =>
-    isLoggedIn ? loggedIn() : loggedOut()
+  isLoggedIn ? loggedIn() : loggedOut()
 
 export const MenuUser = withTracker(() => {
-    const isLoggedIn = !!(Meteor.userId && Meteor.userId())
-    return { isLoggedIn }
+  const isLoggedIn = !!(Meteor.userId && Meteor.userId())
+  return { isLoggedIn }
 })(MenuUserWrapper)
