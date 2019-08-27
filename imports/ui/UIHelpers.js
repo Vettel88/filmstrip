@@ -1,6 +1,8 @@
 import '@rmwc/circular-progress/circular-progress.css'
 import i18next from 'i18next'
 import { Meteor } from 'meteor/meteor'
+import React from 'react'
+import { CircularProgress } from 'rmwc'
 import { Notifications } from '/imports/ui/components/layouts/Notifications.jsx'
 import React from 'react'
 import { withTranslation as withTranslationOrig } from 'react-i18next'
