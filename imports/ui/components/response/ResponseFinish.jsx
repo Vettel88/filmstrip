@@ -126,12 +126,14 @@ const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId 
     <>
       {loadingWrapper(loading, () =>
         <Grid>
-          <GridCell span={12}>
+          <GridCell desktop={3} tablet={1} phone={0} />
+          <GridCell desktop={6} tablet={6} phone={4}>
             <IconCard image='/icons8-checked.svg' headline={t('Response.Confirmed')} caption={t('Response.ConfirmedCopy', { email })} />
             <PaddedCard>
               <SignupForm email={email} t={t} />
             </PaddedCard>
           </GridCell>
+          <GridCell desktop={3} tablet={1} phone={0} />
         </Grid>
       )}
     </>

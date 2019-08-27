@@ -16,25 +16,6 @@ const StyledReactFilestack = styled(ReactFilestack)`
   width: 100% !important;
 `
 
-const tiles = [
-  {
-    "filename": "a1498d35-5092-4c85-9895-a52aab24eddc.jpeg",
-    "handle": "SU8Lk6RlQXqa7zya6NN6",
-    "mimetype": "image/jpeg",
-    "originalPath": "a1498d35-5092-4c85-9895-a52aab24eddc.jpeg",
-    "size": 276444,
-    "source": "local_file_system",
-    "url": "https://cdn.filestackcontent.com/SU8Lk6RlQXqa7zya6NN6",
-    "uploadId": "rbjaTqbGFRh7UpEY",
-    "originalFile": {
-      "name": "a1498d35-5092-4c85-9895-a52aab24eddc.jpeg",
-      "type": "image/jpeg",
-      "size": 276444
-    },
-    "status": "Stored"
-  }
-]
-
 export class ResponseAnswer extends React.Component {
 
   constructor(props) {
@@ -58,8 +39,6 @@ export class ResponseAnswer extends React.Component {
       }
     }
 
-    this.state.files = tiles;
-
   }
 
   responseUploadSave = (res) => {
@@ -80,7 +59,7 @@ export class ResponseAnswer extends React.Component {
   }
 
   render() {
-    const { t } = this.props
+    const { t, emailBase64 } = this.props
     const currentFrame = this.props.currentFrame
     let textResponse, linkResponse, fileResponse
 
@@ -133,7 +112,7 @@ export class ResponseAnswer extends React.Component {
           onSuccess={(res) => this.responseUploadSave(res)}
           componentDisplayMode={{
             type: 'link',
-            customText: t('PickFile'),
+            customText: `+ ${t('PickFile')}`,
           }}
           render={({ onPick }) => (
             <Button label='' onClick={onPick} />
@@ -144,7 +123,7 @@ export class ResponseAnswer extends React.Component {
 
     const addVideo = (event) => {
       event.preventDefault()
-      this.props.history.push(`/a/${currentFrame.filmstripId}/${currentFrame._id}/${btoa(this.props.email)}/recordVideo`)
+      this.props.history.push(`/response/${currentFrame.filmstripId}/${currentFrame._id}/${emailBase64}/recordVideo`)
     }
 
     return (

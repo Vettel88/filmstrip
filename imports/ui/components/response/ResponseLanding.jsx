@@ -13,7 +13,7 @@ export const ResponseLanding = prepareResponseView(({ filmstrip, email, t }) => 
   const [toQuestionnaire, setToQuestionnaire] = useState(false)
 
   if (toQuestionnaire === true) {
-    const url = `/a/${filmstrip._id}/${btoa(userEmail)}/q`
+    const url = `/response/${filmstrip._id}/${filmstrip.frames[0]._id}/${btoa(userEmail)}`
     return <Redirect to={url} />
   }
 

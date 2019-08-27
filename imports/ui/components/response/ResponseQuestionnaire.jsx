@@ -12,23 +12,20 @@ import styled from 'styled-components'
 const StyledGridCell = styled(GridCell)`
   background: white;
 `
-export const ResponseQuestionnaire = prepareResponseView(({ filmstrip, t, email, history }) => {
+export const ResponseQuestionnaire = prepareResponseView(({
+  t,
+  filmstrip,
+  frame,
+  email,
+  emailBase64,
+  currentFrameIndex,
+  history
+}) => {
 
-  useEffect(() => {
-    document.body.classList.add('fullWidth')
-    return function cleanup() {
-      document.body.classList.remove('fullWidth')
-    }
-  })
-
-  const [currentFrameIndex, setCurrentFrameIndex] = useState(0)
-  const [toFinish, setToFinish] = useState(false)
+  const [toFinish, goToFinish] = useState(false)
+  const [toNextFrame, goToNextFrame] = useState(false)
+  const [toPreviousFrame, goToPreviousFrame] = useState(false)
   const [createdFilmstripId, setCreatedFilmstripId] = useState(false)
-
-  const prevQuestion = (event) => {
-    event.preventDefault()
-    setCurrentFrameIndex(currentFrameIndex - 1)
-  }
 
   const nextQuestion = (event) => {
 
@@ -36,13 +33,13 @@ export const ResponseQuestionnaire = prepareResponseView(({ filmstrip, t, email,
 
     if (currentFrameIndex === filmstrip.frames.length - 1) {
 
-      const frames = filmstrip.frames.map(frame => {
+      const frames = filmstrip.frames.map(f => {
 
         return Object.assign({
-          no: frame.no,
-          responseToFrameId: frame._id,
+          no: f.no,
+          responseToFrameId: f._id,
           responseToFilmstripId: filmstrip._id
-        }, JSON.parse(localStorage.getItem(frame._id)))
+        }, JSON.parse(localStorage.getItem(f._id)))
 
       })
 
@@ -57,22 +54,31 @@ export const ResponseQuestionnaire = prepareResponseView(({ filmstrip, t, email,
         if (err) console.error(err)
         else {
           setCreatedFilmstripId(res)
-          setToFinish(true)
+          goToFinish(true)
         }
       })
 
     }
     else {
-      setCurrentFrameIndex(currentFrameIndex + 1)
+      goToNextFrame(true)
     }
 
   }
 
   const frames = filmstrip.frames
-  const currentFrame = frames[currentFrameIndex]
 
   if (toFinish === true) {
-    const url = `/a/${filmstrip._id}/${btoa(email)}/${createdFilmstripId}/finish`
+    const url = `/a/${filmstrip._id}/${emailBase64}/${createdFilmstripId}/finish`
+    return <Redirect push to={url} />
+  }
+
+  if (toPreviousFrame === true) {
+    const url = `/response/${filmstrip._id}/${frames[currentFrameIndex - 1]._id}/${emailBase64}`
+    return <Redirect push to={url} />
+  }
+
+  if (toNextFrame === true) {
+    const url = `/response/${filmstrip._id}/${frames[currentFrameIndex + 1]._id}/${emailBase64}`
     return <Redirect push to={url} />
   }
 
@@ -80,15 +86,15 @@ export const ResponseQuestionnaire = prepareResponseView(({ filmstrip, t, email,
     <>
       <Grid style={{ paddingBottom: '72px' }}>
         <GridCell span={12}>
-          <Typography use='headline5' tag='h5'>
+          <Typography use='headline4' tag='h4' style={{ textAlign: 'center' }}>
             {filmstrip.name || 'Untitled Filmstrip'}
           </Typography>
        </GridCell>
         <GridCell desktop={6} tablet={4} phone={4}>
-          <ResponseQuestion currentFrame={currentFrame} filmstrip={filmstrip} currentFrameIndex={currentFrameIndex} t={t} />
+          <ResponseQuestion currentFrame={frame} filmstrip={filmstrip} currentFrameIndex={currentFrameIndex} t={t} />
         </GridCell>
         <StyledGridCell desktop={6} tablet={4} phone={4}>
-          <ResponseAnswer key={currentFrame._id} currentFrame={currentFrame} filmstrip={filmstrip} currentFrameIndex={currentFrameIndex} t={t} history={history} email={email} />
+          <ResponseAnswer key={frame._id} currentFrame={frame} filmstrip={filmstrip} currentFrameIndex={currentFrameIndex} t={t} history={history} email={email} emailBase64={emailBase64} />
         </StyledGridCell>
       </Grid>
       <StickyNav
@@ -97,12 +103,15 @@ export const ResponseQuestionnaire = prepareResponseView(({ filmstrip, t, email,
         prevTitle={t('Response.PrevQuestion')}
         nextTitle={t('Response.NextQuestion')}
         finishTitle={t('Response.Finish')}
-        onPrevious={prevQuestion}
+        onPrevious={(event) => {
+          event.preventDefault()
+          goToPreviousFrame(true)
+        }}
         onNext={nextQuestion}
       />
     </>
   )
 
-}
-
-)
+}, {
+  isFullWidth: true
+})

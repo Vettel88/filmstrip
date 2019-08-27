@@ -46,6 +46,8 @@ const ResponseWrapper = ({
   Component,
   isLoading,
   filmstrip,
+  frame,
+  layoutOptions,
   ...rest
 }) => {
 
@@ -61,13 +63,16 @@ const ResponseWrapper = ({
     <div>
       {loadingWrapper(isLoading, () => (
         <Grid>
-          <GridCell span={12}>
+          {!layoutOptions.isFullWidth && <GridCell desktop={3} tablet={1} phone={0} /> }
+          <GridCell desktop={layoutOptions.isFullWidth ? 12 : 6} tablet={layoutOptions.isFullWidth ? 8 : 6} phone={4}>
             <Component
-              key={filmstrip._id}
+              key={frame ? frame._id : filmstrip._id}
               filmstrip={filmstrip}
+              frame={frame}
               {...rest}
             />
           </GridCell>
+          {!layoutOptions.isFullWidth && <GridCell desktop={3} tablet={1} phone={0} />}
         </Grid>
       ))}
     </div>
@@ -79,33 +84,49 @@ const ResponseWrapper = ({
  * Reactive with withTracker and passes down translation as {t}.
  * @param {React.Component} Component Component to render after data has loaded
  */
-export const prepareResponseView = Component => {
+export const prepareResponseView = (Component, layoutOptions) => {
   return withRouter(withTranslation()(
     withTracker(({ match, history }) => {
-      const id =
-        match && match.params && match.params.id ? match.params.id : '-1'
+      const filmstripId =
+        match && match.params && match.params.filmstripId ? match.params.filmstripId : '-1'
+      const frameId =
+        match && match.params && match.params.frameId ? match.params.frameId : '-1'
       const createdFilmstripId =
         match && match.params && match.params.createdFilmstripId
           ? match.params.createdFilmstripId
           : null
-      const handle = Meteor.subscribe('ResponseFilmstrip', id)
+      const handle = Meteor.subscribe('ResponseFilmstrip', filmstripId)
 
       const frames = Frames.find({
-        filmstripId: id
+        filmstripId
+      }, {
+        sort: {
+          no: 1
+        }
       }).fetch()
 
       const filmstrip = Filmstrips.findOne({
-        _id: id
+        _id: filmstripId
       })
 
       if (filmstrip) filmstrip.frames = frames
 
+      const frame = frames.length ? frames.find(f => f._id === frameId) : null
+      const currentFrameIndex = frames.length ? frames.map(f => f._id).indexOf(frameId) : 0
+
+      console.log("frameId", filmstripId, frameId, frames, "frame", frame, "currentFrameIndex", currentFrameIndex)
+
       return {
         Component,
         filmstrip,
+        frame,
+        frameId,
+        currentFrameIndex,
         isLoading: !handle.ready(),
         email: match.params.emailBase64 ? atob(match.params.emailBase64) : '',
+        emailBase64: match.params.emailBase64 ? match.params.emailBase64 : '',
         createdFilmstripId,
+        layoutOptions: layoutOptions || {},
         history
       }
     })(ResponseWrapper)
