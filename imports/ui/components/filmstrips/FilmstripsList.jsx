@@ -12,6 +12,12 @@ import { loadingWrapper, addTranslations, t, withTranslation } from '/imports/ui
 import Video from '/imports/ui/components/VideoPlayer.js'
 import './FilmstripsList.less'
 
+const toggleOpenMenu = (open, setOpen) => event => {
+    event.preventDefault()
+    setOpen(!open)
+    return false
+}
+
 const popupMenu = (history, filmstrip, frameId) => {
     const [open, setOpen] = React.useState(false)
     const viewInvites = () => history.push(`/filmstrip/${filmstrip._id}/${frameId}/invites`)
@@ -34,25 +40,37 @@ const popupMenu = (history, filmstrip, frameId) => {
             <MenuItem onClick={viewCompleted}>{t('FramestripsList.ViewCompleted')}</MenuItem>
             <MenuItem onClick={removeFilmstrip}>{t('FramestripsList.DeleteFilmstrip')}</MenuItem>
         </Menu>
-        <IconButton icon="more_vert" onClick={evt => setOpen(!open)} />
+        {/* <IconButton icon="more_vert" onClick={evt => setOpen(!open)} /> */}
+        <IconButton icon="more_vert" onClick={toggleOpenMenu(open, setOpen)} />
     </MenuSurfaceAnchor>)
 }
+
+function hasAncestorClass(element, className) {
+    while (element = element.parentElement) {
+        if (element.classList.contains(className)) {
+           return true
+       }
+    }
+    return false
+}
+
+const gotoFirstFrame = (history, filmstrip, frameId) => event => {
+    // we have this handler for the whole list item, we want to supress the event if it bubbles up from anything in .actions
+    if (!hasAncestorClass(event.target, 'actions')) {
+        history.push(`/filmstrip/${filmstrip._id}/${frameId}/settings`)
+    }
+}
+
+const getInviteesCount = filmstrip => Invites.find({filmstripId: filmstrip._id}).count()
+const getAnswersDoneCount = filmstrip => Invites.find({filmstripId: filmstrip._id, respondedAt: {$exists: true}}).count()
+
+const avatarSource = 'https://via.placeholder.com/48'
 
 const FilmstripsListItem = withRouter(({history, filmstrip}) => {
     const firstFrame = Frames.findOne({ filmstripId: filmstrip._id, no: 1 })
     const frameId = get(firstFrame, '_id', '')
 
-    const gotoFirstFrame = event => {
-        event.preventDefault()
-        history.push(`/filmstrip/${filmstrip._id}/${frameId}/settings`)
-    }
-    // TODO maybe move this to the store
-    const getInviteesCount = filmstrip => Invites.find({filmstripId: filmstrip._id}).count()
-    const getAnswersDoneCount = filmstrip => Invites.find({filmstripId: filmstrip._id, respondedAt: {$exists: true}}).count()
-    
-    const avatarSource = 'https://via.placeholder.com/48'
-
-    return <li>
+    return <li onClick={gotoFirstFrame(history, filmstrip, frameId)}>
         <div className="listContent">
             <img src={avatarSource} title={firstFrame && firstFrame.title}/>
             <div className="listData">
