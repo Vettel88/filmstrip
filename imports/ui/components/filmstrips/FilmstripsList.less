@@ -1,5 +1,37 @@
 .FilmstripsList {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    
     li {
-        padding-bottom: 20px;
+        display: flex;
+        justify-content: space-between;
+        overflow: visible;
+        padding: 5px;
+        .listContent {
+            display: flex;
+            justify-content: space-between;
+            img {
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                margin-right: 15px;
+            }
+        }
+        .mdc-menu, [role="menu"], [role="menuitem"] {
+            min-width: 200px;
+        }
+        p {
+            color: rgba(0, 0, 0, 0.54);
+        }
+        &:hover {
+            background-color: #eee;
+        }
+    }
+
+    .footerAction {
+        position: fixed;
+        bottom: 40px;
+        right: 40px;
     }
 }
