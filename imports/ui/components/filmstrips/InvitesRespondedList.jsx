@@ -24,7 +24,6 @@ const InvitesRespondedListItem = withRouter(observer(({invite}) => <li onClick={
 </li>))
 
 const setter = set => event => set(event.target.value)
-const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)} className="share" mini={true}/> : <></>
 
 const InvitesRespondedListWrapper = withRouter(observer(({}) => {
     const inviteFilter = invite => {
