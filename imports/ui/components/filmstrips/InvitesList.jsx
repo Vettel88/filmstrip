@@ -62,18 +62,6 @@ const InvitesListWrapper = withRouter(observer(({}) => {
 
 const InvitesListWrapperStyled = styled(InvitesListWrapper)`
   background: red;
-  // padding: 64px;
-  // margin-bottom: 1rem;
-
-  // @media (max-width: 839px) {
-  //   padding: 32px;
-  // }
-
-  // @media (max-width: 479px) {
-  //   padding: 24px;
-  // }
-
-  // text-align: ${props => props.align ? props.align : 'inherit'};
 `
 
 export const InvitesList = UI.withTranslation()(withTracker(({match}) => {
@@ -85,7 +73,6 @@ export const InvitesList = UI.withTranslation()(withTracker(({match}) => {
     })
     return {}
 })(InvitesListWrapperStyled))
-
 
 export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreateInvite}) => {
     const [name, setName] = React.useState('')
