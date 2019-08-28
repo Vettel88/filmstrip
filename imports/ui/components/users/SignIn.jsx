@@ -92,7 +92,6 @@ export const SignIn = withTranslation()(({ t }) => {
       <Card>
         <Typography use='headline4' tag='h4'>
           {t('SignIn.Header')}
-          <Icon icon='arrow_right_alt' />
         </Typography>
         <SignInForm t={t} />
         <Typography tag='p' use='body2'>

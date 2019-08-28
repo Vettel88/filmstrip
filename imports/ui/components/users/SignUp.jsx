@@ -80,7 +80,6 @@ export const SignupForm = ({ t, email }) => {
     <>
       <Typography use='headline4' tag='h4'>
         {t('Signup.Header')}
-        <Icon icon='arrow_right_alt' />
       </Typography>
       <Typography use='body2' tag='p'>
         {t('Signup.Copy')}
