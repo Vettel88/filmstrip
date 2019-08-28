@@ -1,15 +1,9 @@
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
-import { Meteor } from 'meteor/meteor'
-import Postmark from 'postmark'
-import { Random } from 'meteor/random'
-import SimpleSchema from 'simpl-schema'
-import { ValidatedMethod } from 'meteor/mdg:validated-method'
-
 let postmark
 
 if (Meteor.isServer) {
-  postmark = new Postmark.ServerClient(Meteor.settings.postmark.apikey)
+  postmark = require('/server/postmark.js')
 }
 
 export const ResponseSave = new ValidatedMethod({
@@ -115,16 +109,12 @@ export const ResponseSendConfirmation = new ValidatedMethod({
       if (email === filmstrip.email)
         if (filmstrip) {
           await postmark.sendEmailWithTemplate({
-            From: Meteor.settings.postmark.sender,
             To: email,
-            TemplateAlias: 'ResponseConfirm-en',
+            Template: 'ResponseConfirm',
+            Language: 'en',
             TemplateModel: {
               filmstrip_name: filmstrip.name,
-              action_url: link,
-              support_email: Meteor.settings.public.support.email,
-              sender_name: Meteor.settings.public.support.sender,
-              product_name: Meteor.settings.public.support.productName,
-              product_url: Meteor.settings.public.support.productUrl
+              action_url: link
             }
           })
 
