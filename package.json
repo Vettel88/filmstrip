@@ -4,7 +4,7 @@
   "scripts": {
     "lint": "./node_modules/.bin/eslint .",
     "start": "meteor run",
-    "test": "./node_modules/.bin/jest",
+    "test": "npm run lint && ./node_modules/.bin/jest",
     "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
     "test-watch": "./node_modules/.bin/jest --watchAll",
     "visualize": "meteor --production --extra-packages bundle-visualizer"
