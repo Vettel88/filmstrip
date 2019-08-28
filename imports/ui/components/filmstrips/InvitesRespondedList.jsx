@@ -17,8 +17,8 @@ const avatarName = invite => (invite.name || 'No Name').toUpperCase()
 const InvitesRespondedListItem = withRouter(observer(({invite}) => <li onClick={() => invitesStore.selectInviteResponded(invite)}>
     <Avatar size="xsmall" name={avatarName(invite)}/>
     <div className="description">
-        <Typography tag='h6'>{invite.name || t('InvitesResponded.undefined')}</Typography>
-        <Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
+        <Typography use="headline6">{invite.name || t('InvitesResponded.undefined')}</Typography>
+        <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
     </div>
     <Checkbox label="" checked={invitesStore.selectedInvitesRespondedIDs.includes(invite._id)}/>
 </li>))
@@ -27,9 +27,6 @@ const setter = set => event => set(event.target.value)
 const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)} className="share" mini={true}/> : <></>
 
 const InvitesRespondedListWrapper = withRouter(observer(({}) => {
-    const [filter, setFilter] = React.useState('')
-    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
-    const [showShareInvite, setShowShareInvite] = React.useState(false)
     const inviteFilter = invite => {
         if (!invite.respondedAt) return false
         const email = get(invite, 'email', '').toLowerCase()
@@ -37,6 +34,10 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
+    
+    const [filter, setFilter] = React.useState('')
+    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
+    const [showShareInvite, setShowShareInvite] = React.useState(false)
 
     return (<div className="InvitesRespondedList">
         <TextField placeholder={t('InvitesResponded.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>

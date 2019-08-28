@@ -1,25 +1,22 @@
-import React from 'react'
-import { Meteor } from 'meteor/meteor'
 import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import Layout from './components/layouts/Layout'
-import ModalLayout from './components/layouts/ModalLayout'
-import FilmstripLayout from './components/layouts/FilmstripLayout'
-
-import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
-import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
-
-import { ResponseLayout } from '/imports/ui/components/response/ResponseCommon.jsx'
-import { ResponseLanding } from '/imports/ui/components/response/ResponseLanding.jsx'
-import { ResponseQuestionnaire } from '/imports/ui/components/response/ResponseQuestionnaire.jsx'
-import { ResponseFinish, ResponseConfirm } from '/imports/ui/components/response/ResponseFinish.jsx'
-
-import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
-import { FilmstripsSettings } from '/imports/ui/components/filmstrips/FilmstripsSettings.jsx'
 import { FilmstripsItem } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
+import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
+import FilmstripLayout from './components/layouts/FilmstripLayout'
+import { FilmstripsSettings } from '/imports/ui/components/filmstrips/FilmstripsSettings.jsx'
+import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
 import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
 import { InvitesRespondedList } from '/imports/ui/components/filmstrips/InvitesRespondedList.jsx'
-import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
+import Layout from './components/layouts/Layout'
+import { Meteor } from 'meteor/meteor'
+import ModalLayout from './components/layouts/ModalLayout'
+import React from 'react'
+import { ResponseConfirm, ResponseFinish } from '/imports/ui/components/response/ResponseFinish.jsx'
+import { ResponseLanding } from '/imports/ui/components/response/ResponseLanding.jsx'
+import { ResponseLayout } from '/imports/ui/components/response/ResponseCommon.jsx'
+import { ResponseQuestionnaire } from '/imports/ui/components/response/ResponseQuestionnaire.jsx'
 import { ResponseVideoRecorder } from '/imports/ui/components/response/ResponseVideoRecorder.jsx'
+import { SignUp } from '/imports/ui/components/users/SignUp.jsx'
+import { SignIn } from '/imports/ui/components/users/SignIn.jsx'
 import { ThemeProvider } from 'rmwc'
 
 import 'css-reset-and-normalize/css/reset-and-normalize.min.css'
@@ -39,6 +36,8 @@ const PrivateRoute = ({ component: RouteComponent, layout: RouteLayout, ...rest 
             ? <RouteLayout><RouteComponent {...props} /></RouteLayout> 
             : <Redirect to='/signIn' />
     )} />
+
+const ResponsiveModalLayout = (props) => <ModalLayout {...props} responsive={true} />
 
 const App = () =>
     <ThemeProvider
@@ -79,8 +78,8 @@ const App = () =>
                 <AppRoute path="/response/:filmstripId/:frameId/:emailBase64" component={ResponseQuestionnaire} layout={ResponseLayout} />
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
-            <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />
             <AppRoute path="/response/:filmstripId/:frameId/:emailBase64/recordVideo" component={ResponseVideoRecorder} layout={ModalLayout} />
+            <PrivateRoute path="/filmstrip/:filmstripId/:frameId/frames/recordVideo" component={FrameVideoRecorder} layout={ResponsiveModalLayout} />
         </Router>
     </ThemeProvider>
 

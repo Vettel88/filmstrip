@@ -1,7 +1,14 @@
 .filmstripsItem {
-    h3 {
-        float: left;
+    input[type=text]{
+        padding-top: 1rem !important;
     }
+
+    button.footerAction {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+    }
+  
     .filestack-react {
         text-align: right;
         float: right;
@@ -12,15 +19,66 @@
     .filestack-react:after, .mdc-list:before {
         clear: both;
     }
-    .mdc-layout-grid__cell {
-        padding-top: 10px;
+
+    .mdc-card {
+        margin-bottom: 1rem;
     }
-    .mdc-layout-grid__cell.right {
-        text-align: right;
+
+    .frameSlides {
+
+        height: 15.5rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        text-align: center !important;
+
+        .videoContainer {
+            height: inherit;
+
+            video {
+                height: inherit;
+            }
+
+            .noRecording {
+                background-color: #EEE;
+                height: 100%;
+                margin: auto;
+                width: 80%;
+            }
+
+            .recordButtonContainer {
+                position: absolute;
+                top: 38%;
+                width: 100%;
+
+                button {
+                    margin: auto;
+                }
+            }
+        }
+
+        .buttonPanel {
+            height: 15.5rem;
+            position: absolute;
+            display: flex;
+            z-index: 1;
+            top: 0;
+
+            &.back {
+                left: -0.5rem;
+            }
+
+            &.next {
+                right: -0.5rem;
+            }
+
+            button {
+                align-self: center;
+            }
+        }
     }
+
     .videoEditor {
         position: relative;
-        width: 300px;
         margin: auto;
         .actions {
             display: flex;
@@ -46,7 +104,7 @@
         }
     }
   }
-  
+
   .CreateInviteDialog {
     display: flex;
   }

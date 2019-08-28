@@ -1,123 +1,56 @@
 import { Meteor } from 'meteor/meteor'
 import React from 'react';
 import ReactFilestack from 'filestack-react'
-import { TextField, Button, Icon, List, ListItem, Card as MUICard, GridCell, Grid, Fab, CardPrimaryAction, Snackbar, SnackbarAction, Switch} from "rmwc";
+import { TextField, Button, Icon, List, ListItem, Card, GridCell, Grid, Fab, MenuSurface, MenuSurfaceAnchor, Snackbar, SnackbarAction, Switch} from "rmwc";
+
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
-import get from 'lodash/get'
 import { observer } from 'mobx-react'
 import { loadingWrapper, addTranslations, t, withTranslation, changeLanguage } from '/imports/ui/UIHelpers.js'
 import Video from '/imports/ui/components/VideoPlayer.js'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+
 import stores from '/imports/store'
 const store = stores.filmstripStore
+
+import './FilmstripsItem.less'
 
 const FormField = styled.div`
     padding: 1rem;
 `
 
-/* Styled Components */
-const Card = styled(MUICard)`
-    padding: 1rem;
-    margin-bottom: 1rem;
-`
-
-/* Filmstrip Settings Section */
-const FilmstripSettings = observer((props) => {
-    const filmstrip = store.filmstrip || {}
+const FrameEditorItem = withRouter(observer(({history, frameId}) => {
+    const [playing, setPlaying] = React.useState(false)
+    const frame = store.getFrame(frameId)
+    const addVideo = () => history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/frames/recordVideo/`)
     return (
-        <>
-            <FormField>
-                <TextField
-                    label={"Name"}
-                    name="filmstripName"
-                    value={filmstrip.name}
-                    fullwidth
-                    onChange={e => {
-                        store.setFilmstripValue(
-                            "name",
-                            e.currentTarget.value
-                        );
-                    }}
-                    maxLength={50}
-                    characterCount
+        <div className="videoContainer">
+            {frame.cloudinaryPublicId ? (
+                <Video
+                    publicId={frame.cloudinaryPublicId}
+                    onPlaying={() => setPlaying(true)}
+                    onStopped={() => setPlaying(false)}
                 />
-            </FormField>
-            <FormField>
-                <TextField
-                    textarea
-                    outlined
-                    fullwidth
-                    label={"Description"} // TODO i18n
-                    rows={3}
-                    maxLength={120}
-                    characterCount
-                    value={filmstrip.description}
-                    onChange={e => {
-                        store.setFilmstripValue(
-                            "description",
-                            e.currentTarget.value
-                        );
-                    }}
-                />
-            </FormField>
-        </>
-    );
-})
-
-const FrameEditorItem = withRouter((props) => {
-    const { history, match, frame } = props
-    const removeFrame = (event) => {
-        if(confirm(t('FramestripsItem.Do you want to delete the frame?'))) {
-            store.removeFrame(frame)
-        }
-    }
-    const addVideo = () => history.push(`/filmstrip/${frame.filmstripId}/${frame._id}/recordVideo/`)
-    const createFrame = () => store.createFrame(frame.filmstripId)
-    const publicId = get(frame, 'cloudinaryPublicId')
-    const imageOrVideo = publicId
-        ? <Video publicId={publicId} width="300"/>
-        : <img src="https://via.placeholder.com/300x200" onClick={addVideo}/>
-
-    // All frames will be rendered but only the currently selected will be visible
-    const { frameId } = match.params
-    const getStyle = id => {
-        return ({ display: id === frameId ? 'block' : 'none' })
-    }
-
-    return (<div className="videoEditor" style={getStyle(frame._id)}>
-        {imageOrVideo}
-        <div className="actions">
-            <Fab icon="clear" data-no={frame.no} onClick={removeFrame} style={{ backgroundColor: 'var(--mdc-theme-error)' }} theme={['onError']}  mini={true}/>
-            <Fab icon="add" data-no={frame.no} onClick={createFrame} mini={true}/>
+            ) : (
+                <div className="noRecording"></div>
+            )}
+            {!playing ? (
+                <div className="recordButtonContainer">
+                    <Fab
+                        icon="fiber_manual_record"
+                        onClick={addVideo}
+                        style={{ backgroundColor: 'var(--mdc-theme-error)' }}
+                        theme={['onError']}
+                    />
+                </div>
+            ) : (
+                <></>
+            )}
         </div>
-    </div>)
-})
-
-const FrameSelectorItem = withRouter(({history, match, frame}) => {
-    const { filmstripId, frameId } = match.params
-    const changeFrame = event =>
-        history.push(`/filmstrip/${filmstripId}/${event.currentTarget.dataset.id}`)    
-    const getColor = () => frame._id === frameId ? 'black' : 'grey'
-    
-    return (<>
-        <Icon data-id={frame._id} onClick={changeFrame}
-            icon={
-                <div
-                    style={{
-                        background: getColor(),
-                        width: '12px',
-                        height: '12px',
-                        borderRadius: '50px',
-                        marginLeft: '3px',
-                    }}
-                />
-            }
-        />
-    </>)
-})
+    )
+}))
 
 const StyledReactFilestack = styled(ReactFilestack)`
     text-align: right;
@@ -131,74 +64,85 @@ const FrameItem = observer(({frameId}) => {
 
     return (
         <>
-            <CardPrimaryAction>
-                <GridCell span={12}>
-                    <TextField
-                        label={t('FramestripsItem.Frame Title')}
-                        name="title"
-                        value={frame.title}
-                        onChange={(e) => store.setFrameValue(frame, 'title', e.currentTarget.value)}
-                        maxLength={50}
-                        characterCount
-                    />
-                </GridCell>
-                <GridCell span={12}>
-                    <TextField
-                        textarea
-                        outlined
-                        fullwidth
-                        label={t('FramestripsItem.Frame Description')}
-                        rows={3}
-                        maxLength={120}
-                        characterCount
-                        value={frame.description}
-                        onChange={(e) => store.setFrameValue(frame, 'description', e.currentTarget.value)}
-                    />
-                </GridCell>
-                <GridCell span={12}>
-                    <TextField
-                        textarea
-                        label={t('FramestripsItem.Link')}
-                        defaultValue={frame.link}
-                        onChange={(e) => store.setFrameValue(frame, 'link', e.currentTarget.value)}
-                    />
-                </GridCell>
-                <GridCell span={12}>
-                    <h3>{t('FramestripsItem.Files')}</h3>
-                    <StyledReactFilestack
-                        apikey={Meteor.settings.public.filestack.apikey}
-                        onSuccess={({filesUploaded}) => {
-                            const newFiles = [].concat(frame.files)
-                            filesUploaded.forEach(f => newFiles.push(f))
-                            store.setFrameValue(frame, 'files', newFiles)
-                        }}
-                        componentDisplayMode={{
-                            type: 'link',
-                            customText: t('FramestripsItem.Upload'),
-                        }}
-                        render={({ onPick }) => (
-                            <Button label='' onClick={onPick} />
-                        )}
-                    />
-                </GridCell>
-                <GridCell span={12}>
-                    <List>
-                        {frame.files && frame.files.map((file, i) => 
-                            <FileItem
-                                key={i}
-                                file={file}
-                                filmstrip={store.filmstrip}
-                                frame={frame}
-                                no={frame.no}
-                                files={frame.files}
-                                setFiles={console.log}
-                            />)
-                        }
-                    </List>
-                </GridCell>
-            </CardPrimaryAction>
             <Card>
-                <CardPrimaryAction>
+                <GridCell span={12}>
+                    <FormField>
+                        <TextField
+                            label={t('FramestripsItem.Frame Title')}
+                            name="title"
+                            fullwidth
+                            value={frame.title}
+                            onChange={(e) => store.setFrameValue(frame, 'title', e.currentTarget.value)}
+                            maxLength={50}
+                            characterCount
+                        />
+                    </FormField>
+                </GridCell>
+                <GridCell span={12}>
+                    <FormField>
+                        <TextField
+                            textarea
+                            outlined
+                            fullwidth
+                            label={t('FramestripsItem.Frame Description')}
+                            rows={3}
+                            maxLength={120}
+                            characterCount
+                            value={frame.description}
+                            onChange={(e) => store.setFrameValue(frame, 'description', e.currentTarget.value)}
+                        />
+                    </FormField>
+                </GridCell>
+                <GridCell span={12}>
+                    <FormField>
+                        <TextField
+                            fullwidth
+                            label={t('FramestripsItem.Link')}
+                            defaultValue={frame.link}
+                            onChange={(e) => store.setFrameValue(frame, 'link', e.currentTarget.value)}
+                        />
+                    </FormField>
+                </GridCell>
+                <GridCell span={12}>
+                    <FormField>
+                        <h3>{t('FramestripsItem.Files')}</h3>
+                        <StyledReactFilestack
+                            apikey={Meteor.settings.public.filestack.apikey}
+                            onSuccess={({filesUploaded}) => {
+                                const newFiles = [].concat(frame.files)
+                                filesUploaded.forEach(f => newFiles.push(f))
+                                store.setFrameValue(frame, 'files', newFiles)
+                            }}
+                            componentDisplayMode={{
+                                type: 'link',
+                                customText: t('FramestripsItem.Upload'),
+                            }}
+                            render={({ onPick }) => (
+                                <Button label='' onClick={onPick} />
+                            )}
+                        />
+                    </FormField>
+                </GridCell>
+                <GridCell span={12}>
+                    <FormField>
+                        <List>
+                            {frame.files && frame.files.map((file, i) => 
+                                <FileItem
+                                    key={i}
+                                    file={file}
+                                    filmstrip={store.filmstrip}
+                                    frame={frame}
+                                    no={frame.no}
+                                    files={frame.files}
+                                    setFiles={console.log}
+                                />)
+                            }
+                        </List>
+                    </FormField>
+                </GridCell>
+            </Card>
+            <Card>
+                <GridCell span={12}>
                     <FormField>
                         <Switch
                             checked={frame.allowTextAnswer || false}
@@ -206,6 +150,8 @@ const FrameItem = observer(({frameId}) => {
                             label={t('FramestripsItem.allowTextAnswers')}
                         />
                     </FormField>
+                </GridCell>
+                <GridCell span={12}>
                     <FormField>
                         <Switch
                             checked={frame.allowAddingLinks || false}
@@ -213,6 +159,8 @@ const FrameItem = observer(({frameId}) => {
                             label={t('FramestripsItem.allowAddingLinks')}
                         />
                     </FormField>
+                </GridCell>
+                <GridCell span={12}>
                     <FormField>
                         <Switch
                             checked={frame.allowAddingFiles || false}
@@ -220,7 +168,7 @@ const FrameItem = observer(({frameId}) => {
                             label={t('FramestripsItem.allowAddingFiles')}
                         />
                     </FormField>
-                </CardPrimaryAction>
+                </GridCell>
             </Card>
         </>
     )
@@ -250,7 +198,7 @@ const FileItem = ({filmstrip, frame, no, file, files}) => <Grid>
     </Grid>
 
 const FilmstripItem = observer((props) => {
-    const { frameId, filmstripId } = props
+    const { frameId, filmstripId, history } = props
     return (
         <div className="filmstripsItem">
             {loadingWrapper(store.isLoading, () =>
@@ -267,24 +215,91 @@ const FilmstripItem = observer((props) => {
                             />
                         }
                     />
-                    <Card>
-                        <CardPrimaryAction>
-                            <FilmstripSettings filmstripId={filmstripId} />
-                        </CardPrimaryAction>
-                    </Card>
-                    <Card>
-                        <h1>{t("FramestripsItem.Frames")}</h1>
-                        <div style={{ textAlign: "center" }}>
-                            {store.frames.map(frame => <FrameEditorItem key={frame.no} frame={frame} />)}
-                            {store.frames.map(frame => <FrameSelectorItem key={frame.no} frame={frame} />)}
-                        </div>
-                        <FrameItem frameId={frameId} />
-                    </Card>
+                    <FilmstripFrameSlides
+                        frameId={frameId}
+                        filmstripId={filmstripId}
+                        history={history}
+                    />
+                    <FrameItem frameId={frameId} />
+                    <Fab
+                        className="footerAction"
+                        icon="add"
+                        onClick={async () => {
+                            const newFrame = await store.createFrame(filmstripId)
+                            history.replace(`/filmstrip/${filmstripId}/${newFrame._id}/frames`)
+                        }}
+                    />
                 </>
             )}
         </div>
     )
 })
+
+const getFramesForNavigation = (currentFrameId) => {
+    if (store.frames.length <= 1) {
+        return { previousFrame: null, nextFrame: null }
+    }
+    const indexOfCurrentFrame = store.frames.findIndex(frame => frame._id === currentFrameId)
+    const currentFrame = store.frames[indexOfCurrentFrame]
+    const nextFrameIndex = indexOfCurrentFrame + 1
+    const nextFrame = nextFrameIndex < store.frames.length ? store.frames[nextFrameIndex] : null
+    const previousFrameIndex = indexOfCurrentFrame - 1
+    const previousFrame = previousFrameIndex >= 0 ? store.frames[previousFrameIndex] : null
+    return {
+        previousFrame,
+        currentFrame,
+        nextFrame,
+    }
+}
+
+const BackButton = (props) => (
+    <div className="buttonPanel back">
+        {props.disabled ? <></> : <Fab icon="arrow_left" mini onClick={props.onClick} />}
+    </div>
+)
+const NextButton = (props) => (
+    <div className="buttonPanel next">
+        {props.disabled ? <></> : <Fab icon="arrow_right" mini onClick={props.onClick}/>}
+    </div>
+)
+
+const SelectedIcon = styled(Icon)`
+    color: #888;
+`
+const UnselectedIcon = styled(Icon)`
+    color: #CCC;
+`
+
+const FilmstripFrameSlides = ({frameId, filmstripId, history}) => {
+    const { previousFrame, nextFrame, currentFrame } = getFramesForNavigation(frameId)
+    const indexOfCurrentFrame = store.frames.findIndex(frame => frame._id === frameId)
+    return (
+        <div className="frameSlides">
+            <BackButton
+                disabled={!previousFrame}
+                onClick={(e) => {
+                    e.preventDefault()
+                    history.replace(`/filmstrip/${filmstripId}/${previousFrame._id}/frames`)
+                }}
+            />
+            <FrameEditorItem frameId={frameId} />
+            <NextButton
+                disabled={!nextFrame}
+                onClick={(e) => {
+                    e.preventDefault()
+                    history.replace(`/filmstrip/${filmstripId}/${nextFrame._id}/frames`)
+                }}
+            />
+            <div>
+                {store.frames.map((_,i)=> (
+                    indexOfCurrentFrame === i ?
+                        <SelectedIcon icon="fiber_manual_record" /> :
+                        <UnselectedIcon icon="fiber_manual_record" />
+                ))}
+            </div>
+        </div>
+    )
+}
 
 export const FilmstripsItem = withTranslation()(
     withTracker(({match}) => {
