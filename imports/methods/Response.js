@@ -108,7 +108,7 @@ export const ResponseSendConfirmation = new ValidatedMethod({
       const emailBase64 = new Buffer(email).toString('base64')
       const link =
         process.env.ROOT_URL +
-        `confirm/${filmstripId}/${emailBase64}/${filmstrip.confirmationKey}`
+        `/confirm/${filmstripId}/${emailBase64}/${filmstrip.confirmationKey}`
 
       if (email === filmstrip.email)
         if (filmstrip) {
