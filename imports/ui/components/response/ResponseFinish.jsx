@@ -58,7 +58,7 @@ const ResponseFinishContainer = ({ email, t, filmstrip, createdFilmstripId }) =>
     )
   } 
 
-  const responseUrl = `/response/${filmstrip._id}/${filmstrip.frames[0]._id}/${btoa(userEmail)}`
+  const responseUrl = `/a/${filmstrip._id}/${btoa(userEmail)}/q`
 
   if (isSent) return <ResponseConfirmationSent email={userEmail} t={t} />
 
