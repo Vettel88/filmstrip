@@ -3,6 +3,7 @@ import React from 'react'
 import { Button, TextField, GridCell, GridInner, Fab, Typography, Checkbox, Avatar, Dialog, DialogContent, List, ListItem } from 'rmwc'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
+import styled from 'styled-components'
 import get from 'lodash/get'
 import upperFirst from 'lodash/upperFirst'
 import { observer } from 'mobx-react'
@@ -15,20 +16,14 @@ import './InvitesList.less'
 // Avatar needs words starting with uppercase letters, so do that for every word of name
 const getAvatarName = name => (name || 'No Name').split(' ').map(w => upperFirst(w)).join(' ')
 
-const InvitesListItem = withRouter(observer(({history, invite}) => <ListItem>
-    <GridInner>
-        <GridCell span={2} style={({textAlign: 'center'})} onClick={() => InvitesStore.selectInvite(invite)}>
-            <Avatar size="xsmall" name={getAvatarName(invite.name)}/>
-        </GridCell>
-        <GridCell span={9} onClick={() => invitesStore.selectInvite(invite)}>
-            <Typography use="headline7">{invite.name || t('Invites.undefined')}</Typography>
-            <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
-        </GridCell>
-        <GridCell span={1}>
-            <Checkbox label="" checked={invitesStore.selectedInviteIDs.includes(invite._id)} onChange={() => invitesStore.selectInvite(invite)}/>
-        </GridCell>
-    </GridInner>
-</ListItem>))
+const InvitesListItem = withRouter(observer(({history, invite}) => <li onClick={() => invitesStore.selectInvite(invite)}>
+    <Avatar size="xsmall" name={getAvatarName(invite.name)}/>
+    <div className="description">
+        <Typography tag='h6'>{invite.name || t('Invites.undefined')}</Typography>
+        <Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
+    </div>
+    <Checkbox label="" checked={invitesStore.selectedInviteIDs.includes(invite._id)}/>
+</li>))
 
 const setter = set => event => set(event.target.value)
 
@@ -50,35 +45,47 @@ const InvitesListWrapper = withRouter(observer(({}) => {
     const renderRemoveButton = show => show ? <Fab icon="delete" onClick={removeInvite}/> : <></>
     
     return (<div className="InvitesList">
-        <GridInner>
-            <GridCell span={12}>
-                <TextField placeholder={t('Invites.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
-            </GridCell>
-            <GridCell span={9}>
-                <Typography use="headline5">{t('Invites.Invited')}</Typography>
-            </GridCell>
-            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                <Button label={invitesStore.hasSelectedInvites ? t('Invites.DeselectAll') : t('Invites.SelectAll')} onClick={() => invitesStore.selectAllInvites()} />
-            </GridCell>
-        </GridInner>
-        <List>
+        <TextField placeholder={t('Invites.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
+        <div className="listTitle">
+            <Typography use="headline5">{t('Invites.Invited')}</Typography>
+            <Button label={invitesStore.hasSelectedInvites ? t('Invites.DeselectAll') : t('Invites.SelectAll')} onClick={() => invitesStore.selectAllInvites()} />
+        </div>
+        <Fab icon="add" onClick={() => setIsCreateInvite(true)} mini={true} className="add" />
+        <ul>
             {UI.loadingWrapper(invitesStore.isInvitesLoading, () => 
                 filteredInvites().map(invite => <InvitesListItem key={invite._id} invite={invite}/>)
             )}
-        </List>
-        <Fab icon="add" onClick={() => setIsCreateInvite(true)} mini={true} className="add" />
+        </ul>
         {CreateInvite({isCreateInvite, setIsCreateInvite})}
     </div>)
 }))
 
-export const InvitesList = UI.withTranslation()(withTracker(({filmstripId, setInvitesCount}) => {
+const InvitesListWrapperStyled = styled(InvitesListWrapper)`
+  background: red;
+  // padding: 64px;
+  // margin-bottom: 1rem;
+
+  // @media (max-width: 839px) {
+  //   padding: 32px;
+  // }
+
+  // @media (max-width: 479px) {
+  //   padding: 24px;
+  // }
+
+  // text-align: ${props => props.align ? props.align : 'inherit'};
+`
+
+export const InvitesList = UI.withTranslation()(withTracker(({match}) => {
+    const { filmstripId } = match.params
     invitesStore.filmstripId = filmstripId
     Meteor.subscribe('Invites', () => {
         invitesStore.invites = Invites.find({filmstripId}).fetch()
         invitesStore.isInvitesLoading = false
     })
-    return { setInvitesCount }
-})(InvitesListWrapper))
+    return {}
+})(InvitesListWrapperStyled))
+
 
 export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreateInvite}) => {
     const [name, setName] = React.useState('')

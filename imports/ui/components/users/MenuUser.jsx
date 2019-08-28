@@ -62,7 +62,7 @@ const loggedIn = () => {
 
             <IconButton
               label='User menu'
-              icon='account_circle'
+              icon='more_vert'
               onClick={evt => setOpen(!open)}
             />
           </MenuSurfaceAnchor>

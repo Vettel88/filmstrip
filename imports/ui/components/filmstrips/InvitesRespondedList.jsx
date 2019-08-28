@@ -12,25 +12,24 @@ import { t } from '/imports/ui/UIHelpers.js'
 import { invitesStore } from '/imports/store/invitesStore.js'
 import './InvitesRespondedList.less'
 
-const InvitesRespondedListItem = withRouter(observer(({invite}) => <ListItem>
-    <GridInner>
-        <GridCell span={2} style={({textAlign: 'center'})} onClick={() => invitesStore.selectInviteResponded(invite)}>
-            <Avatar  size="xsmall" name={invite.name}/>
-        </GridCell>
-        <GridCell span={9} onClick={() => invitesStore.selectInviteResponded(invite)}>
-            <Typography use="headline7">{invite.name || t('InvitesResponded.undefined')}</Typography>
-            <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
-        </GridCell>
-        <GridCell span={1}>
-            <Checkbox label="" checked={invitesStore.selectedInvitesRespondedIDs.includes(invite._id)} onChange={() => invitesStore.selectInviteResponded(invite)}/>
-        </GridCell>
-    </GridInner>
-</ListItem>))
+const avatarName = invite => (invite.name || 'No Name').toUpperCase()
+
+const InvitesRespondedListItem = withRouter(observer(({invite}) => <li onClick={() => invitesStore.selectInviteResponded(invite)}>
+    <Avatar size="xsmall" name={avatarName(invite)}/>
+    <div className="description">
+        <Typography tag='h6'>{invite.name || t('InvitesResponded.undefined')}</Typography>
+        <Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
+    </div>
+    <Checkbox label="" checked={invitesStore.selectedInvitesRespondedIDs.includes(invite._id)}/>
+</li>))
 
 const setter = set => event => set(event.target.value)
+const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)} className="share" mini={true}/> : <></>
 
 const InvitesRespondedListWrapper = withRouter(observer(({}) => {
     const [filter, setFilter] = React.useState('')
+    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
+    const [showShareInvite, setShowShareInvite] = React.useState(false)
     const inviteFilter = invite => {
         if (!invite.respondedAt) return false
         const email = get(invite, 'email', '').toLowerCase()
@@ -38,41 +37,32 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
-    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
-    const [showShareInvite, setShowShareInvite] = React.useState(false)
-    const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)}/> : <></>
-    
+
     return (<div className="InvitesRespondedList">
-        <GridInner>
-            <GridCell span={9}>
-                <TextField placeholder={t('InvitesResponded.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
-            </GridCell>
-            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                {renderShareButton(invitesStore.hasSelectedInvitesResponded)}
-            </GridCell>
-            <GridCell span={9}>
-                <Typography use="headline5">{t('InvitesResponded.Responded')}</Typography>
-            </GridCell>
-            <GridCell span={3} style={({display: 'flex', justifyContent: 'flex-end'})}>
-                <Button label={invitesStore.hasSelectedInvitesResponded ? t('InvitesResponded.DeselectAll') : t('InvitesResponded.SelectAll')} onClick={() => invitesStore.selectAllInvitesResponded()} />
-            </GridCell>
-        </GridInner>
-        <List>
+        <TextField placeholder={t('InvitesResponded.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
+        <div className="listTitle">
+            <Typography use="headline5">{t('InvitesResponded.Responded')}</Typography>
+            <Button label={invitesStore.hasSelectedInvitesResponded ? t('InvitesResponded.DeselectAll') : t('InvitesResponded.SelectAll')} onClick={() => invitesStore.selectAllInvitesResponded()} />
+        </div>
+
+        {renderShareButton(invitesStore.hasSelectedInvitesResponded)}
+        <ul>
             {UI.loadingWrapper(invitesStore.isInvitesRespondedLoading, () => 
                 filteredInvites().map(invite => <InvitesRespondedListItem key={invite._id} invite={invite}/>)
             )}
-        </List>
+        </ul>
         {ShareInvite({showShareInvite, setShowShareInvite})}
     </div>)
 }))
 
-export const InvitesRespondedList = UI.withTranslation()(withTracker(({filmstripId, setInvitesRespondedCount}) => {
+export const InvitesRespondedList = UI.withTranslation()(withTracker(({match}) => {
+    const { filmstripId } = match.params
     invitesStore.filmstripId = filmstripId
     Meteor.subscribe('Invites', () => {
         invitesStore.invitesResponded = Invites.find({filmstripId, respondedAt: { $exists: true } }).fetch()
         invitesStore.isInvitesRespondedLoading = false
     })
-    return { setInvitesRespondedCount }
+    return {}
 })(InvitesRespondedListWrapper))
 
 export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowShareInvite}) => {
@@ -102,15 +92,17 @@ export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowSha
             <form>
                 <TextField placeholder={t('InvitesResponded.Subject')} name="subject" value={subject} 
                     onChange={setter(setSubject)} placeholder={t('InvitesResponded.email.placeholder.Subject')}/>
+                {/* TODO i18n */}
                 <TextField placeholder={t('InvitesResponded.Body')} name="body" value={body} 
                     onChange={setter(setBody)} textarea fullwidth rows={10} 
-                    placeholder={t('InvitesResponded.email.placeholder.Body', {username: Meteor.user().username || 'Your Filmstrip user'})}/> // TODO i18n
+                    placeholder={t('InvitesResponded.email.placeholder.Body', {username: Meteor.user().username || 'Your Filmstrip user'})}/>
                 <ReactFilestack
                     apikey={Meteor.settings.public.filestack.apikey}
                     onSuccess={({filesUploaded}) => setFile(filesUploaded[0])}
                     componentDisplayMode={{ customText: t('InvitesResponded.Upload'), type: 'link' }}
                     render={({ onPick }) => <Button label={t('InvitesResponded.Upload')} raised onClick={onPick} />}
                 />
+                <br/>
                 <Button raised onClick={share}>{t('InvitesResponded.Share')}</Button>
             </form>
         </DialogContent>
