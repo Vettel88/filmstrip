@@ -1,5 +1,7 @@
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import SimpleSchema from 'simpl-schema';
+
 let postmark
 
 if (Meteor.isServer) {
