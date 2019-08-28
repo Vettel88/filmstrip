@@ -1,8 +1,11 @@
 import '@rmwc/circular-progress/circular-progress.css'
+import i18next from 'i18next'
 import { Meteor } from 'meteor/meteor'
 import { Notifications } from '/imports/ui/components/layouts/Notifications.jsx'
-import i18next from 'i18next'
+import React from 'react'
 import { withTranslation as withTranslationOrig } from 'react-i18next'
+import { CircularProgress } from 'rmwc'
+
 export const loadingWrapper = (isLoading, fn) =>
   isLoading ? <CircularProgress /> : fn()
 
