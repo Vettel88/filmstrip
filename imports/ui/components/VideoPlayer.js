@@ -1,5 +1,5 @@
-import React from 'react'
 import { Meteor } from 'meteor/meteor'
+import React from 'react'
 
 import windowSize from 'react-window-size'
 const { cloudName } = Meteor.settings.public.cloudinary

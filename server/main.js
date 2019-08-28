@@ -1,11 +1,10 @@
-import { Meteor } from 'meteor/meteor'
 import '/imports/ui/UIState.js'
 import './methods.js'
 import '/imports/methods/Response.js'
-
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
+import { Meteor } from 'meteor/meteor'
 
 const insertFilmstrip = o => Filmstrips.insert(o)
 const insertFrame = o => Frames.insert(o)

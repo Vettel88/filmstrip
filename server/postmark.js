@@ -1,5 +1,5 @@
-import { check } from 'meteor/check'
 import * as PostmarkAPI from 'postmark'
+import { check } from 'meteor/check'
 
 export const Postmark = new PostmarkAPI.ServerClient(
   Meteor.settings.postmark.apikey

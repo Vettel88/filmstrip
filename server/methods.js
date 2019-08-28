@@ -1,10 +1,10 @@
-import { Meteor } from 'meteor/meteor'
-import { check } from 'meteor/check'
-import get from 'lodash/get'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
+import { Meteor } from 'meteor/meteor'
 import { Postmark } from '/server/postmark.js'
+import { check } from 'meteor/check'
+import get from 'lodash/get'
 
 // this check needs to be called with `call` from a method to have `Meteor.userId` available
 const checkFilmstripOwner = ({ filmstrip, filmstripId }) => {

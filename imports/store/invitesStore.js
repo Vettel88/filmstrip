@@ -1,7 +1,7 @@
-import { Meteor } from 'meteor/meteor'
-import { observable } from 'mobx'
 import { Invites } from '/imports/db/invites.js'
+import { Meteor } from 'meteor/meteor'
 import { Notifications } from '/imports/ui/UIHelpers.js'
+import { observable } from 'mobx'
 
 export const invitesStore = observable({
   isDirty: false,

@@ -1,7 +1,7 @@
+import { Frames } from './frames.js'
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { createCollection } from './collectionHelpers.js'
-import { Frames } from './frames.js'
 
 export const Filmstrips = createCollection('Filmstrips')
 
