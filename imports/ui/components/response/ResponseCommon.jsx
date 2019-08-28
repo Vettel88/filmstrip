@@ -114,8 +114,6 @@ export const prepareResponseView = (Component, layoutOptions) => {
       const frame = frames.length ? frames.find(f => f._id === frameId) : null
       const currentFrameIndex = frames.length ? frames.map(f => f._id).indexOf(frameId) : 0
 
-      console.log("frameId", filmstripId, frameId, frames, "frame", frame, "currentFrameIndex", currentFrameIndex)
-
       return {
         Component,
         filmstrip,

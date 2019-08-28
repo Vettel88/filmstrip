@@ -52,9 +52,8 @@ export class ResponseAnswer extends React.Component {
 
   updateLocalStorageState = (state) => {
     this.setState(state)
-    const newState = Object.assign(this.state, state)
     Meteor.defer(() => {
-      localStorage.setItem(this.props.currentFrame._id, JSON.stringify(newState))
+      localStorage.setItem(this.props.currentFrame._id, JSON.stringify(Object.assign({}, this.state, state)))
     })
   }
 
