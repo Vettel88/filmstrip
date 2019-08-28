@@ -1,6 +1,7 @@
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
-import SimpleSchema from 'simpl-schema';
+import SimpleSchema from 'simpl-schema'
+import { Random } from 'meteor/random'
 
 let postmark
 
