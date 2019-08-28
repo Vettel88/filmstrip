@@ -16,7 +16,10 @@ import './FilmstripLayout.less'
 const { filmstripStore } = stores
 
 const StyledGrid = styled(Grid)`
-    padding-top: 100px !important;
+    padding-top: 64px !important;
+    @media (max-width: 479px) {
+        padding-top: 56px !important;
+    }
 `
 
 const TopAppBar = styled(UnstyledTopAppBar)`

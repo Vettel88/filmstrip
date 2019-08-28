@@ -3,6 +3,7 @@ import React from 'react'
 import { Button, TextField, GridCell, GridInner, Fab, Typography, Checkbox, Avatar, Dialog, DialogContent, List, ListItem } from 'rmwc'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
+import styled from 'styled-components'
 import get from 'lodash/get'
 import upperFirst from 'lodash/upperFirst'
 import { observer } from 'mobx-react'
@@ -18,8 +19,8 @@ const getAvatarName = name => (name || 'No Name').split(' ').map(w => upperFirst
 const InvitesListItem = withRouter(observer(({history, invite}) => <li onClick={() => invitesStore.selectInvite(invite)}>
     <Avatar size="xsmall" name={getAvatarName(invite.name)}/>
     <div className="description">
-        <Typography use="headline7">{invite.name || t('Invites.undefined')}</Typography>
-        <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
+        <Typography tag='h6'>{invite.name || t('Invites.undefined')}</Typography>
+        <Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
     </div>
     <Checkbox label="" checked={invitesStore.selectedInviteIDs.includes(invite._id)}/>
 </li>))
@@ -59,6 +60,22 @@ const InvitesListWrapper = withRouter(observer(({}) => {
     </div>)
 }))
 
+const InvitesListWrapperStyled = styled(InvitesListWrapper)`
+  background: red;
+  // padding: 64px;
+  // margin-bottom: 1rem;
+
+  // @media (max-width: 839px) {
+  //   padding: 32px;
+  // }
+
+  // @media (max-width: 479px) {
+  //   padding: 24px;
+  // }
+
+  // text-align: ${props => props.align ? props.align : 'inherit'};
+`
+
 export const InvitesList = UI.withTranslation()(withTracker(({match}) => {
     const { filmstripId } = match.params
     invitesStore.filmstripId = filmstripId
@@ -67,7 +84,8 @@ export const InvitesList = UI.withTranslation()(withTracker(({match}) => {
         invitesStore.isInvitesLoading = false
     })
     return {}
-})(InvitesListWrapper))
+})(InvitesListWrapperStyled))
+
 
 export const CreateInvite = UI.withTranslation()(({t, isCreateInvite, setIsCreateInvite}) => {
     const [name, setName] = React.useState('')
