@@ -49,7 +49,7 @@ const ResponseFinishContainer = ({ email, t, filmstrip, createdFilmstripId }) =>
 
         setIsSending(false)
 
-        if (err) console.error(err)
+        if (err) return Notifications.error(t('ErrorOccurred'), err)
         else {
           localStorage.clear()
           setIsSent(true)
@@ -58,7 +58,7 @@ const ResponseFinishContainer = ({ email, t, filmstrip, createdFilmstripId }) =>
     )
   } 
 
-  const responseUrl = `/a/${filmstrip._id}/${btoa(userEmail)}/q`
+  const responseUrl = `/response/${filmstrip._id}/${filmstrip.frames[0]._id}/${btoa(userEmail)}`
 
   if (isSent) return <ResponseConfirmationSent email={userEmail} t={t} />
 
@@ -111,8 +111,8 @@ const ResponseConfirmWrapper = ({ confirmationKey, email, t, createdFilmstripId 
     confirmationKey
   }, (err, res) => {
     if (err) {
-      console.error(err)
       setLoading(false)
+      return Notifications.error(t('ErrorOccurred'), err)
     }
     else {
       setLoading(false)
