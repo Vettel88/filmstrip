@@ -16,7 +16,7 @@ const avatarName = invite => (invite.name || 'No Name').toUpperCase()
 
 const InvitesRespondedListItem = withRouter(observer(({invite}) => <li onClick={() => invitesStore.selectInviteResponded(invite)}>
     <Avatar size="xsmall" name={avatarName(invite)}/>
-    <div class="description">
+    <div className="description">
         <Typography use="headline6">{invite.name || t('InvitesResponded.undefined')}</Typography>
         <br/><Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
     </div>
