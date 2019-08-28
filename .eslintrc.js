@@ -2,20 +2,23 @@ module.exports = {
   parser: 'babel-eslint',
   env: {
     node: true,
-    es6: true
+    browser: true,
+    es6: true,
   },
   extends: ['eslint:recommended', 'plugin:prettier/recommended'],
   globals: {
     Atomics: 'readonly',
     Meteor: 'readonly',
-    SharedArrayBuffer: 'readonly'
+    SharedArrayBuffer: 'readonly',
   },
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 2018,
-    sourceType: 'module'
+    sourceType: 'module',
   },
-  rules: {}
-};
+  rules: {
+    'sort-imports': 2,
+  },
+}

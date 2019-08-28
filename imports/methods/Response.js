@@ -1,14 +1,14 @@
-import { Meteor } from 'meteor/meteor'
-import { Random } from 'meteor/random'
-import { ValidatedMethod } from 'meteor/mdg:validated-method'
-import SimpleSchema from 'simpl-schema'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import { Meteor } from 'meteor/meteor'
 import Postmark from 'postmark'
+import { Random } from 'meteor/random'
+import SimpleSchema from 'simpl-schema'
+import { ValidatedMethod } from 'meteor/mdg:validated-method'
 
-let postmark;
+let postmark
 
-if(Meteor.isServer) {
+if (Meteor.isServer) {
   postmark = new Postmark.ServerClient(Meteor.settings.postmark.apikey)
 }
 
@@ -31,11 +31,7 @@ export const ResponseSave = new ValidatedMethod({
       optional: false
     }
   }).validator(),
-  run({
-    filmstrip,
-    frames
-  }) {
-
+  run({ filmstrip, frames }) {
     filmstrip._id = Random.id()
 
     filmstrip.frameIds = frames.map(frame => {
@@ -48,9 +44,8 @@ export const ResponseSave = new ValidatedMethod({
     filmstrip.confirmationKey = Random.id(32)
 
     Filmstrips.insert(filmstrip)
-    
-    return filmstrip._id
 
+    return filmstrip._id
   }
 })
 
@@ -71,30 +66,25 @@ export const ResponseVerifyConfirmation = new ValidatedMethod({
       optional: false
     }
   }).validator(),
-  run({
-    filmstripId,
-    email,
-    confirmationKey
-  }) {
-
-    if(Meteor.isServer) {
-
-      const filmstripUpdateOp = Filmstrips.update({
-        _id: filmstripId,
-        confirmationKey,
-        email
-      }, {
+  run({ filmstripId, email, confirmationKey }) {
+    if (Meteor.isServer) {
+      const filmstripUpdateOp = Filmstrips.update(
+        {
+          _id: filmstripId,
+          confirmationKey,
+          email
+        },
+        {
           $set: {
             confirmed: true,
             confirmedAt: new Date()
           }
-      })
+        }
+      )
 
-      if(filmstripUpdateOp === 1) return true
+      if (filmstripUpdateOp === 1) return true
       else return false
-
     }
-
   }
 })
 
@@ -111,43 +101,35 @@ export const ResponseSendConfirmation = new ValidatedMethod({
       optional: false
     }
   }).validator(),
-  async run({
-    filmstripId,
-    email
-  }) {
-
-    if(Meteor.isServer) {
-
+  async run({ filmstripId, email }) {
+    if (Meteor.isServer) {
       const filmstrip = Filmstrips.findOne(filmstripId)
 
-      if (!filmstrip) throw "Filmstrip not found";
+      if (!filmstrip) throw 'Filmstrip not found'
 
       const emailBase64 = new Buffer(email).toString('base64')
-      const link = process.env.ROOT_URL + `confirm/${filmstripId}/${emailBase64}/${filmstrip.confirmationKey}`
+      const link =
+        process.env.ROOT_URL +
+        `confirm/${filmstripId}/${emailBase64}/${filmstrip.confirmationKey}`
 
       if (email === filmstrip.email)
+        if (filmstrip) {
+          await postmark.sendEmailWithTemplate({
+            From: Meteor.settings.postmark.sender,
+            To: email,
+            TemplateAlias: 'ResponseConfirm-en',
+            TemplateModel: {
+              filmstrip_name: filmstrip.name,
+              action_url: link,
+              support_email: Meteor.settings.public.support.email,
+              sender_name: Meteor.settings.public.support.sender,
+              product_name: Meteor.settings.public.support.productName,
+              product_url: Meteor.settings.public.support.productUrl
+            }
+          })
 
-      if (filmstrip) {
-
-        await postmark.sendEmailWithTemplate({
-          "From": Meteor.settings.postmark.sender,
-          "To": email,
-          "TemplateAlias": "ResponseConfirm-en",
-          "TemplateModel": {
-            "filmstrip_name": filmstrip.name,
-            "action_url": link,
-            "support_email": Meteor.settings.public.support.email,
-            "sender_name": Meteor.settings.public.support.sender,
-            "product_name": Meteor.settings.public.support.productName,
-            "product_url": Meteor.settings.public.support.productUrl
-          }
-        })
-
-        return true
-
-      }
-
+          return true
+        }
     }
-
   }
 })

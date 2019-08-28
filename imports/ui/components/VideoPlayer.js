@@ -1,32 +1,29 @@
-import React from "react"
 import { Meteor } from 'meteor/meteor'
+import React from 'react'
 
-import windowSize from "react-window-size"
+import windowSize from 'react-window-size'
 const { cloudName } = Meteor.settings.public.cloudinary
 
 class VideoPlayer extends React.Component {
+  _cloudinaryURL = extension =>
+    `http://res.cloudinary.com/${cloudName}/video/upload/v1/${this.props.publicId}.${extension}`
 
-    _cloudinaryURL = (extension) => 
-        `http://res.cloudinary.com/${cloudName}/video/upload/v1/${this.props.publicId}.${extension}`
-
-    render(){
-        const { publicId, showControls=true, width, windowWidth } = this.props
-        return (
-            <video
-                key={publicId}
-                controls
-                playsInline
-                // showControls={showControls}
-                width={width || 0.8 * windowWidth}
-                poster={this._cloudinaryURL('jpg')}
-            >
-                <source src={this._cloudinaryURL('webm')} type="video/webm" />
-                <source src={this._cloudinaryURL('mp4')} type="video/mp4" />
-                <source src={this._cloudinaryURL('ogv')} type="video/ogv" />
-            </video>
-        )
-
-    }
+  render() {
+    const { publicId, width, windowWidth } = this.props
+    return (
+      <video
+        key={publicId}
+        controls
+        playsInline
+        // showControls={showControls}
+        width={width || 0.8 * windowWidth}
+        poster={this._cloudinaryURL('jpg')}>
+        <source src={this._cloudinaryURL('webm')} type='video/webm' />
+        <source src={this._cloudinaryURL('mp4')} type='video/mp4' />
+        <source src={this._cloudinaryURL('ogv')} type='video/ogv' />
+      </video>
+    )
+  }
 }
 
-export default windowSize(VideoPlayer);
+export default windowSize(VideoPlayer)
