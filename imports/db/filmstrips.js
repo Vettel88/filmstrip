@@ -1,34 +1,24 @@
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
+import { createCollection } from './collectionHelpers.js'
 import { Frames } from './frames.js'
-
-import {
-    createCollection,
-    createStandardPublications
-} from './collectionHelpers.js';
 
 export const Filmstrips = createCollection('Filmstrips')
 
 if (Meteor.isServer) {
-    Meteor.publish('Filmstrips', function () {
-        if (!this.userId) return this.ready()
-        return Filmstrips.find({createdBy: this.userId})
-    })
-    Meteor.publish('Filmstrip', function (_id) {
-        check([_id], [String])
-        if (!this.userId) return this.ready()
-        return [
-            Filmstrips.find({ _id }),
-            Frames.find({ filmstripId: _id }),
-        ]
-    })
-    Meteor.publish('ResponseFilmstrip', function (_id) {
-        check([_id], [String])
-        return [
-            Filmstrips.find({ _id: _id }),
-            Frames.find({ filmstripId: _id })
-        ]
-    })
+  Meteor.publish('Filmstrips', function() {
+    if (!this.userId) return this.ready()
+    return Filmstrips.find({ createdBy: this.userId })
+  })
+  Meteor.publish('Filmstrip', function(_id) {
+    check([_id], [String])
+    if (!this.userId) return this.ready()
+    return [Filmstrips.find({ _id }), Frames.find({ filmstripId: _id })]
+  })
+  Meteor.publish('ResponseFilmstrip', function(_id) {
+    check([_id], [String])
+    return [Filmstrips.find({ _id: _id }), Frames.find({ filmstripId: _id })]
+  })
 }
 
 // # Frames / Slides
