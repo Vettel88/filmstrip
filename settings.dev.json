@@ -6,8 +6,8 @@
     "public": {
         "support": {
             "productName": "Filmstrip",
-            "productUrl": "https://filmstrip.io",
-            "email": "support@filmstrip.io"
+            "productUrl": "https://app.filmstrip.cloud",
+            "email": "support@filmstrip.cloud"
         },
         "cloudinary": {
             "uploadPreset": "filmstrip_1",
