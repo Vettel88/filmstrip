@@ -1,4 +1,3 @@
-import './FilmstripsResponseView.less'
 import {
     Fab,
     Grid,
