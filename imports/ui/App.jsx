@@ -4,6 +4,7 @@ import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList
 import FilmstripLayout from './components/layouts/FilmstripLayout'
 import { FilmstripsSettings } from '/imports/ui/components/filmstrips/FilmstripsSettings.jsx'
 import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
+import { FilmstripsResponseView } from '/imports/ui/components/filmstrips/FilmstripsResponseView.jsx'
 import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
 import { InvitesRespondedList } from '/imports/ui/components/filmstrips/InvitesRespondedList.jsx'
 import Layout from './components/layouts/Layout'
@@ -76,6 +77,7 @@ const App = () =>
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/invites" component={InvitesList} layout={FilmstripLayout} />
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/responded" component={InvitesRespondedList} layout={FilmstripLayout} />
                 <AppRoute path="/response/:filmstripId/:frameId/:emailBase64" component={ResponseQuestionnaire} layout={ResponseLayout} />
+                <AppRoute exact path="/response/:filmstripId" component={FilmstripsResponseView} layout={Layout} />
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
             <AppRoute path="/response/:filmstripId/:frameId/:emailBase64/recordVideo" component={ResponseVideoRecorder} layout={ModalLayout} />
