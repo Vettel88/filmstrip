@@ -99,7 +99,7 @@ const FrameView = ({
                     />
                 </Card>
             )}
-            {currentFrame.files && currentFrame.files.length && (
+            {currentFrame.files && currentFrame.files.length > 0 && (
                 <Card>
                     <Typography use='headline6' tag='h6'>
                         Uploaded files
