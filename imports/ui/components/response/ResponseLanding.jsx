@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import { emailIsValid, regexPattern } from '/imports/ui/UIHelpers.js'
+import { emailIsValid } from '/imports/ui/UIHelpers.js'
 import { Grid, GridCell, GridInner, TextField, Typography } from 'rmwc'
 import { prepareResponseView } from './ResponseCommon.jsx'
 import { Form, BigButton as Button } from '/imports/ui/components/Forms.jsx'
@@ -25,7 +25,7 @@ export const ResponseLanding = prepareResponseView(({ filmstrip, email, t }) => 
       copy={t('Response.LandingHelp')}
     >
       <Form fullWidth onSubmit={() => setToQuestionnaire(true)}>
-        <TextField label={t('Response.LandingTypeEmail')} value={userEmail} onChange={(event) => setUserEmail(event.target.value.trim().toLowerCase())} outlined pattern={regexPattern} />
+        <TextField label={t('Response.LandingTypeEmail')} value={userEmail} onChange={(event) => setUserEmail(event.target.value.trim().toLowerCase())} outlined />
         <Typography use='caption' tag='p'>{t('Response.LandingContact')}</Typography>
         <Button label={t('Response.Start')} raised disabled={userEmail && emailIsValid(userEmail) ? false : true} />
       </Form>

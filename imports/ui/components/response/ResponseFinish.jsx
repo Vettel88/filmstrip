@@ -1,7 +1,7 @@
 import { Meteor } from 'meteor/meteor'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { emailIsValid, regexPattern } from '/imports/ui/UIHelpers.js'
+import { emailIsValid } from '/imports/ui/UIHelpers.js'
 import { CircularProgress, TextField, Typography, Grid, GridCell } from 'rmwc'
 import { prepareResponseView } from './ResponseCommon.jsx'
 import { ResponseSendConfirmation, ResponseVerifyConfirmation } from '/imports/methods/Response.js'
