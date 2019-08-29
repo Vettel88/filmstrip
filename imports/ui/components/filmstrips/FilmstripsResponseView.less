@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     width: 600px;
-    @media (max-width: 839px) {
+    @media (max-width: 370px) {
         width: 100%;
     }
     
@@ -22,6 +22,9 @@
             label {
                 font-weight: bold;
                 width: 200px;
+                @media (max-width: 370px) {
+                    width: 120px;
+                }
             }
         }
     }
@@ -42,6 +45,12 @@
             flex-grow: 2;
             margin: 0 20px;
             text-align: center;
+            video {
+                width: 300px;
+                @media (max-width: 370px) {
+                    width: 180px;
+                }
+            }
         }
     }
 }
