@@ -16,6 +16,7 @@ import { ResponseFinish, ResponseConfirm, ResponseConfirmationSent } from '/impo
 import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
 import { FilmstripsSettings } from '/imports/ui/components/filmstrips/FilmstripsSettings.jsx'
 import { FilmstripsItem } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
+import { FilmstripsResponseView } from '/imports/ui/components/filmstrips/FilmstripsResponseView.jsx'
 import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
 import { InvitesRespondedList } from '/imports/ui/components/filmstrips/InvitesRespondedList.jsx'
 import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
@@ -76,6 +77,7 @@ const App = () =>
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/frames" component={FilmstripsItem} layout={FilmstripLayout} />
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/invites" component={InvitesList} layout={FilmstripLayout} />
                 <PrivateRoute path="/filmstrip/:filmstripId/:frameId/responded" component={InvitesRespondedList} layout={FilmstripLayout} />
+                <AppRoute exact path="/response/:filmstripId" component={FilmstripsResponseView} layout={Layout} />
                 <AppRoute component={NoMatch} layout={Layout} />
             </Switch>
             <PrivateRoute path="/filmstrip/:filmstripId/:frameId/recordVideo" component={FrameVideoRecorder} layout={ModalLayout} />

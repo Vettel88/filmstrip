@@ -10,9 +10,9 @@ export const invitesStore = observable({
   isInvitesLoading: true,
   selectedInviteIDs: [],
 
-  invitesResponded: [],
-  isInvitesRespondedLoading: true,
-  selectedInvitesRespondedIDs: [],
+  filmstripsResponded: [],
+  isFilmstripsRespondedLoading: true,
+  filmstripsRespondedIDs: [],
 
   selectInvite(invite) {
     if (this.selectedInviteIDs.includes(invite._id)) {
@@ -35,29 +35,27 @@ export const invitesStore = observable({
   },
 
   selectInviteResponded(invite) {
-    if (this.selectedInvitesRespondedIDs.includes(invite._id)) {
-      return (this.selectedInvitesRespondedIDs = this.selectedInvitesRespondedIDs.filter(
+    if (this.filmstripsRespondedIDs.includes(invite._id)) {
+      return (this.filmstripsRespondedIDs = this.filmstripsRespondedIDs.filter(
         id => id !== invite._id
       ))
     }
-    this.selectedInvitesRespondedIDs.push(invite._id)
+    this.filmstripsRespondedIDs.push(invite._id)
   },
 
   selectAllInvitesResponded() {
-    if (this.selectedInvitesRespondedIDs.length) {
-      return (this.selectedInvitesRespondedIDs = [])
+    if (this.filmstripsRespondedIDs.length) {
+      return (this.filmstripsRespondedIDs = [])
     }
-    this.selectedInvitesRespondedIDs = this.invitesResponded.map(
-      invite => invite._id
-    )
+    this.filmstripsRespondedIDs = this.filmstripsResponded.map(invite => invite._id)
   },
 
   get hasSelectedInvitesResponded() {
-    return this.selectedInvitesRespondedIDs.length > 0
+    return this.filmstripsRespondedIDs.length > 0
   },
 
   invitesCount: 0,
-  responedCount: 0,
+  respondedCount: 0,
 
   createInvite({ name, email }) {
     Meteor.call(

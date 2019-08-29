@@ -11,6 +11,7 @@ import { addTranslations, t, withTranslation } from '/imports/ui/UIHelpers.js'
 import { Notifications } from '/imports/ui/components/layouts/Notifications.jsx'
 import { Invites } from '/imports/db/invites.js'
 import { invitesStore } from '/imports/store/invitesStore.js'
+import { Filmstrips } from '/imports/db/filmstrips.js'
 import stores from '/imports/store'
 import './FilmstripLayout.less'
 const { filmstripStore } = stores
@@ -40,9 +41,10 @@ const FilmstripMenu = () => {
             const { filmstripId, frameId } = match.params
 
             Meteor.subscribe('Invites', () => {
-                const invites = Invites.find({ filmstripId })
-                invitesStore.invitesCount = invites.count()
-                invitesStore.responedCount = invites.fetch().filter(i => i.respondedAt).length
+                invitesStore.invitesCount = Invites.find({ filmstripId }).count()
+            })
+            Meteor.subscribe('Filmstrips', () => {
+                invitesStore.respondedCount = Filmstrips.find({ responseToFilmstripId: filmstripId }).count()
             })
         
             return (<MenuSurfaceAnchor>
@@ -50,7 +52,7 @@ const FilmstripMenu = () => {
                     <MenuItem onClick={goto(history, filmstripId, frameId, 'settings')}>{t('FilmstripLayout.Settings')}</MenuItem>
                     <MenuItem onClick={goto(history, filmstripId, frameId, 'frames')}>{t('FilmstripLayout.Frames')}</MenuItem>
                     <MenuItem onClick={goto(history, filmstripId, frameId, 'invites')}>{t('FilmstripLayout.Invites')} ({invitesStore.invitesCount})</MenuItem>
-                    <MenuItem onClick={goto(history, filmstripId, frameId, 'responded')}>{t('FilmstripLayout.Responded')} ({invitesStore.responedCount})</MenuItem>
+                    <MenuItem onClick={goto(history, filmstripId, frameId, 'responded')}>{t('FilmstripLayout.Responded')} ({invitesStore.respondedCount})</MenuItem>
                     <ListDivider />
                     <MenuItem onClick={logout(history)}>Logout</MenuItem>
                 </Menu>

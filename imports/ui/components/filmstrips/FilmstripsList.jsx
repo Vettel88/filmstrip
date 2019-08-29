@@ -58,7 +58,7 @@ const gotoFirstFrame = (history, filmstrip, frameId) => event => {
 }
 
 const getInviteesCount = filmstrip => Invites.find({filmstripId: filmstrip._id}).count()
-const getAnswersDoneCount = filmstrip => Invites.find({filmstripId: filmstrip._id, respondedAt: {$exists: true}}).count()
+const getAnswersDoneCount = filmstrip => Filmstrips.find({ responseToFilmstripId: filmstrip._id }).count()
 
 const avatarSource = 'https://via.placeholder.com/48'
 

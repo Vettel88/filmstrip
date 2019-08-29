@@ -7,6 +7,7 @@ import { withTracker } from 'meteor/react-meteor-data'
 import get from 'lodash/get'
 import { observer } from 'mobx-react'
 import { Invites } from '/imports/db/invites.js'
+import { Filmstrips } from '/imports/db/filmstrips.js'
 import * as UI from '/imports/ui/UIHelpers.js'
 import { t } from '/imports/ui/UIHelpers.js'
 import { invitesStore } from '/imports/store/invitesStore.js'
@@ -20,23 +21,23 @@ const InvitesRespondedListItem = withRouter(observer(({invite}) => <li onClick={
         <Typography tag='h6'>{invite.name || t('InvitesResponded.undefined')}</Typography>
         <Typography use="body2">{UI.dateToString(invite.createdAt)}</Typography>
     </div>
-    <Checkbox label="" checked={invitesStore.selectedInvitesRespondedIDs.includes(invite._id)}/>
+    <Checkbox label="" checked={invitesStore.filmstripsRespondedIDs.includes(invite._id)}/>
 </li>))
 
 const setter = set => event => set(event.target.value)
 const renderShareButton = show => show ? <Fab icon="share" onClick={() => setShowShareInvite(true)} className="share" mini={true}/> : <></>
 
-const InvitesRespondedListWrapper = withRouter(observer(({}) => {
+const InvitesRespondedListWrapper = withRouter(observer(({ filmstripId }) => {
     const [filter, setFilter] = React.useState('')
-    const filteredInvites = () => invitesStore.invitesResponded.filter(inviteFilter)
-    const [showShareInvite, setShowShareInvite] = React.useState(false)
     const inviteFilter = invite => {
-        if (!invite.respondedAt) return false
         const email = get(invite, 'email', '').toLowerCase()
         const name = get(invite, 'name', '').toLowerCase()
         const lowerFilter = filter.toLowerCase()
         return email.includes(lowerFilter) || name.includes(lowerFilter)
     }
+    const filteredInvites = () => invitesStore.filmstripsResponded.filter(inviteFilter)
+    const [showShareInvite, setShowShareInvite] = React.useState(false)
+    const renderShareButton = show => show ? <Fab icon="share" className="share" onClick={() => setShowShareInvite(true)} mini={true} /> : <></>
 
     return (<div className="InvitesRespondedList">
         <TextField placeholder={t('InvitesResponded.TypeToSearch')} name="filter" value={filter} onChange={setter(setFilter)}/>
@@ -47,39 +48,44 @@ const InvitesRespondedListWrapper = withRouter(observer(({}) => {
 
         {renderShareButton(invitesStore.hasSelectedInvitesResponded)}
         <ul>
-            {UI.loadingWrapper(invitesStore.isInvitesRespondedLoading, () => 
+            {UI.loadingWrapper(invitesStore.isFilmstripsRespondedLoading, () => 
                 filteredInvites().map(invite => <InvitesRespondedListItem key={invite._id} invite={invite}/>)
             )}
         </ul>
-        {ShareInvite({showShareInvite, setShowShareInvite})}
+        {ShareInvite({filmstripId, showShareInvite, setShowShareInvite})}
     </div>)
 }))
 
 export const InvitesRespondedList = UI.withTranslation()(withTracker(({match}) => {
     const { filmstripId } = match.params
     invitesStore.filmstripId = filmstripId
-    Meteor.subscribe('Invites', () => {
-        invitesStore.invitesResponded = Invites.find({filmstripId, respondedAt: { $exists: true } }).fetch()
-        invitesStore.isInvitesRespondedLoading = false
+    Meteor.subscribe('Filmstrips', () => {
+        invitesStore.filmstripsResponded = Filmstrips.find({ responseToFilmstripId: filmstripId }).fetch()
+        invitesStore.isFilmstripsRespondedLoading = false
     })
-    return {}
+    return { filmstripId }
 })(InvitesRespondedListWrapper))
 
-export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowShareInvite}) => {
-    const [subject, setSubject] = React.useState(t(''))
-    const [body, setBody] = React.useState('')
-    const [file, setFile] = React.useState('')
+export const ShareInvite = UI.withTranslation()(({t, match, filmstripId, showShareInvite, setShowShareInvite}) => {
+    const [email, setEmail] = React.useState(t('test@sun.com.py'))
+    const [subject, setSubject] = React.useState(t('my subject'))
+    const [body, setBody] = React.useState('my body')
+    const [file, setFile] = React.useState()
     const share = event => {
         event.preventDefault()
         try {
+            // TODO it should be possible to enter several emails at once
+            UI.checkEmail(email, { field: t('Invites.Email') })
             UI.checkMandatory(subject, { field: t('InvitesResponded.Subject') })
             UI.checkMandatory(body, { field: t('InvitesResponded.Body') })
             let bodyWithFile = body
+            // TODO file is always undefined, I would need some more minutes to fix it
+            console.log(file)
             if (file) {
                 bodyWithFile = `${body}\n\n${t('InvitesResponded.email.fileMsg', {file})}`
             }
-            Meteor.call('filmstrip.invite.shareRespondedInvites', { inviteIDs: invitesStore.selectedInvitesRespondedIDs, subject, body: bodyWithFile, file }, (error) => {
-                if (error) return console.error(error)
+            Meteor.call('filmstrip.invite.shareRespondedInvites', { email, filmstripId, inviteIDs: invitesStore.filmstripsRespondedIDs, subject, body: bodyWithFile, file }, (error) => {
+                if (error) return UI.Notifications.error(t('InvitesResponded.errorShare'), error)
                 setShowShareInvite(false)
                 UI.Notifications.success(t('InvitesResponded.email.messageResponsesSent'))
             })    
@@ -90,20 +96,23 @@ export const ShareInvite = UI.withTranslation()(({t, showShareInvite, setShowSha
     return showShareInvite ? <Dialog open={open} onClose={_ => {setShowShareInvite(false)}} className="CreateInviteDialog">
         <DialogContent>
             <form>
-                <TextField placeholder={t('InvitesResponded.Subject')} name="subject" value={subject} 
-                    onChange={setter(setSubject)} placeholder={t('InvitesResponded.email.placeholder.Subject')}/>
+                <TextField placeholder={t('InvitesResponded.Email')} name="email" value={email} fullwidth
+                    onChange={setter(setEmail)} placeholder={t('InvitesResponded.email.placeholder.Email')} />
+                <TextField placeholder={t('InvitesResponded.Subject')} name="subject" value={subject} fullwidth
+                    onChange={setter(setSubject)} placeholder={t('InvitesResponded.email.placeholder.Subject')} />
                 {/* TODO i18n */}
                 <TextField placeholder={t('InvitesResponded.Body')} name="body" value={body} 
-                    onChange={setter(setBody)} textarea fullwidth rows={10} 
+                    onChange={setter(setBody)} textarea fullwidth rows={10}
                     placeholder={t('InvitesResponded.email.placeholder.Body', {username: Meteor.user().username || 'Your Filmstrip user'})}/>
-                <ReactFilestack
-                    apikey={Meteor.settings.public.filestack.apikey}
-                    onSuccess={({filesUploaded}) => setFile(filesUploaded[0])}
-                    componentDisplayMode={{ customText: t('InvitesResponded.Upload'), type: 'link' }}
-                    render={({ onPick }) => <Button label={t('InvitesResponded.Upload')} raised onClick={onPick} />}
-                />
-                <br/>
-                <Button raised onClick={share}>{t('InvitesResponded.Share')}</Button>
+                <div>
+                    <ReactFilestack
+                        apikey={Meteor.settings.public.filestack.apikey}
+                        onSuccess={({filesUploaded}) => setFile(filesUploaded[0])}
+                        componentDisplayMode={{ customText: t('InvitesResponded.Upload'), type: 'link' }}
+                        render={({ onPick }) => <Button label={t('InvitesResponded.Upload')} raised onClick={onPick} />}
+                    />
+                </div>
+                <div><Button raised onClick={share}>{t('InvitesResponded.Share')}</Button></div>
             </form>
         </DialogContent>
     </Dialog> : <></>
