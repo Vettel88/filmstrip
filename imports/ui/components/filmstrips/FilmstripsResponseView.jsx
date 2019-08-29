@@ -1,37 +1,146 @@
 import './FilmstripsResponseView.less'
-import React from 'react'
-import { Card, Fab, Typography } from 'rmwc'
-import { withTracker } from 'meteor/react-meteor-data'
-import get from 'lodash/get'
+import {
+    Fab,
+    Grid,
+    GridCell,
+    List,
+    ListItem,
+    ListItemMeta,
+    ListItemPrimaryText,
+    ListItemSecondaryText,
+    ListItemText,
+    Typography
+} from 'rmwc'
 import {
     addTranslations,
     loadingWrapper,
     t,
     withTranslation
 } from '/imports/ui/UIHelpers.js'
+import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import get from 'lodash/get'
+import { Link } from 'react-router-dom'
+import React from 'react'
+import styled from 'styled-components'
 import Video from '/imports/ui/components/VideoPlayer.js'
+import { withTracker } from 'meteor/react-meteor-data'
 
 const nl2br = string => string.replace(/\n/g, '<br/>')
 
 const FileView = ({ file }) => <>{file.filename}</>
 
-const FrameView = ({ frame = {}, currentFrame }) => {
-    console.log(frame)
+const LeftFab = styled(Fab)`
+    position: absolute !important;
+    top: 50%;
+    left: 0;
+    margin-top: -28px;
+    margin-left: -18px;
+`
+
+const RightFab = styled(Fab)`
+    position: absolute !important;
+    top: 50%;
+    right: 0;
+    margin-top: -28px;
+    margin-right: -18px;
+`
+
+const FrameView = ({
+    currentFrame,
+    currentFrameIndex,
+    setCurrentFrameIndex,
+    frames
+}) => {
+    const frameCount = frames.length
     return (
-        <div className='rows'>
-            <Typography use='headline6' className='title'>
-                {currentFrame + 1}. {frame.title}
+        <>
+            {currentFrame.cloudinaryPublicId && (
+                <div style={{ marginBottom: '24px', position: 'relative' }}>
+                    <LeftFab
+                        icon='arrow_back'
+                        disabled={currentFrameIndex === 0}
+                        onClick={changeFrame(
+                            frameCount,
+                            currentFrameIndex,
+                            setCurrentFrameIndex,
+                            -1
+                        )}
+                    />
+                    <Video
+                        publicId={currentFrame.cloudinaryPublicId}
+                        width='100%'
+                    />
+                    {currentFrameIndex < frames.length && (
+                        <RightFab
+                            icon='arrow_forward'
+                            onClick={changeFrame(
+                                frameCount,
+                                currentFrameIndex,
+                                setCurrentFrameIndex
+                            )}
+                        />
+                    )}
+                </div>
+            )}
+            <Typography use='headline4' tag='h4'>
+                {currentFrameIndex + 1}. {currentFrame.title}
             </Typography>
-            <div className='row'>
-                <label>Description:</label> <span>{frame.description}</span>
-            </div>
-            {frame.files &&
-                frame.files.map(file => (
-                    <FileView key={file.handle} file={file} />
-                ))}
-        </div>
+            {currentFrame.text && (
+                <Card>
+                    <Typography use='headline6' tag='h6'>
+                        Text answer
+                    </Typography>
+                    <Typography
+                        use='body2'
+                        tag='p'
+                        dangerouslySetInnerHTML={{
+                            __html: nl2br(currentFrame.text)
+                        }}
+                    />
+                </Card>
+            )}
+            {currentFrame.files && currentFrame.files.length && (
+                <Card>
+                    <Typography use='headline6' tag='h6'>
+                        Uploaded files
+                    </Typography>
+                    <List twoLine>
+                        {currentFrame.files.map(file => (
+                            <ListItem
+                                key={file.handle}
+                                onClick={event => {
+                                    event.preventDefault()
+                                    window.open(file.url)
+                                }}>
+                                <ListItemText>
+                                    <ListItemPrimaryText>
+                                        {file.filename}
+                                    </ListItemPrimaryText>
+                                    <ListItemSecondaryText>
+                                        {Math.round(file.size / 1024)}
+                                        kB
+                                    </ListItemSecondaryText>
+                                </ListItemText>
+                            </ListItem>
+                        ))}
+                    </List>
+                </Card>
+            )}
+            {currentFrame.link && (
+                <Card>
+                    <Typography use='headline6' tag='h6'>
+                        Links
+                    </Typography>
+                    <Typography use='body2' tag='p'>
+                        <Link to={currentFrame.link} target='_blank'>
+                            {currentFrame.link}
+                        </Link>
+                    </Typography>
+                </Card>
+            )}
+        </>
     )
 }
 
@@ -48,75 +157,26 @@ const changeFrame = (
 }
 
 const FilmstripsResponseViewWrapper = ({ isLoading, filmstrip, frames }) => {
-    const [currentFrame, setCurrentFrame] = React.useState(0)
-    const frameCount = frames.length
-    const publicId = get(frames[currentFrame], 'video.public_id')
+    const [currentFrameIndex, setCurrentFrameIndex] = React.useState(0)
+    const currentFrame = frames[currentFrameIndex] || {}
 
     return (
-        <div className='FilmstripsResponseView'>
+        <>
             {loadingWrapper(isLoading, () => (
-                <Card className='rows'>
-                    <div className='row'>
-                        <label>Email:</label> <span>{filmstrip.email}</span>
-                    </div>
-                    <div className='row'>
-                        <label>Name:</label> <span>{filmstrip.name}</span>
-                    </div>
-                    <div className='row'>
-                        <label>Description:</label>{' '}
-                        {filmstrip.description && (
-                            <span
-                                dangerouslySetInnerHTML={{
-                                    __html: nl2br(filmstrip.description)
-                                }}
-                            />
-                        )}
-                    </div>
-                </Card>
+                <Grid>
+                    <GridCell desktop={3} tablet={1} phone={0} />
+                    <GridCell desktop={6} tablet={6} phone={4}>
+                        <FrameView
+                            currentFrame={currentFrame}
+                            frames={frames}
+                            currentFrameIndex={currentFrameIndex}
+                            setCurrentFrameIndex={setCurrentFrameIndex}
+                        />
+                    </GridCell>
+                    <GridCell desktop={3} tablet={1} phone={0} />
+                </Grid>
             ))}
-            <Card>
-                <div className='videoArea'>
-                    {currentFrame > 0 ? (
-                        <Fab
-                            icon='arrow_back'
-                            onClick={changeFrame(
-                                frameCount,
-                                currentFrame,
-                                setCurrentFrame,
-                                -1
-                            )}
-                        />
-                    ) : (
-                        <></>
-                    )}
-                    <div className='video'>
-                        {publicId ? (
-                            <Video publicId={publicId} width='300' />
-                        ) : (
-                            <>No video</>
-                        )}
-                    </div>
-                    {currentFrame < frames.length ? (
-                        <Fab
-                            icon='arrow_forward'
-                            onClick={changeFrame(
-                                frameCount,
-                                currentFrame,
-                                setCurrentFrame
-                            )}
-                        />
-                    ) : (
-                        <></>
-                    )}
-                </div>
-                <div>
-                    <FrameView
-                        frame={frames[currentFrame]}
-                        currentFrame={currentFrame}
-                    />
-                </div>
-            </Card>
-        </div>
+        </>
     )
 }
 

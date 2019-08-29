@@ -7,123 +7,131 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method'
 let postmark
 
 if (Meteor.isServer) {
-  postmark = require('/server/postmark.js')
+    postmark = require('/server/postmark.js')
 }
 
 export const ResponseSave = new ValidatedMethod({
-  name: 'Response.Save',
-  mixins: [],
-  validate: new SimpleSchema({
-    filmstrip: {
-      type: Object,
-      blackbox: true, // Blackbox until we have a filmstrip schema
-      optional: false
-    },
-    frames: {
-      type: Array,
-      optional: false
-    },
-    'frames.$': {
-      type: Object,
-      blackbox: true,
-      optional: false
+    name: 'Response.Save',
+    mixins: [],
+    validate: new SimpleSchema({
+        filmstrip: {
+            type: Object,
+            blackbox: true, // Blackbox until we have a filmstrip schema
+            optional: false
+        },
+        frames: {
+            type: Array,
+            optional: false
+        },
+        'frames.$': {
+            type: Object,
+            blackbox: true,
+            optional: false
+        }
+    }).validator(),
+    run({ filmstrip, frames }) {
+        if (Meteor.isServer) {
+            filmstrip._id = Random.id()
+
+            const parsedFrames = frames.map(frame => {
+                frame._id = Random.id()
+                frame.filmstripId = filmstrip._id
+                return frame
+            })
+
+            filmstrip.frameIds = frames.map(frame => frame._id)
+            filmstrip.confirmed = false
+            filmstrip.confirmationKey = Random.id(32)
+
+            console.log('inserting', filmstrip, frames)
+
+            Filmstrips.insert(filmstrip)
+            parsedFrames.forEach(frame => {
+                Frames.insert(frame)
+            })
+
+            return filmstrip._id
+        }
     }
-  }).validator(),
-  run({ filmstrip, frames }) {
-    filmstrip._id = Random.id()
-
-    filmstrip.frameIds = frames.map(frame => {
-      frame._id = Random.id()
-      Frames.insert(frame)
-      return frame._id
-    })
-
-    filmstrip.confirmed = false
-    filmstrip.confirmationKey = Random.id(32)
-
-    Filmstrips.insert(filmstrip)
-
-    return filmstrip._id
-  }
 })
 
 export const ResponseVerifyConfirmation = new ValidatedMethod({
-  name: 'Response.VerifyConfirmation',
-  mixins: [],
-  validate: new SimpleSchema({
-    filmstripId: {
-      type: String,
-      optional: false
-    },
-    email: {
-      type: String,
-      optional: false
-    },
-    confirmationKey: {
-      type: String,
-      optional: false
-    }
-  }).validator(),
-  run({ filmstripId, email, confirmationKey }) {
-    if (Meteor.isServer) {
-      const filmstripUpdateOp = Filmstrips.update(
-        {
-          _id: filmstripId,
-          confirmationKey,
-          email
+    name: 'Response.VerifyConfirmation',
+    mixins: [],
+    validate: new SimpleSchema({
+        filmstripId: {
+            type: String,
+            optional: false
         },
-        {
-          $set: {
-            confirmed: true,
-            confirmedAt: new Date()
-          }
+        email: {
+            type: String,
+            optional: false
+        },
+        confirmationKey: {
+            type: String,
+            optional: false
         }
-      )
+    }).validator(),
+    run({ filmstripId, email, confirmationKey }) {
+        if (Meteor.isServer) {
+            const filmstripUpdateOp = Filmstrips.update(
+                {
+                    _id: filmstripId,
+                    confirmationKey,
+                    email
+                },
+                {
+                    $set: {
+                        confirmed: true,
+                        confirmedAt: new Date()
+                    }
+                }
+            )
 
-      if (filmstripUpdateOp === 1) return true
-      else return false
+            if (filmstripUpdateOp === 1) return true
+            else return false
+        }
     }
-  }
 })
 
 export const ResponseSendConfirmation = new ValidatedMethod({
-  name: 'Response.SendConfirmation',
-  mixins: [],
-  validate: new SimpleSchema({
-    filmstripId: {
-      type: String,
-      optional: false
-    },
-    email: {
-      type: String,
-      optional: false
-    }
-  }).validator(),
-  async run({ filmstripId, email }) {
-    if (Meteor.isServer) {
-      const filmstrip = Filmstrips.findOne(filmstripId)
+    name: 'Response.SendConfirmation',
+    mixins: [],
+    validate: new SimpleSchema({
+        filmstripId: {
+            type: String,
+            optional: false
+        },
+        email: {
+            type: String,
+            optional: false
+        }
+    }).validator(),
+    async run({ filmstripId, email }) {
+        if (Meteor.isServer) {
+            const filmstrip = Filmstrips.findOne(filmstripId)
 
-      if (!filmstrip) throw 'Filmstrip not found'
+            if (!filmstrip) throw 'Filmstrip not found'
 
-      const emailBase64 = new Buffer(email).toString('base64')
-      const link =
-        process.env.ROOT_URL +
-        `/confirm/${filmstripId}/${emailBase64}/${filmstrip.confirmationKey}`
+            const emailBase64 = new Buffer(email).toString('base64')
+            const link =
+                process.env.ROOT_URL +
+                `/confirm/${filmstripId}/${emailBase64}/${filmstrip.confirmationKey}`
 
-      if (email === filmstrip.email)
-        if (filmstrip) {
-          await postmark.sendEmailWithTemplate({
-            To: email,
-            Template: 'ResponseConfirm',
-            Language: 'en',
-            TemplateModel: {
-              filmstrip_name: filmstrip.name,
-              action_url: link
-            }
-          })
+            if (email === filmstrip.email)
+                if (filmstrip) {
+                    await postmark.sendEmailWithTemplate({
+                        To: email,
+                        Template: 'ResponseConfirm',
+                        Language: 'en',
+                        TemplateModel: {
+                            filmstrip_name: filmstrip.name,
+                            action_url: link
+                        }
+                    })
 
-          return true
+                    return true
+                }
         }
     }
-  }
 })

@@ -130,10 +130,17 @@ export const InvitesRespondedList = UI.withTranslation()(
     withTracker(({ match }) => {
         const { filmstripId } = match.params
         invitesStore.filmstripId = filmstripId
-        Meteor.subscribe('Filmstrips', () => {
-            invitesStore.filmstripsResponded = Filmstrips.find({
-                responseToFilmstripId: filmstripId
-            }).fetch()
+        Meteor.subscribe('CompletedFilmstripResponses', filmstripId, () => {
+            invitesStore.filmstripsResponded = Filmstrips.find(
+                {
+                    responseToFilmstripId: filmstripId
+                },
+                {
+                    sort: {
+                        createdAt: -1
+                    }
+                }
+            ).fetch()
             invitesStore.isFilmstripsRespondedLoading = false
         })
         return { filmstripId }
