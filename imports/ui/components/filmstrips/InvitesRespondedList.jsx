@@ -67,9 +67,9 @@ export const InvitesRespondedList = UI.withTranslation()(withTracker(({match}) =
 })(InvitesRespondedListWrapper))
 
 export const ShareInvite = UI.withTranslation()(({t, match, filmstripId, showShareInvite, setShowShareInvite}) => {
-    const [email, setEmail] = React.useState(t('test@sun.com.py'))
-    const [subject, setSubject] = React.useState(t('my subject'))
-    const [body, setBody] = React.useState('my body')
+    const [email, setEmail] = React.useState(t(''))
+    const [subject, setSubject] = React.useState(t(''))
+    const [body, setBody] = React.useState('')
     const [file, setFile] = React.useState()
     const share = event => {
         event.preventDefault()
