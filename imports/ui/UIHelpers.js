@@ -10,7 +10,6 @@ export const loadingWrapper = (isLoading, fn) =>
   isLoading ? <CircularProgress /> : fn()
 
 export const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-export const regexPattern = '^[^s@]+@[^s@]+.[^s@]+$' // For input elements, without the //
 
 // methods starting with validate return only a truthy/falsy value
 export const validateEmail = email => !!email.match(regexEmail)
