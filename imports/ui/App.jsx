@@ -3,12 +3,8 @@ import { FilmstripsItem } from '/imports/ui/components/filmstrips/FilmstripsItem
 import { FilmstripsList } from '/imports/ui/components/filmstrips/FilmstripsList.jsx'
 import FilmstripLayout from './components/layouts/FilmstripLayout'
 import { FilmstripsSettings } from '/imports/ui/components/filmstrips/FilmstripsSettings.jsx'
-<<<<<<< HEAD
 import { FrameVideoRecorder } from '/imports/ui/components/filmstrips/FrameVideoRecorder.jsx'
-=======
-import { FilmstripsItem } from '/imports/ui/components/filmstrips/FilmstripsItem.jsx'
 import { FilmstripsResponseView } from '/imports/ui/components/filmstrips/FilmstripsResponseView.jsx'
->>>>>>> Start with FilmstripsResponseView
 import { InvitesList } from '/imports/ui/components/filmstrips/InvitesList.jsx'
 import { InvitesRespondedList } from '/imports/ui/components/filmstrips/InvitesRespondedList.jsx'
 import Layout from './components/layouts/Layout'
