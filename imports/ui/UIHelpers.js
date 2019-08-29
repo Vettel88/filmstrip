@@ -1,10 +1,10 @@
 import '@rmwc/circular-progress/circular-progress.css'
-import i18next from 'i18next'
+import { CircularProgress } from 'rmwc' // eslint-disable-line no-unused-vars
 import { Meteor } from 'meteor/meteor'
 import { Notifications } from '/imports/ui/components/layouts/Notifications.jsx'
-import React from 'react'
+import React from 'react' // eslint-disable-line no-unused-vars
+import i18next from 'i18next'
 import { withTranslation as withTranslationOrig } from 'react-i18next'
-import { CircularProgress } from 'rmwc'
 
 export const loadingWrapper = (isLoading, fn) =>
   isLoading ? <CircularProgress /> : fn()
