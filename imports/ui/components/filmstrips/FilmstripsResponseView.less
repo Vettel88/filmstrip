@@ -1,0 +1,47 @@
+.FilmstripsResponseView {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+    @media (max-width: 839px) {
+        width: 100%;
+    }
+    
+    margin: auto;
+    align-items: center;
+    .rows {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .title {
+            font-weight: bold;
+        }
+        .row {
+            display: flex;
+            flex-direction: row;
+            padding: 3px;
+            label {
+                font-weight: bold;
+                width: 200px;
+            }
+        }
+    }
+    .mdc-card {
+        width: 100%;
+        padding: 15px;
+    }
+    .mdc-card + .mdc-card {
+        margin-top: 15px;
+    }
+    .videoArea {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        min-height: 200px;
+        align-items: center;
+        .video {
+            flex-grow: 2;
+            margin: 0 20px;
+            text-align: center;
+        }
+    }
+}

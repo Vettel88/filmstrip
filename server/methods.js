@@ -2,8 +2,8 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
 import { Meteor } from 'meteor/meteor'
-import { Postmark } from '/server/postmark.js'
-import { check } from 'meteor/check'
+import { Postmark, sendEmail } from '/server/postmark.js'
+import { check, Match } from 'meteor/check'
 import get from 'lodash/get'
 
 // this check needs to be called with `call` from a method to have `Meteor.userId` available
@@ -153,27 +153,20 @@ Filmstrip.io`
     checkFilmstripOwner.call(this, { filmstripId: invite.filmstripId })
     return Invites.remove({ _id: { $in }, createdBy: Meteor.userId() })
   },
-  'filmstrip.invite.shareRespondedInvites'({ inviteIDs, subject, body, file }) {
+  async 'filmstrip.invite.shareRespondedInvites'({ email, filmstripId, inviteIDs, subject, body, file }) {
     check(inviteIDs, [String])
-    check([subject, body], [String])
-    check(file, Object)
-    const invites = Invites.find(
-      { _id: { $in: inviteIDs } },
-      { fields: { email: 1 } }
-    )
-    const emails = invites.map(({ email }) => ({
-      From: Meteor.settings.postmark.sender,
-      To: email,
-      ReplyTo:
-        get(Meteor.user(), 'emails[0].address') ||
-        Meteor.settings.postmark.sender,
-      Subject: subject,
-      TextBody: body
-    }))
-    Postmark.sendEmailBatch(emails)
-    Invites.update(
-      { _id: { $in: inviteIDs } },
-      { $set: { sharedAt: new Date() } }
-    )
-  }
+    check([email, filmstripId, subject, body], [String])
+    check(file, Match.Maybe(Object))
+
+    const getLink = _id => Meteor.absoluteUrl(`/response/${_id}`)
+    const responses = Filmstrips.find({ responseToFilmstripId: filmstripId })
+        .map(({ _id }) => `\n<a href="${getLink(_id)}"></a>`)
+
+    const postmarkEmail = {
+        To: email,
+        Subject: subject,
+        TextBody: `${body}\n\n${responses}`,
+    }
+    await sendEmail(postmarkEmail)
+  },
 })
