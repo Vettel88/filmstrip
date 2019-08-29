@@ -28,14 +28,13 @@ import { withTracker } from 'meteor/react-meteor-data'
 
 const nl2br = string => string.replace(/\n/g, '<br/>')
 
-const FileView = ({ file }) => <>{file.filename}</>
-
 const LeftFab = styled(Fab)`
     position: absolute !important;
     top: 50%;
     left: 0;
     margin-top: -28px;
     margin-left: -18px;
+    z-index: 2;
 `
 
 const RightFab = styled(Fab)`
@@ -44,6 +43,7 @@ const RightFab = styled(Fab)`
     right: 0;
     margin-top: -28px;
     margin-right: -18px;
+    z-index: 2;
 `
 
 const FrameView = ({
@@ -55,35 +55,34 @@ const FrameView = ({
     const frameCount = frames.length
     return (
         <>
-            {currentFrame.cloudinaryPublicId && (
-                <div style={{ marginBottom: '24px', position: 'relative' }}>
-                    <LeftFab
-                        icon='arrow_back'
-                        disabled={currentFrameIndex === 0}
-                        onClick={changeFrame(
-                            frameCount,
-                            currentFrameIndex,
-                            setCurrentFrameIndex,
-                            -1
-                        )}
-                    />
+            <div style={{ marginBottom: '24px', position: 'relative' }}>
+                <LeftFab
+                    icon='arrow_back'
+                    disabled={currentFrameIndex === 0}
+                    onClick={changeFrame(
+                        frameCount,
+                        currentFrameIndex,
+                        setCurrentFrameIndex,
+                        -1
+                    )}
+                />
+                {currentFrame.cloudinaryPublicId && (
                     <Video
                         publicId={currentFrame.cloudinaryPublicId}
                         width='100%'
                     />
-                    {currentFrameIndex < frames.length && (
-                        <RightFab
-                            icon='arrow_forward'
-                            onClick={changeFrame(
-                                frameCount,
-                                currentFrameIndex,
-                                setCurrentFrameIndex
-                            )}
-                        />
+                )}
+                <RightFab
+                    icon='arrow_forward'
+                    disabled={currentFrameIndex === frameCount - 1}
+                    onClick={changeFrame(
+                        frameCount,
+                        currentFrameIndex,
+                        setCurrentFrameIndex
                     )}
-                </div>
-            )}
-            <Typography use='headline4' tag='h4'>
+                />
+            </div>
+            <Typography use='headline5' tag='h5'>
                 {currentFrameIndex + 1}. {currentFrame.title}
             </Typography>
             {currentFrame.text && (
@@ -165,6 +164,9 @@ const FilmstripsResponseViewWrapper = ({ isLoading, filmstrip, frames }) => {
                 <Grid>
                     <GridCell desktop={3} tablet={1} phone={0} />
                     <GridCell desktop={6} tablet={6} phone={4}>
+                        <Typography use='headline5' tag='h5'>
+                            {filmstrip.email}
+                        </Typography>
                         <FrameView
                             currentFrame={currentFrame}
                             frames={frames}

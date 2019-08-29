@@ -43,8 +43,6 @@ export const ResponseSave = new ValidatedMethod({
             filmstrip.confirmed = false
             filmstrip.confirmationKey = Random.id(32)
 
-            console.log('inserting', filmstrip, frames)
-
             Filmstrips.insert(filmstrip)
             parsedFrames.forEach(frame => {
                 Frames.insert(frame)

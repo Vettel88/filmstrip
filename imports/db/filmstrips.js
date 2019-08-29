@@ -25,10 +25,16 @@ if (Meteor.isServer) {
     Meteor.publish('CompletedFilmstripResponses', function(_id) {
         check([_id], [String])
         if (!this.userId) return this.ready()
-        return Filmstrips.find({
-            responseToFilmstripId: _id,
-            confirmed: { $eq: true }
-        })
+        return [
+            Filmstrips.find({
+                responseToFilmstripId: _id,
+                confirmed: { $eq: true }
+            }),
+            Frames.find({
+                responseToFilmstripId: _id,
+                no: 1
+            })
+        ]
     })
     Meteor.publish('SharedFilmstrip', function(_id) {
         check([_id], [String])
