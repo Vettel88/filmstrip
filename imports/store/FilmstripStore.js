@@ -37,28 +37,29 @@ export default class FilmstripStore {
   }
 
   setFrameValue(frameOrFrameId, attribute, value) {
-    const frameId = typeof frameOrFrameId === 'object' ? frameOrFrameId._id : frameOrFrameId
+    const frameId =
+      typeof frameOrFrameId === 'object' ? frameOrFrameId._id : frameOrFrameId
     this.isDirty = true
     this.getFrame(frameId)[attribute] = value
   }
 
-  createFrame = (filmstripId) => new Promise((resolve, reject) => {
-    const no = this.getMaxFrameNo() + 1
-    Meteor.call(
-      'filmstrip.frame.create',
-      { filmstripId, no },
-      (error, frame) => {
-        if (error) {
-          reject(error)
-          return Notifications.error('Frame could not be created', error) // TODO i18n
+  createFrame = filmstripId =>
+    new Promise((resolve, reject) => {
+      const no = this.getMaxFrameNo() + 1
+      Meteor.call(
+        'filmstrip.frame.create',
+        { filmstripId, no },
+        (error, frame) => {
+          if (error) {
+            reject(error)
+            return Notifications.error('Frame could not be created', error) // TODO i18n
+          }
+          this.frames.push(frame)
+          this.frameId = frame._id
+          resolve(frame)
         }
-        this.frames.push(frame)
-        this.frameId = frame._id
-        resolve(frame)
-      }
-    )
-  }
-)
+      )
+    })
 
   removeFrame(frame) {
     Meteor.call('filmstrip.frame.remove', frame._id, error => {
