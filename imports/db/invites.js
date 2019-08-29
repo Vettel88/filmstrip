@@ -10,7 +10,7 @@ createStandardPublications(Invites)
 
 if (Meteor.isServer) {
   Meteor.startup(() => {
-    const options = { background: true, unique: true }
+    const options = { background: true }
     Invites.rawCollection().createIndex({ email: 1 }, options)
   })
 }
