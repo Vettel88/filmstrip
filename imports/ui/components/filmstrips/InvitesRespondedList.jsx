@@ -56,17 +56,6 @@ const InvitesRespondedListItem = withRouter(
 )
 
 const setter = set => event => set(event.target.value)
-const renderShareButton = show =>
-    show ? (
-        <Fab
-            icon='share'
-            onClick={() => setShowShareInvite(true)}
-            className='share'
-            mini={true}
-        />
-    ) : (
-        <></>
-    )
 
 const InvitesRespondedListWrapper = withRouter(
     observer(({ filmstripId }) => {
@@ -167,14 +156,18 @@ export const ShareInvite = UI.withTranslation()(
                 })
                 UI.checkMandatory(body, { field: t('InvitesResponded.Body') })
                 let bodyWithFile = body
-                if (file) {
+                if (files.length > 0) {
+                    let filesTxt
+                    filesTxt = files
+                        .map(f => {
+                            return `${f.filename}: ${f.url}`
+                        })
+                        .join('\n')
                     bodyWithFile = `${body}\n\n${t(
-                        'InvitesResponded.email.fileMsg',
-                        {
-                            file
-                        }
-                    )}`
+                        'InvitesResponded.email.fileMsg'
+                    )}\n\n${filesTxt}`
                 }
+                console.log(invitesStore.filmstripsRespondedIDs)
                 Meteor.call(
                     'filmstrip.invite.shareRespondedInvites',
                     {
@@ -183,7 +176,7 @@ export const ShareInvite = UI.withTranslation()(
                         inviteIDs: invitesStore.filmstripsRespondedIDs,
                         subject,
                         body: bodyWithFile,
-                        file
+                        files
                     },
                     error => {
                         if (error)
@@ -191,6 +184,10 @@ export const ShareInvite = UI.withTranslation()(
                                 t('InvitesResponded.errorShare'),
                                 error
                             )
+                        setEmail('')
+                        setSubject('')
+                        setBody('')
+                        setFiles([])
                         setShowShareInvite(false)
                         UI.Notifications.success(
                             t('InvitesResponded.email.messageResponsesSent')
@@ -210,12 +207,15 @@ export const ShareInvite = UI.withTranslation()(
                 }}
                 className='CreateInviteDialog'>
                 <DialogContent>
-                    <Form>
+                    <Form fullWidth>
+                        <Typography tag='h6' use='headline6'>
+                            Share responses
+                        </Typography>
                         <TextField
                             placeholder={t('InvitesResponded.Email')}
                             name='email'
                             value={email}
-                            fullwidth
+                            outlined
                             onChange={setter(setEmail)}
                             placeholder={t(
                                 'InvitesResponded.email.placeholder.Email'
@@ -225,7 +225,7 @@ export const ShareInvite = UI.withTranslation()(
                             placeholder={t('InvitesResponded.Subject')}
                             name='subject'
                             value={subject}
-                            fullwidth
+                            outlined
                             onChange={setter(setSubject)}
                             placeholder={t(
                                 'InvitesResponded.email.placeholder.Subject'
@@ -237,7 +237,7 @@ export const ShareInvite = UI.withTranslation()(
                             value={body}
                             onChange={setter(setBody)}
                             textarea
-                            fullwidth
+                            outlined
                             rows={10}
                             placeholder={t(
                                 'InvitesResponded.email.placeholder.Body',
@@ -266,7 +266,7 @@ export const ShareInvite = UI.withTranslation()(
                             )}
                         />
                         <List twoLine>
-                            {files.length &&
+                            {files.length > 0 &&
                                 files.map(file => {
                                     const removeItem = () => {
                                         setFiles(
@@ -296,7 +296,6 @@ export const ShareInvite = UI.withTranslation()(
                                     )
                                 })}
                         </List>
-                        )}
                         <BigButton raised onClick={share}>
                             {t('InvitesResponded.Share')}
                         </BigButton>
@@ -321,7 +320,7 @@ Meteor.startup(() => {
             Subject: 'Subject',
             Body: 'Body',
             File: 'File',
-            Upload: 'Attach a file',
+            Upload: '+ Attach a file',
             Share: 'Share',
             email: {
                 placeholder: {
@@ -329,8 +328,7 @@ Meteor.startup(() => {
                     Subject: 'Subject',
                     Body: 'Message content'
                 },
-                fileMsg:
-                    'The file <a href="{{file.url}}">{{file.filename}}</a> has been added to this email.',
+                fileMsg: 'Attachment(s):',
                 messageResponsesSent: 'The response(s) have been shared'
             },
             errorShare: 'The response(s) could not be shared'
