@@ -61,6 +61,8 @@ const StyledReactFilestack = styled(ReactFilestack)`
 
 const FrameItem = observer(({frameId}) => {
     const frame = store.getFrame(frameId) || {}
+    console.log('frame', frame.title)
+    console.log('frame', frame.link)
 
     return (
         <>
@@ -96,10 +98,13 @@ const FrameItem = observer(({frameId}) => {
                 <GridCell span={12}>
                     <FormField>
                         <TextField
+                            name="link"
                             fullwidth
                             label={t('FramestripsItem.Link')}
-                            defaultValue={frame.link}
+                            value={frame.link || ''}
                             onChange={(e) => store.setFrameValue(frame, 'link', e.currentTarget.value)}
+                            maxLength={50}
+                            characterCount
                         />
                     </FormField>
                 </GridCell>

@@ -2,6 +2,7 @@ import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
 import { Invites } from '/imports/db/invites.js'
 import { Meteor } from 'meteor/meteor'
+import omit from 'lodash/omit'
 import { Postmark, sendEmail } from '/server/postmark.js'
 import { Match, check } from 'meteor/check'
 import get from 'lodash/get'
@@ -39,12 +40,13 @@ Meteor.methods({
         Filmstrips.update({ _id }, { $set: { name, description } })
 
         frames.forEach(frame => {
+            const $set = omit(frame, '_id')
             Frames.upsert(
                 {
                     filmstripId: _id,
                     no: frame.no
                 },
-                { $set: { ...frame } }
+                { $set }
             )
         })
     },
