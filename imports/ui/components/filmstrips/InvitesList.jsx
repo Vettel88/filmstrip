@@ -173,7 +173,10 @@ export const InvitesList = UI.withTranslation()(
         const { filmstripId } = match.params
         invitesStore.filmstripId = filmstripId
         Meteor.subscribe('Invites', () => {
-            invitesStore.invites = Invites.find({ filmstripId }).fetch()
+            invitesStore.invites = Invites.find(
+                { filmstripId },
+                { sort: { createdAt: -1 } }
+            ).fetch()
             invitesStore.isInvitesLoading = false
         })
         return {}
@@ -190,6 +193,8 @@ export const CreateInvite = UI.withTranslation()(
                 UI.checkMandatory(name, { field: t('Invites.Name') })
                 UI.checkEmail(email, { field: t('Invites.Email') })
                 invitesStore.createInvite({ name, email })
+                setEmail('')
+                setName('')
                 setIsCreateInvite(false)
             } catch (error) {
                 if (error) return Notifications.error(error.message, error) // TODO i18n
@@ -211,16 +216,28 @@ export const CreateInvite = UI.withTranslation()(
                             placeholder={t('Invites.Name')}
                             name='name'
                             value={name}
+                            outlined
                             onChange={setter(setName)}
                         />
                         <TextField
                             placeholder={t('Invites.Email')}
                             name='email'
                             value={email}
+                            outlined
                             onChange={setter(setEmail)}
                         />
-                        <BigButton raised disabled={name && name.length > 0 && email && emailIsValid(userEmail) ? false : true} onClick={save}>
-                            {t('Invites.Save')}
+                        <BigButton
+                            raised
+                            disabled={
+                                name &&
+                                name.length > 0 &&
+                                email &&
+                                emailIsValid(email)
+                                    ? false
+                                    : true
+                            }
+                            onClick={save}>
+                            {t('Invites.Send')}
                         </BigButton>
                     </Form>
                 </DialogContent>
@@ -242,7 +259,7 @@ Meteor.startup(() => {
             promptEmail: 'Enter an email of a person you want to invite',
             Name: 'Name',
             Email: 'Email',
-            Save: 'Save',
+            Send: 'Send',
             Delete: 'Delete',
             confirmRemoval: 'Do you want to delete the invite(s)?'
         }
@@ -257,7 +274,7 @@ Meteor.startup(() => {
             promptEmail: 'Ingresa el email de una persona que quieres invitar',
             Name: 'Nombre',
             Email: 'Correo electrónico',
-            Save: 'Save',
+            Send: 'Send',
             Delete: 'Borrar',
             confirmRemoval: 'Quieres borrar el/los invitado(s)'
         }
