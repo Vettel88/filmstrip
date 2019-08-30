@@ -25,6 +25,8 @@ import {
 import { BigButton, Form } from '/imports/ui/components/Forms.jsx'
 import { Filmstrips } from '/imports/db/filmstrips.js'
 import { Frames } from '/imports/db/frames.js'
+import { Link } from 'react-router-dom'
+import { ListItemAvatar } from '/imports/ui/components/Lists.jsx'
 import { Meteor } from 'meteor/meteor'
 import React, { useState } from 'react'
 import ReactFilestack from 'filestack-react'
@@ -45,77 +47,45 @@ const getCloudinaryPosterUrl = frame => {
     }
 }
 
-const StyledListItemGraphic = styled(ListItemGraphic)`
-    margin-left: 0;
-    margin-right: 16px;
-    width: 40px;
-    height: 40px;
-    display: block;
-    position: relative;
-    .rmwc-avatar__icon,
-    .rmwc-avatar__text {
-        position: absolute;
-        top: 0;
-        left: 0;
-        border-radius: 50%;
-        display: block;
-        width: 40px;
-        height: 40px;
-        z-index: 2;
-    }
-    .rmwc-avatar__text {
-        z-index: 1;
-        border: 1px solid rgba(0, 0, 0, 0.24);
-        color: rgba(0, 0, 0, 0.24);
-        text-align: center;
-        font-family: Roboto;
-        font-size: 16px;
-        padding-top: 12px;
-    }
-`
-
-const FilmstripResponsesListItem = withRouter(
-    observer(({ filmstrip, history }) => {
-        const goToResponse = () => {
-            history.push(`/response/${filmstrip._id}`)
-        }
-
-        return (
-            <ListItem onClick={goToResponse}>
-                <StyledListItemGraphic
-                    icon={
-                        <Avatar
-                            size='small'
-                            src={getCloudinaryPosterUrl(filmstrip.frame)}
-                            name={avatarName(filmstrip)}
-                        />
-                    }
-                />
-                <ListItemText>
-                    <ListItemPrimaryText>
-                        {filmstrip.email || t('InvitesResponded.undefined')}
-                    </ListItemPrimaryText>
-                    <ListItemSecondaryText>
-                        {UI.dateToString(filmstrip.createdAt)}
-                    </ListItemSecondaryText>
-                </ListItemText>
-                <ListItemMeta>
-                    <Checkbox
-                        label=''
-                        onClick={event => {
-                            event.stopPropagation()
-                            event.preventDefault()
-                            invitesStore.selectInviteResponded(filmstrip)
-                        }}
-                        checked={invitesStore.filmstripsRespondedIDs.includes(
-                            filmstrip._id
-                        )}
+const FilmstripResponsesListItem = observer(({ filmstrip }) => {
+    const responseLink = `/response/${filmstrip._id}`
+    return (
+        <ListItem>
+            <ListItemAvatar
+                tag={Link}
+                to={responseLink}
+                icon={
+                    <Avatar
+                        size='small'
+                        src={getCloudinaryPosterUrl(filmstrip.frame)}
+                        name={avatarName(filmstrip)}
                     />
-                </ListItemMeta>
-            </ListItem>
-        )
-    })
-)
+                }
+            />
+            <ListItemText tag={Link} to={responseLink}>
+                <ListItemPrimaryText>
+                    {filmstrip.email || t('InvitesResponded.undefined')}
+                </ListItemPrimaryText>
+                <ListItemSecondaryText>
+                    {UI.dateToString(filmstrip.createdAt)}
+                </ListItemSecondaryText>
+            </ListItemText>
+            <ListItemMeta>
+                <Checkbox
+                    label=''
+                    onClick={event => {
+                        event.stopPropagation()
+                        event.preventDefault()
+                        invitesStore.selectInviteResponded(filmstrip)
+                    }}
+                    checked={invitesStore.filmstripsRespondedIDs.includes(
+                        filmstrip._id
+                    )}
+                />
+            </ListItemMeta>
+        </ListItem>
+    )
+})
 
 const setter = set => event => set(event.target.value)
 
