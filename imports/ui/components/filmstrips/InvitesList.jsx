@@ -128,10 +128,6 @@ const InvitesListWrapper = withRouter(
     })
 )
 
-const InvitesListWrapperStyled = styled(InvitesListWrapper)`
-    background: red;
-`
-
 export const InvitesList = UI.withTranslation()(
     withTracker(({ match }) => {
         const { filmstripId } = match.params
@@ -144,7 +140,7 @@ export const InvitesList = UI.withTranslation()(
             invitesStore.isInvitesLoading = false
         })
         return {}
-    })(InvitesListWrapperStyled)
+    })(InvitesListWrapper)
 )
 
 export const CreateInvite = UI.withTranslation()(
