@@ -1,4 +1,5 @@
 import { Frames } from './frames.js'
+import { Invites } from './invites.js'
 import { Meteor } from 'meteor/meteor'
 import { check } from 'meteor/check'
 import { createCollection } from './collectionHelpers.js'
@@ -42,6 +43,14 @@ if (Meteor.isServer) {
             Filmstrips.find({ _id: _id }),
             Frames.find({ filmstripId: _id })
         ]
+    })
+    Meteor.publish('FilmstripsWithFrameIdAndInvites', function() {
+        if (!this.userId) return this.ready()
+        const filmstrips = Filmstrips.find({ createdBy: this.userId })
+        const filmstripIDs = filmstrips.map(f => f._id)
+        const frames = Frames.find({ filmstripId: { $in: filmstripIDs } }, { fields: { filmstripId: 1, no: 1 } }) 
+        const invites = Invites.find({ filmstripId: { $in: filmstripIDs } }, { fields: { filmstripId: 1 } }) 
+        return [filmstrips, frames, invites]
     })
 }
 

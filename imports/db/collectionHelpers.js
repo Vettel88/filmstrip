@@ -37,12 +37,14 @@ export const forbidClientSideUpdates = collection =>
 export const createStandardPublications = (collection, plural, singular) => {
   if (Meteor.isClient) return
   const pluralName = plural || collection._name
-  const singularName =
-    singular || pluralName.substring(0, pluralName.length - 1)
-  Meteor.publish(pluralName, function() {
+  const singularName = singular || pluralName.substring(0, pluralName.length - 1)
+
+  Meteor.publish(pluralName, function({ filter = {}, fields = {}, sort = {} } = { filter: {}, fields: {}, sort: {} }) {
+    const secureFilter = Object.assign(filter, { createdBy: this.userId })
     if (!this.userId) return this.ready()
-    return collection.find({ createdBy: this.userId })
+    return collection.find({ createdBy: this.userId }, { fields, sort })
   })
+  
   Meteor.publish(singularName, function(_id) {
     check([_id], [String])
     if (!this.userId) return this.ready()
