@@ -109,7 +109,7 @@ const FrameItem = observer(({frameId}) => {
                         <StyledReactFilestack
                             apikey={Meteor.settings.public.filestack.apikey}
                             onSuccess={({filesUploaded}) => {
-                                const newFiles = [].concat(frame.files)
+                                const newFiles = [].concat(frame.files || [])
                                 filesUploaded.forEach(f => newFiles.push(f))
                                 store.setFrameValue(frame, 'files', newFiles)
                             }}
