@@ -37,7 +37,7 @@ const popupMenu = (history, filmstrip, frameId) => {
             <MenuItem onClick={viewCompleted(history, filmstrip, frameId)}>{t('FramestripsList.ViewCompleted')}</MenuItem>
             <MenuItem onClick={removeFilmstrip}>{t('FramestripsList.DeleteFilmstrip')}</MenuItem>
         </Menu>
-        <IconButton icon="more_vert" onClick={toggleOpenMenu(open, setOpen)} />
+        <IconButton icon="more_horiz" onClick={toggleOpenMenu(open, setOpen)} />
     </MenuSurfaceAnchor>)
 }
 
