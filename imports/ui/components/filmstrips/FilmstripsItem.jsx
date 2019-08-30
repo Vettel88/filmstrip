@@ -96,10 +96,13 @@ const FrameItem = observer(({frameId}) => {
                 <GridCell span={12}>
                     <FormField>
                         <TextField
+                            name="link"
                             fullwidth
                             label={t('FramestripsItem.Link')}
-                            defaultValue={frame.link}
+                            value={frame.link || ''}
                             onChange={(e) => store.setFrameValue(frame, 'link', e.currentTarget.value)}
+                            maxLength={50}
+                            characterCount
                         />
                     </FormField>
                 </GridCell>
