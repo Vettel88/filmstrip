@@ -61,8 +61,6 @@ const StyledReactFilestack = styled(ReactFilestack)`
 
 const FrameItem = observer(({frameId}) => {
     const frame = store.getFrame(frameId) || {}
-    console.log('frame', frame.title)
-    console.log('frame', frame.link)
 
     return (
         <>
