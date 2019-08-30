@@ -45,7 +45,7 @@ const getAvatarName = name =>
 
 const InvitesListItem = withRouter(
     observer(({ history, invite }) => (
-        <ListItem onClick={() => invitesStore.selectInvite(invite)}>
+        <ListItem>
             <ListItemAvatar
                 icon={<Avatar size='small' name={getAvatarName(invite.name)} />}
             />
@@ -57,14 +57,6 @@ const InvitesListItem = withRouter(
                     {UI.dateToString(invite.createdAt)}
                 </ListItemSecondaryText>
             </ListItemText>
-            <ListItemMeta>
-                <Checkbox
-                    label=''
-                    checked={invitesStore.selectedInviteIDs.includes(
-                        invite._id
-                    )}
-                />
-            </ListItemMeta>
         </ListItem>
     ))
 )
@@ -82,13 +74,6 @@ const InvitesListWrapper = withRouter(
         }
         const filteredInvites = () => invitesStore.invites.filter(inviteFilter)
         const [isCreateInvite, setIsCreateInvite] = React.useState(false)
-        const removeInvite = () => {
-            if (confirm(t('Invites.confirmRemoval'))) {
-                invitesStore.removeSelectedInvites()
-            }
-        }
-        const renderRemoveButton = show =>
-            show ? <Fab icon='delete' onClick={removeInvite} /> : <></>
 
         return (
             <Grid>
@@ -109,30 +94,9 @@ const InvitesListWrapper = withRouter(
                 </GridCell>
 
                 <GridCell span={12}>
-                    <GridInner>
-                        <GridCell desktop={6} tablet={4} phone={2}>
-                            <Typography use='headline5' tag='h5'>
-                                {t('Invites.Invited')}
-                            </Typography>
-                        </GridCell>
-                        <GridCell
-                            desktop={6}
-                            tablet={4}
-                            phone={2}
-                            align='right'
-                            style={{
-                                textAlign: 'right'
-                            }}>
-                            <Button
-                                label={
-                                    invitesStore.hasSelectedInvites
-                                        ? t('Invites.DeselectAll')
-                                        : t('Invites.SelectAll')
-                                }
-                                onClick={() => invitesStore.selectAllInvites()}
-                            />
-                        </GridCell>
-                    </GridInner>
+                    <Typography use='headline5' tag='h5'>
+                        {t('Invites.Invited')}
+                    </Typography>
                 </GridCell>
                 <GridCell span={12}>
                     <List twoLine avatarList>
@@ -259,9 +223,7 @@ Meteor.startup(() => {
             promptEmail: 'Enter an email of a person you want to invite',
             Name: 'Name',
             Email: 'Email',
-            Send: 'Send',
-            Delete: 'Delete',
-            confirmRemoval: 'Do you want to delete the invite(s)?'
+            Send: 'Send'
         }
     })
     UI.addTranslations('es', {
@@ -274,9 +236,7 @@ Meteor.startup(() => {
             promptEmail: 'Ingresa el email de una persona que quieres invitar',
             Name: 'Nombre',
             Email: 'Correo electrónico',
-            Send: 'Send',
-            Delete: 'Borrar',
-            confirmRemoval: 'Quieres borrar el/los invitado(s)'
+            Send: 'Send'
         }
     })
 })
