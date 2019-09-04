@@ -95,7 +95,7 @@ export const FilmstripsSettings = withTranslation()(
         Meteor.subscribe('Filmstrip', filmstripId, () => {
             store.filmstrip = Filmstrips.findOne(filmstripId)
         })
-        Meteor.subscribe('Frames', { filmstripId: filmstripId }, () => {
+        Meteor.subscribe('Frames', { filter: { filmstripId } }, () => {
             store.frames = Frames.find({ filmstripId }).fetch()
         })
         return ({ filmstripId, frameId })
