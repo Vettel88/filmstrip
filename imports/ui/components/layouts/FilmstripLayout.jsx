@@ -67,9 +67,7 @@ const DeleteFrameMenuItem = withRouter(({ history, match }) =>
                 {t('FilmstripLayout.DeleteFrame')}
             </MenuItem>
         </>
-    ) : (
-        <></>
-    )
+    ) : null
 )
 
 const FilmstripMenu = () => {
