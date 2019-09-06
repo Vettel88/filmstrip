@@ -48,6 +48,28 @@ const logout = history => () => {
 }
 const toggleOpen = (open, setOpen) => () => setOpen(!open)
 
+const DeleteFrameMenuItem = withRouter(({ history, match }) =>
+    filmstripStore.frames.length > 1 ? (
+        <>
+            <ListDivider />
+            <MenuItem
+                onClick={async () => {
+                    const { filmstripId, frameId } = match.params
+                    if (filmstripStore.frames.length > 1) {
+                        const nextFrame = await filmstripStore.removeFrame(
+                            frameId
+                        )
+                        history.replace(
+                            `/filmstrip/${filmstripId}/${nextFrame._id}/frames`
+                        )
+                    }
+                }}>
+                {t('FilmstripLayout.DeleteFrame')}
+            </MenuItem>
+        </>
+    ) : null
+)
+
 const FilmstripMenu = () => {
     const [open, setOpen] = React.useState(false)
     return (
@@ -99,6 +121,10 @@ const FilmstripMenu = () => {
                                 {t('FilmstripLayout.Responded')} (
                                 {invitesStore.respondedCount})
                             </MenuItem>
+                            <Route
+                                path='/filmstrip/:filmstripId/:frameId/frames'
+                                component={DeleteFrameMenuItem}
+                            />
                             <ListDivider />
                             <MenuItem onClick={logout(history)}>
                                 Logout
@@ -173,7 +199,8 @@ Meteor.startup(() => {
             Settings: 'Settings',
             Frames: 'Frames',
             Invites: 'Invites',
-            Responded: 'Responded'
+            Responded: 'Responded',
+            DeleteFrame: 'Delete this Frame'
         }
     })
     addTranslations('es', {
@@ -181,7 +208,8 @@ Meteor.startup(() => {
             Settings: 'Ajustes',
             Frames: 'Frames',
             Invites: 'Invitados',
-            Responded: 'Respondido'
+            Responded: 'Respondido',
+            DeleteFrame: 'Eliminar este Marko'
         }
     })
 })
