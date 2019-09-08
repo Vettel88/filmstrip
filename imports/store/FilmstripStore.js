@@ -5,7 +5,6 @@ import { Notifications } from '/imports/ui/UIHelpers.js'
 export default class FilmstripStore {
     @observable isDirty = false
 
-    @observable filmstripId
     @observable frameId
 
     @observable filmstrip

@@ -1,4 +1,4 @@
-import { Snackbar, SnackbarAction, TextField, Grid, GridCell } from 'rmwc'
+import { Grid, GridCell, Snackbar, SnackbarAction, TextField } from 'rmwc'
 import {
     addTranslations,
     loadingWrapper,
@@ -17,8 +17,11 @@ import { withTracker } from 'meteor/react-meteor-data'
 
 const store = stores.filmstripStore
 
-const FilmstripSettingsForm = observer(_props => {
-    const filmstrip = store.filmstrip || {}
+const FilmstripSettingsForm = observer(({ filmstripId }) => {
+    const filmstrip =
+        filmstripId && store.filmstrip && filmstripId === store.filmstrip._id
+            ? store.filmstrip
+            : {}
     return (
         <Form fullWidth>
             <TextField
