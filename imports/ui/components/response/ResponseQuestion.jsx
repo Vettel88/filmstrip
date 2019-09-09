@@ -3,7 +3,7 @@ import React from 'react'
 import { Typography } from 'rmwc'
 import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx';
 import { Link } from 'react-router-dom'
-import Video from '/imports/ui/components/VideoPlayer.js'
+import Video from '/imports/ui/components/Video.js'
 
 export const ResponseQuestion = ({ t, currentFrame, filmstrip, currentFrameIndex }) => {
 

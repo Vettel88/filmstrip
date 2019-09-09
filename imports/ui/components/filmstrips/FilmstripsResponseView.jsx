@@ -23,7 +23,7 @@ import get from 'lodash/get'
 import { Link } from 'react-router-dom'
 import React from 'react'
 import styled from 'styled-components'
-import Video from '/imports/ui/components/VideoPlayer.js'
+import Video from '/imports/ui/components/Video.js'
 import { withTracker } from 'meteor/react-meteor-data'
 
 const nl2br = string => string.replace(/\n/g, '<br/>')
