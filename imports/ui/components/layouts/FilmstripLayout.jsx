@@ -126,7 +126,12 @@ const Header = withRouter(
                     />
                 </TopAppBarSection>
                 <TopAppBarSection>
-                    <TopAppBarTitle>
+                    <TopAppBarTitle
+                        style={{
+                            paddingLeft: 0,
+                            textAlign: 'center',
+                            width: '100%'
+                        }}>
                         {filmstripStore.filmstrip &&
                             filmstripStore.filmstrip.name}
                     </TopAppBarTitle>
