@@ -3,7 +3,6 @@ import {
     Fab,
     Grid,
     GridCell,
-    Icon,
     List,
     ListItem,
     ListItemMeta,
@@ -31,50 +30,10 @@ import ReactFilestack from 'filestack-react'
 import { StaticFab } from '/imports/ui/components/Forms.jsx'
 import { VideoPlayer } from '/imports/ui/components/VideoPlayer.jsx'
 import stores from '/imports/store'
-import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
-import { BigButton } from '../Forms'
 
 const store = stores.filmstripStore
-
-const FrameEditorItem = withRouter(
-    observer(({ history, frameId }) => {
-        const [playing, setPlaying] = React.useState(false)
-        const frame = store.getFrame(frameId)
-        const addVideo = () =>
-            history.push(
-                `/filmstrip/${frame.filmstripId}/${frame._id}/frames/recordVideo/`
-            )
-        return (
-            <div className='videoContainer'>
-                {frame.cloudinaryPublicId ? (
-                    <Video
-                        publicId={frame.cloudinaryPublicId}
-                        onPlaying={() => setPlaying(true)}
-                        onStopped={() => setPlaying(false)}
-                    />
-                ) : (
-                    <div className='noRecording'></div>
-                )}
-                {!playing ? (
-                    <div className='recordButtonContainer'>
-                        <Fab
-                            icon='fiber_manual_record'
-                            onClick={addVideo}
-                            style={{
-                                backgroundColor: 'var(--mdc-theme-error)'
-                            }}
-                            theme={['onError']}
-                        />
-                    </div>
-                ) : (
-                    <></>
-                )}
-            </div>
-        )
-    })
-)
 
 const FrameItem = observer(({ frameId }) => {
     const frame = store.getFrame(frameId) || {}
@@ -161,7 +120,7 @@ const FrameItem = observer(({ frameId }) => {
                             store.setFrameValue(
                                 frame,
                                 'allowTextAnswer',
-                                e.currentTarget.checked
+                                e.target.checked
                             )
                         }>
                         {t('FramestripsItem.allowTextAnswers')}
@@ -177,7 +136,7 @@ const FrameItem = observer(({ frameId }) => {
                             store.setFrameValue(
                                 frame,
                                 'allowAddingLinks',
-                                e.currentTarget.checked
+                                e.target.checked
                             )
                         }>
                         {t('FramestripsItem.allowAddingLinks')}
@@ -193,7 +152,7 @@ const FrameItem = observer(({ frameId }) => {
                             store.setFrameValue(
                                 frame,
                                 'allowAddingFiles',
-                                e.currentTarget.checked
+                                e.target.checked
                             )
                         }>
                         {t('FramestripsItem.allowAddingFiles')}
