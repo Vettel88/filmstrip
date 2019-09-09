@@ -1,13 +1,12 @@
-import './FilmstripsItem.less'
 import {
     Button,
-    Card,
     Fab,
     Grid,
     GridCell,
     Icon,
     List,
     ListItem,
+    ListItemMeta,
     Snackbar,
     SnackbarAction,
     Switch,
@@ -19,28 +18,30 @@ import {
     t,
     withTranslation
 } from '/imports/ui/UIHelpers.js'
+
+import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
+import { FileList } from '/imports/ui/components/FileList.jsx'
 import { Filmstrips } from '/imports/db/filmstrips.js'
+import { Form } from '/imports/ui/components/Forms.jsx'
 import { Frames } from '/imports/db/frames.js'
 import { Meteor } from 'meteor/meteor'
 import { observer } from 'mobx-react'
-import { withRouter } from 'react-router-dom'
-import { withTracker } from 'meteor/react-meteor-data'
 import React from 'react'
 import ReactFilestack from 'filestack-react'
+import { StaticFab } from '/imports/ui/components/Forms.jsx'
+import { VideoPlayer } from '/imports/ui/components/VideoPlayer.jsx'
 import stores from '/imports/store'
 import styled from 'styled-components'
-import Video from '/imports/ui/components/VideoPlayer.js'
+import { withRouter } from 'react-router-dom'
+import { withTracker } from 'meteor/react-meteor-data'
+import { BigButton } from '../Forms'
 
 const store = stores.filmstripStore
-
-const FormField = styled.div`
-    padding: 1rem;
-`
 
 const FrameEditorItem = withRouter(
     observer(({ history, frameId }) => {
         const [playing, setPlaying] = React.useState(false)
-        const frame = store.getFrame(frameId) || {}
+        const frame = store.getFrame(frameId)
         const addVideo = () =>
             history.push(
                 `/filmstrip/${frame.filmstripId}/${frame._id}/frames/recordVideo/`
@@ -75,165 +76,137 @@ const FrameEditorItem = withRouter(
     })
 )
 
-const StyledReactFilestack = styled(ReactFilestack)`
-    text-align: right;
-    float: right;
-    text-decoration: underline;
-    color: blue;
-`
-
 const FrameItem = observer(({ frameId }) => {
     const frame = store.getFrame(frameId) || {}
 
     return (
-        <>
+        <Form fullWidth>
             <Card>
-                <GridCell span={12}>
-                    <FormField>
-                        <TextField
-                            label={t('FramestripsItem.Frame Title')}
-                            name='title'
-                            fullwidth
-                            value={frame.title}
-                            onChange={e =>
-                                store.setFrameValue(
-                                    frame,
-                                    'title',
-                                    e.currentTarget.value
-                                )
-                            }
-                            maxLength={50}
-                            characterCount
-                        />
-                    </FormField>
-                </GridCell>
-                <GridCell span={12}>
-                    <FormField>
-                        <TextField
-                            textarea
-                            outlined
-                            fullwidth
-                            label={t('FramestripsItem.Frame Description')}
-                            rows={3}
-                            maxLength={120}
-                            characterCount
-                            value={frame.description}
-                            onChange={e =>
-                                store.setFrameValue(
-                                    frame,
-                                    'description',
-                                    e.currentTarget.value
-                                )
-                            }
-                        />
-                    </FormField>
-                </GridCell>
-                <GridCell span={12}>
-                    <FormField>
-                        <TextField
-                            name='link'
-                            fullwidth
-                            label={t('FramestripsItem.Link')}
-                            value={frame.link || ''}
-                            onChange={e =>
-                                store.setFrameValue(
-                                    frame,
-                                    'link',
-                                    e.currentTarget.value
-                                )
-                            }
-                            maxLength={50}
-                            characterCount
-                        />
-                    </FormField>
-                </GridCell>
-                <GridCell span={12}>
-                    <FormField>
-                        <h3>{t('FramestripsItem.Files')}</h3>
-                        <StyledReactFilestack
-                            apikey={Meteor.settings.public.filestack.apikey}
-                            onSuccess={({ filesUploaded }) => {
-                                const newFiles = [].concat(frame.files || [])
-                                filesUploaded.forEach(f => newFiles.push(f))
-                                store.setFrameValue(frame, 'files', newFiles)
-                            }}
-                            componentDisplayMode={{
-                                type: 'link',
-                                customText: t('FramestripsItem.Upload')
-                            }}
-                            render={({ onPick }) => (
-                                <Button label='' onClick={onPick} />
-                            )}
-                        />
-                    </FormField>
-                </GridCell>
-                <GridCell span={12}>
-                    <FormField>
-                        <List>
-                            {frame.files &&
-                                frame.files.map((file, i) => (
-                                    <FileItem
-                                        key={i}
-                                        file={file}
-                                        filmstrip={store.filmstrip}
-                                        frame={frame}
-                                        no={frame.no}
-                                        files={frame.files}
-                                        setFiles={console.log}
-                                    />
-                                ))}
-                        </List>
-                    </FormField>
-                </GridCell>
+                <TextField
+                    label={t('FramestripsItem.Frame Title')}
+                    name='title'
+                    outlined
+                    value={frame.title}
+                    onChange={e =>
+                        store.setFrameValue(
+                            frame,
+                            'title',
+                            e.currentTarget.value
+                        )
+                    }
+                    maxLength={50}
+                    characterCount
+                />
+                <TextField
+                    textarea
+                    outlined
+                    label={t('FramestripsItem.Frame Description')}
+                    rows={3}
+                    maxLength={120}
+                    characterCount
+                    value={frame.description}
+                    onChange={e =>
+                        store.setFrameValue(
+                            frame,
+                            'description',
+                            e.currentTarget.value
+                        )
+                    }
+                />
+                <TextField
+                    name='link'
+                    outlined
+                    label={t('FramestripsItem.Link')}
+                    value={frame.link || ''}
+                    onChange={e =>
+                        store.setFrameValue(
+                            frame,
+                            'link',
+                            e.currentTarget.value
+                        )
+                    }
+                    maxLength={50}
+                    characterCount
+                />
+                <FileList
+                    files={frame.files}
+                    onRemove={(e, file, index) => {
+                        const newFiles = [].concat(frame.files || [])
+                        if (index > -1) newFiles.splice(index, 1)
+                        store.setFrameValue(frame, 'files', newFiles)
+                    }}
+                />
+                <ReactFilestack
+                    apikey={Meteor.settings.public.filestack.apikey}
+                    onSuccess={({ filesUploaded }) => {
+                        const newFiles = [].concat(frame.files || [])
+                        filesUploaded.forEach(f => newFiles.push(f))
+                        store.setFrameValue(frame, 'files', newFiles)
+                    }}
+                    componentDisplayMode={{
+                        type: 'button',
+                        customText: `+ Upload a file`,
+                        customClass:
+                            'mdc-button mdc-ripple-upgraded mdc-ripple-upgraded--background-focused'
+                    }}
+                    render={({ onPick }) => (
+                        <Button label='' onClick={onPick} />
+                    )}
+                />
             </Card>
             <Card>
-                <GridCell span={12}>
-                    <FormField>
-                        <Switch
-                            checked={frame.allowTextAnswer || false}
-                            onClick={e =>
-                                store.setFrameValue(
-                                    frame,
-                                    'allowTextAnswer',
-                                    e.currentTarget.checked
-                                )
-                            }
-                            label={t('FramestripsItem.allowTextAnswers')}
-                        />
-                    </FormField>
-                </GridCell>
-                <GridCell span={12}>
-                    <FormField>
-                        <Switch
-                            checked={frame.allowAddingLinks || false}
-                            onClick={e =>
-                                store.setFrameValue(
-                                    frame,
-                                    'allowAddingLinks',
-                                    e.currentTarget.checked
-                                )
-                            }
-                            label={t('FramestripsItem.allowAddingLinks')}
-                        />
-                    </FormField>
-                </GridCell>
-                <GridCell span={12}>
-                    <FormField>
-                        <Switch
-                            checked={frame.allowAddingFiles || false}
-                            onClick={e =>
-                                store.setFrameValue(
-                                    frame,
-                                    'allowAddingFiles',
-                                    e.currentTarget.checked
-                                )
-                            }
-                            label={t('FramestripsItem.allowAddingFiles')}
-                        />
-                    </FormField>
-                </GridCell>
+                <List>
+                    <ListItem
+                        onClick={e =>
+                            store.setFrameValue(
+                                frame,
+                                'allowTextAnswer',
+                                e.currentTarget.checked
+                            )
+                        }>
+                        {t('FramestripsItem.allowTextAnswers')}
+                        <ListItemMeta>
+                            <Switch
+                                checked={frame.allowTextAnswer || false}
+                                readOnly
+                            />
+                        </ListItemMeta>
+                    </ListItem>
+                    <ListItem
+                        onClick={e =>
+                            store.setFrameValue(
+                                frame,
+                                'allowAddingLinks',
+                                e.currentTarget.checked
+                            )
+                        }>
+                        {t('FramestripsItem.allowAddingLinks')}
+                        <ListItemMeta>
+                            <Switch
+                                checked={frame.allowAddingLinks || false}
+                                readOnly
+                            />
+                        </ListItemMeta>
+                    </ListItem>
+                    <ListItem
+                        onClick={e =>
+                            store.setFrameValue(
+                                frame,
+                                'allowAddingFiles',
+                                e.currentTarget.checked
+                            )
+                        }>
+                        {t('FramestripsItem.allowAddingFiles')}
+                        <ListItemMeta>
+                            <Switch
+                                checked={frame.allowAddingFiles || false}
+                                readOnly
+                            />
+                        </ListItemMeta>
+                    </ListItem>
+                </List>
             </Card>
-        </>
+        </Form>
     )
 })
 
@@ -242,165 +215,81 @@ const saveFilmstrip = event => {
     store.persist()
 }
 
-const removeFile = ({ filmstrip, no, frame, file, files }) => event => {
-    event.preventDefault()
-    const newFiles = files.filter(f => f.handle !== file.handle)
-    store.setFrameValue(frame, 'files', newFiles)
-}
-
-const FileItem = ({ filmstrip, frame, no, file, files }) => (
-    <Grid>
-        <GridCell span={2}>
-            <img
-                src={file.url}
-                alt={file.filename}
-                width='48'
-                height='48'></img>
-        </GridCell>
-        <GridCell span={8}>
-            <ListItem key={file.filename}>{file.filename}</ListItem>
-        </GridCell>
-        <GridCell span={2}>
-            <button
-                className='removeFile'
-                onClick={removeFile({ filmstrip, frame, no, file, files })}>
-                {t('FramestripsItem.Remove')}
-            </button>
-        </GridCell>
-    </Grid>
-)
-
-const FilmstripItem = observer(props => {
-    const { frameId, filmstripId, history } = props
-    return (
-        <div className='filmstripsItem'>
-            {loadingWrapper(store.isLoading, () => (
-                <>
-                    <Snackbar
-                        open={store.isDirty}
-                        onClose={e => (store.isDirty = false)}
-                        message={t('FramestripsItem.messageUnsavedChanges')}
-                        timeout={100000000000000000000} // ms => 3.17 x 10^9 years
-                        action={
-                            <SnackbarAction
-                                label={t('FramestripsItem.Save')}
-                                onClick={saveFilmstrip}
-                            />
-                        }
-                    />
-                    <FilmstripFrameSlides
-                        frameId={frameId}
-                        filmstripId={filmstripId}
-                        history={history}
-                    />
-                    <FrameItem frameId={frameId} />
-                    <Fab
-                        className='footerAction'
-                        icon='add'
-                        onClick={async () => {
-                            const newFrame = await store.createFrame(
-                                filmstripId
-                            )
-                            history.replace(
-                                `/filmstrip/${filmstripId}/${newFrame._id}/frames`
-                            )
-                        }}
-                    />
-                </>
-            ))}
-        </div>
-    )
-})
-
-const getFramesForNavigation = currentFrameId => {
-    if (store.frames.length <= 1) {
-        return { previousFrame: null, nextFrame: null }
-    }
-    const indexOfCurrentFrame = store.frames.findIndex(
-        frame => frame._id === currentFrameId
-    )
-    const currentFrame = store.frames[indexOfCurrentFrame]
-    const nextFrameIndex = indexOfCurrentFrame + 1
-    const nextFrame =
-        nextFrameIndex < store.frames.length
-            ? store.frames[nextFrameIndex]
-            : null
-    const previousFrameIndex = indexOfCurrentFrame - 1
-    const previousFrame =
-        previousFrameIndex >= 0 ? store.frames[previousFrameIndex] : null
-    return {
-        previousFrame,
-        currentFrame,
-        nextFrame
-    }
-}
-
-const BackButton = props => (
-    <div className='buttonPanel back'>
-        {props.disabled ? (
-            <></>
-        ) : (
-            <Fab icon='arrow_left' mini onClick={props.onClick} />
-        )}
-    </div>
-)
-const NextButton = props => (
-    <div className='buttonPanel next'>
-        {props.disabled ? (
-            <></>
-        ) : (
-            <Fab icon='arrow_right' mini onClick={props.onClick} />
-        )}
-    </div>
-)
-
-const SelectedIcon = styled(Icon)`
-    color: #888;
-`
-const UnselectedIcon = styled(Icon)`
-    color: #ccc;
-`
-
-const FilmstripFrameSlides = ({ frameId, filmstripId, history }) => {
-    const { previousFrame, nextFrame, currentFrame } = getFramesForNavigation(
-        frameId
-    )
-    const indexOfCurrentFrame = store.frames.findIndex(
+const FilmstripItem = observer(({ frameId, filmstripId, history }) => {
+    const currentFrameIndex = store.frames.findIndex(
         frame => frame._id === frameId
     )
+    const currentFrame = store.frames[currentFrameIndex]
+
+    const previousFrame =
+        currentFrameIndex < store.frames.length
+            ? store.frames[currentFrameIndex - 1]
+            : null
+
+    const nextFrame =
+        currentFrameIndex < store.frames.length - 1
+            ? store.frames[currentFrameIndex + 1]
+            : null
+
     return (
-        <div className='frameSlides'>
-            <BackButton
-                disabled={!previousFrame}
-                onClick={e => {
-                    e.preventDefault()
-                    history.replace(
-                        `/filmstrip/${filmstripId}/${previousFrame._id}/frames`
-                    )
-                }}
-            />
-            <FrameEditorItem frameId={frameId} />
-            <NextButton
-                disabled={!nextFrame}
-                onClick={e => {
-                    e.preventDefault()
-                    history.replace(
-                        `/filmstrip/${filmstripId}/${nextFrame._id}/frames`
-                    )
-                }}
-            />
-            <div>
-                {store.frames.map((_, i) =>
-                    indexOfCurrentFrame === i ? (
-                        <SelectedIcon icon='fiber_manual_record' />
-                    ) : (
-                        <UnselectedIcon icon='fiber_manual_record' />
-                    )
-                )}
-            </div>
-        </div>
+        <Grid>
+            <GridCell span={12}>
+                {loadingWrapper(store.isLoading, () => (
+                    <>
+                        <Snackbar
+                            open={store.isDirty}
+                            onClose={e => (store.isDirty = false)}
+                            message={t('FramestripsItem.messageUnsavedChanges')}
+                            timeout={100000000000000000000} // ms => 3.17 x 10^9 years
+                            action={
+                                <SnackbarAction
+                                    label={t('FramestripsItem.Save')}
+                                    onClick={saveFilmstrip}
+                                />
+                            }
+                        />
+                        <VideoPlayer
+                            currentFrame={currentFrame}
+                            currentFrameIndex={currentFrameIndex}
+                            numberOfFrames={store.frames.length}
+                            onRecord={e => {
+                                e.preventDefault()
+                                history.push(
+                                    `/filmstrip/${filmstripId}/${frameId}/frames/recordVideo/`
+                                )
+                            }}
+                            onClickPrevious={e => {
+                                e.preventDefault()
+                                history.replace(
+                                    `/filmstrip/${filmstripId}/${previousFrame._id}/frames`
+                                )
+                            }}
+                            onClickNext={e => {
+                                e.preventDefault()
+                                history.replace(
+                                    `/filmstrip/${filmstripId}/${nextFrame._id}/frames`
+                                )
+                            }}
+                        />
+                        <FrameItem frameId={frameId} />
+                        <StaticFab
+                            icon='add'
+                            label='Add frame'
+                            onClick={async () => {
+                                const newFrame = await store.createFrame(
+                                    filmstripId
+                                )
+                                history.replace(
+                                    `/filmstrip/${filmstripId}/${newFrame._id}/frames`
+                                )
+                            }}
+                        />
+                    </>
+                ))}
+            </GridCell>
+        </Grid>
     )
-}
+})
 
 export const FilmstripsItem = withTranslation()(
     withTracker(({ match }) => {
@@ -421,7 +310,7 @@ Meteor.startup(() => {
             Frames: 'Frames',
             'Frame Title': 'Frame Title',
             'Frame Description': 'Frame Description',
-            Upload: 'Upload',
+            Upload: '+ Upload a file',
             Link: 'Link',
             Files: 'Files',
             Save: 'Save',

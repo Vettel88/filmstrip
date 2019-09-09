@@ -6,7 +6,7 @@ import { BigButton as Button, Form } from '/imports/ui/components/Forms.jsx';
 import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx';
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
-import Video from '/imports/ui/components/VideoPlayer.js'
+import Video from '/imports/ui/components/Video.js'
 
 const StyledReactFilestack = styled(ReactFilestack)`
   background: var(--mdc-theme-primary) !important;
