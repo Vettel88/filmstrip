@@ -1,27 +1,25 @@
-import React, { useState } from 'react'
-import { validatePassword, loadingWrapper } from '/imports/ui/UIHelpers.js'
-import { Link, Redirect } from 'react-router-dom'
-import { Icon, TextField, Typography } from 'rmwc'
-import { Accounts } from 'meteor/accounts-base'
-import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
 import {
-    ErrorNotice,
     BigButton as Button,
+    ErrorNotice,
     Form
 } from '/imports/ui/components/Forms.jsx'
-import { withTranslation } from 'react-i18next'
+import { Link, Redirect } from 'react-router-dom'
+import React, { useState } from 'react'
+import { TextField, Typography } from 'rmwc'
+import { loadingWrapper, validatePassword } from '/imports/ui/UIHelpers.js'
+import { Accounts } from 'meteor/accounts-base'
+import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
 import PhoneInput from 'react-phone-number-input'
+import { withTranslation } from 'react-i18next'
 
 export const SignUp = withTranslation()(({ t }) => {
     return (
-        <>
-            <Card>
-                <SignupForm t={t} />
-                <Typography tag='p' use='body2'>
-                    <Link to='/signIn'>{t('Signup.SignInLink')}</Link>
-                </Typography>
-            </Card>
-        </>
+        <Card>
+            <SignupForm t={t} />
+            <Typography tag='p' use='body2'>
+                <Link to='/signIn'>{t('Signup.SignInLink')}</Link>
+            </Typography>
+        </Card>
     )
 })
 

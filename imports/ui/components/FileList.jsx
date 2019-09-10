@@ -17,31 +17,27 @@ import React from 'react'
  */
 
 export const FileList = ({ files, onClick, onRemove, ...rest }) => (
-    <>
-        <List twoLine {...rest}>
-            {files &&
-                files.map((file, index) => (
-                    <>
-                        <ListItem>
-                            <ListItemText onClick={onClick}>
-                                <ListItemPrimaryText>
-                                    {file.filename}
-                                </ListItemPrimaryText>
-                                <ListItemSecondaryText>
-                                    {Math.round(file.size / 10000) / 100} MB
-                                </ListItemSecondaryText>
-                            </ListItemText>
-                            {onRemove && (
-                                <ListItemMeta
-                                    onClick={e => onRemove(e, file, index)}
-                                    icon='clear'
-                                />
-                            )}
-                        </ListItem>
-                    </>
-                ))}
-        </List>
-    </>
+    <List twoLine {...rest}>
+        {files &&
+            files.map((file, index) => (
+                <ListItem key={file.handle}>
+                    <ListItemText onClick={onClick}>
+                        <ListItemPrimaryText>
+                            {file.filename}
+                        </ListItemPrimaryText>
+                        <ListItemSecondaryText>
+                            {Math.round(file.size / 10000) / 100} MB
+                        </ListItemSecondaryText>
+                    </ListItemText>
+                    {onRemove && (
+                        <ListItemMeta
+                            onClick={e => onRemove(e, file, index)}
+                            icon='clear'
+                        />
+                    )}
+                </ListItem>
+            ))}
+    </List>
 )
 
 FileList.propTypes = {

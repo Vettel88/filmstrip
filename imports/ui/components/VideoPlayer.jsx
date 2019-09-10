@@ -86,6 +86,10 @@ const StyledVideo = styled(Video)`
     margin: 0 auto;
 `
 
+const VideoPlayerContainer = styled('div')`
+    position: relative;
+`
+
 export const VideoPlayer = ({
     currentFrame,
     currentFrameIndex,
@@ -95,63 +99,53 @@ export const VideoPlayer = ({
     onClickPrevious,
     onStopped,
     onRecord
-}) => {
-    const [playing, setPlaying] = useState(false)
-
-    return (
-        <>
-            <VideoContainer>
-                <PreviousButton
-                    disabled={currentFrameIndex === 0}
-                    onClick={onClickPrevious}
-                    icon='keyboard_arrow_left'
-                />
-                {currentFrame && currentFrame.cloudinaryPublicId ? (
-                    <StyledVideo
-                        publicId={currentFrame.cloudinaryPublicId}
-                        onPlaying={evt => {
-                            setPlaying(true)
-                            if (onPlaying) onPlaying(evt)
-                        }}
-                        onStopped={evt => {
-                            setPlaying(false)
-                            if (onStopped) onStopped(evt)
-                        }}
-                    />
-                ) : (
-                    <EmptyVideo />
-                )}
-                <NextButton
-                    disabled={currentFrameIndex == numberOfFrames - 1}
-                    onClick={onClickNext}
-                    icon='keyboard_arrow_right'
-                />
-            </VideoContainer>
-            {onRecord && (
-                <BigButton
-                    style={{
-                        maxWidth: '480px',
-                        width: '100%',
-                        display: 'block',
-                        margin: '16px auto 24px auto'
-                    }}
-                    onClick={onRecord}
-                    label='Record video'
-                    raised
-                    danger
-                />
-            )}
-            <PaginationIndicator
-                currentIndex={currentFrameIndex}
-                numberOfItems={numberOfFrames}
-                style={{
-                    marginBottom: '24px',
-                    marginTop: '24px'
-                }}
+}) => (
+    <VideoPlayerContainer>
+        <VideoContainer>
+            <PreviousButton
+                disabled={currentFrameIndex === 0}
+                onClick={onClickPrevious}
+                icon='keyboard_arrow_left'
             />
-        </>
-    )
-}
+            {currentFrame && currentFrame.cloudinaryPublicId ? (
+                <StyledVideo
+                    publicId={currentFrame.cloudinaryPublicId}
+                    onPlaying={onPlaying ? onPlaying : undefined}
+                    onStopped={onStopped ? onStopped : undefined}
+                />
+            ) : (
+                <EmptyVideo />
+            )}
+            <NextButton
+                disabled={currentFrameIndex == numberOfFrames - 1}
+                onClick={onClickNext}
+                icon='keyboard_arrow_right'
+            />
+        </VideoContainer>
+        {onRecord && (
+            <BigButton
+                style={{
+                    maxWidth: '480px',
+                    width: '100%',
+                    display: 'block',
+                    margin: '16px auto 24px auto'
+                }}
+                onClick={onRecord}
+                label='Record video'
+                raised
+                danger
+            />
+        )}
+        <PaginationIndicator
+            currentIndex={currentFrameIndex}
+            numberOfItems={numberOfFrames}
+            style={{
+                marginBottom: '24px',
+                marginTop: '24px'
+            }}
+        />
+    </VideoPlayerContainer>
+)
 
 VideoPlayer.propTypes = {
     currentFrame: PropTypes.shape({

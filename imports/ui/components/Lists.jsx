@@ -61,21 +61,17 @@ export const PaginationIndicator = ({
     onClick,
     ...rest
 }) => {
-    const items = []
-    for (let i = 0; i < numberOfItems; i++) {
-        items.push(
-            currentIndex === i ? (
+    return (
+        <DotContainer {...rest}>
+            {Array.from({ length: numberOfItems }).map((item, index) => (
                 <Dot
-                    key={`Dot-${i}`}
-                    onClick={onClick ? onClick : () => {}}
-                    selected
+                    key={`Dot-${index}`}
+                    onClick={onClick ? onClick : undefined}
+                    selected={currentIndex === index}
                 />
-            ) : (
-                <Dot key={`Dot-${i}`} onClick={onClick ? onClick : () => {}} />
-            )
-        )
-    }
-    return <DotContainer {...rest}>{items}</DotContainer>
+            ))}
+        </DotContainer>
+    )
 }
 
 PaginationIndicator.propTypes = {
