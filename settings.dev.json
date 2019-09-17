@@ -1,20 +1,21 @@
 {
-    "postmark": {
-        "apikey": "bd4edec0-4168-4db4-881b-bd78ff7b9814",
-        "sender": "Filmstrip Support <support@filmstrip.cloud>"
+    "postmark":{
+        "apikey":"948c7195-9d06-4f28-a110-96ec41714376",
+        "sender":"Filmstrip Support <info@filmstrip.cloud>"
     },
-    "public": {
-        "support": {
-            "productName": "Filmstrip",
-            "productUrl": "https://app.filmstrip.cloud",
-            "email": "support@filmstrip.cloud"
+    "public":{
+        "support":{
+            "productName":"Filmstrip",
+            "productUrl":"https://film.filmstrip.cloud",
+            "email":"info@filmstrip.cloud"
         },
-        "cloudinary": {
-            "uploadPreset": "filmstrip_1",
-            "cloudName": "incnition"
+        "cloudinary":{
+            "uploadPreset":"i7iywyje",
+            "cloudName":"dbrcuzyzo"
         },
-        "filestack": {
-            "apikey": "Aqp34KkGdTvCthMIbNKTYz"
+        "filestack":{
+            "apikey":"AEH0mDtPATFauUnazM5slz"
         }
     }
 }
+
