@@ -116,7 +116,7 @@ You're receiving this e-mail to confirm that you have answered film strip ${film
 Click here to confirm your answers: ${link}
 
 Yours,
-Filmstrip.io`
+Filmstrip.cloud`
                 })
             } catch (err) {
                 console.error('Postmark error:', err)
@@ -147,7 +147,7 @@ you have been invited by ${username} to respond to the film strip "${filmstrip.n
 Click here to answer: ${link}
 
 Yours,
-Filmstrip.io`
+Filmstrip.cloud`
         })
         return inviteId
     },

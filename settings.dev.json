@@ -1,7 +1,7 @@
 {
     "postmark": {
         "apikey": "bd4edec0-4168-4db4-881b-bd78ff7b9814",
-        "sender": "Filmstrip Support <support@filmstrip.io>"
+        "sender": "Filmstrip Support <support@filmstrip.cloud>"
     },
     "public": {
         "support": {
