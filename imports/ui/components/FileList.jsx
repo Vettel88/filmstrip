@@ -32,6 +32,11 @@ export const FileList = ({ files, onClick, onRemove, ...rest }) => (
                     <NoHeightListItem key={file.handle}>
                         {isImage ? (
                             <a
+                                style={{
+                                    height: 'auto !important',
+                                    width: '200px',
+                                    margin: '0.4rem auto'
+                                }}
                                 href={file.url}
                                 target='_blank'
                                 rel='noopener noreferrer'>
