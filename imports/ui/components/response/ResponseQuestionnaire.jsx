@@ -1,4 +1,5 @@
 import { Dialog, DialogContent, Grid, GridCell, Typography } from 'rmwc'
+import { FileList } from '/imports/ui/components/FileList.jsx'
 import React, { useState } from 'react'
 import { prepareResponseView } from './ResponseCommon.jsx'
 import { Redirect } from 'react-router-dom'

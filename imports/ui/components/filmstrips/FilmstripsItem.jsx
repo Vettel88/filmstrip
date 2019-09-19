@@ -30,7 +30,6 @@ import ReactFilestack from 'filestack-react'
 import { StaticFab } from '/imports/ui/components/Forms.jsx'
 import { VideoPlayer } from '/imports/ui/components/VideoPlayer.jsx'
 import stores from '/imports/store'
-import { withRouter } from 'react-router-dom'
 import { withTracker } from 'meteor/react-meteor-data'
 
 const store = stores.filmstripStore

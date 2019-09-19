@@ -2,8 +2,8 @@ import { Meteor } from 'meteor/meteor'
 import React from 'react'
 import { Typography } from 'rmwc'
 import { PaddedCard as Card } from '/imports/ui/components/Cards.jsx'
-import { Link } from 'react-router-dom'
 import Video from '/imports/ui/components/Video.js'
+import { FileList } from '/imports/ui/components/FileList.jsx'
 
 export const ResponseQuestion = ({
     t,
@@ -19,18 +19,7 @@ export const ResponseQuestion = ({
                 <Typography tag='h6' use='headline6'>
                     {t('Files')}
                 </Typography>
-                <ul>
-                    {currentFrame.files.map(file => (
-                        <li key={file.handle}>
-                            <a
-                                href={file.url}
-                                target='_blank'
-                                rel='noopener noreferrer'>
-                                {file.filename}
-                            </a>
-                        </li>
-                    ))}
-                </ul>
+                <FileList showFilename={true} files={currentFrame.files} />
             </>
         )
     }
