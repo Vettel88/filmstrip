@@ -1,4 +1,4 @@
-import { Grid, GridCell, Typography } from 'rmwc'
+import { Dialog, DialogContent, Grid, GridCell, Typography } from 'rmwc'
 import React, { useState } from 'react'
 import { prepareResponseView } from './ResponseCommon.jsx'
 import { Redirect } from 'react-router-dom'
@@ -6,11 +6,39 @@ import { ResponseAnswer } from './ResponseAnswer.jsx'
 import { ResponseQuestion } from './ResponseQuestion.jsx'
 import { ResponseSave } from '/imports/methods/Response.js'
 import { StickyNav } from '../Forms.jsx'
+import { BigButton as Button } from '/imports/ui/components/Forms.jsx'
 import styled from 'styled-components'
 
 const StyledGridCell = styled(GridCell)`
     background: white;
 `
+const DialogParagraph = ({ children }) => (
+    <Typography tag='p' use='headline6'>
+        {children}
+    </Typography>
+)
+
+const FTUDialog = ({ dialogOpen, setDialogOpen }) => {
+    return (
+        <Dialog
+            open={dialogOpen}
+            className='responseFTU'
+            onClose={() => setDialogOpen(false)}>
+            <DialogContent>
+                <DialogParagraph>
+                    You can simply view this filmstrip by clicking the &lt; and
+                    &gt; buttons.
+                </DialogParagraph>
+                <DialogParagraph>
+                    Or you can respond to each frame by recording a video
+                    response, adding links, and uploading files.
+                </DialogParagraph>
+                <Button label='Ok' onClick={() => setDialogOpen(false)} />
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 export const ResponseQuestionnaire = prepareResponseView(
     ({
         t,
@@ -25,6 +53,7 @@ export const ResponseQuestionnaire = prepareResponseView(
         const [toNextFrame, goToNextFrame] = useState(false)
         const [toPreviousFrame, goToPreviousFrame] = useState(false)
         const [createdFilmstripId, setCreatedFilmstripId] = useState(false)
+        const [dialogOpen, setDialogOpen] = useState(true)
 
         const nextQuestion = event => {
             event.preventDefault()
@@ -84,6 +113,12 @@ export const ResponseQuestionnaire = prepareResponseView(
 
         return (
             <>
+                {currentFrameIndex === 0 ? (
+                    <FTUDialog
+                        dialogOpen={dialogOpen}
+                        setDialogOpen={setDialogOpen}
+                    />
+                ) : null}
                 <Grid style={{ paddingBottom: '72px' }}>
                     <GridCell span={12}>
                         <Typography

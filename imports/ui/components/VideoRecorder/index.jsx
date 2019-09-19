@@ -1,56 +1,57 @@
-import React, { Component } from "react"
-import ReactVideoRecorder from "react-video-recorder"
+import React, { Component } from 'react'
+import ReactVideoRecorder from 'react-video-recorder'
 import Timer from './Timer'
 import Countdown from './Countdown'
 import { Button as Btn, CircularProgress } from 'rmwc'
-import { isSafari, isIOS } from "react-device-detect"
-import cloudinary from "../../../services/cloudinary"
+import { isIOS, isSafari } from 'react-device-detect'
+import cloudinary from '../../../services/cloudinary'
 import styled from 'styled-components'
 const LoadingIndicator = styled(CircularProgress)`
     color: green;
 `
 
 const Button = styled(Btn)`
-    color: #6200EE !important;
+    color: #6200ee !important;
     background-color: white !important;
 `
 
 const ActionsWrapper = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 20px;
-  padding-bottom: 80px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 20px;
+    padding-bottom: 80px;
 `
 
 class Actions extends Component {
-
     renderUseVideoInput = () => {
         if (this.props.useVideoInput) {
-          return (
-            <Button onClick={this.props.onOpenVideoInput} data-qa='open-input'>
-              Upload a video
-            </Button>
-          )
+            return (
+                <Button
+                    onClick={this.props.onOpenVideoInput}
+                    data-qa='open-input'>
+                    Upload a video
+                </Button>
+            )
         }
     }
 
     renderIsReplaying = () => {
         if (this.props.isReplayingVideo) {
-            return (
-                <LoadingIndicator size='xlarge' />
-            );
+            return <LoadingIndicator size='xlarge' />
         }
-    };
+    }
 
     renderIsRecording = () => {
         if (this.props.isRecording) {
             return (
-                <Button onClick={this.props.onStopRecording} data-qa='stop-recording'>
+                <Button
+                    onClick={this.props.onStopRecording}
+                    data-qa='stop-recording'>
                     Stop Recording
                 </Button>
             )
@@ -60,16 +61,24 @@ class Actions extends Component {
     }
 
     renderTimer = () => {
-        if (this.props.isRecording) return <Timer timeLimit={this.props.timeLimit} />
+        if (this.props.isRecording)
+            return <Timer timeLimit={this.props.timeLimit} />
     }
 
     renderIsReadyToRecord = () => {
-        if (this.props.isCameraOn && this.props.streamIsReady && !this.props.isRecording && !this.props.isRunningCountdown) {
-          return (
-            <Button onClick={this.props.onStartRecording} data-qa='start-recording'>
-                Start Recording
-            </Button>
-          )
+        if (
+            this.props.isCameraOn &&
+            this.props.streamIsReady &&
+            !this.props.isRecording &&
+            !this.props.isRunningCountdown
+        ) {
+            return (
+                <Button
+                    onClick={this.props.onStartRecording}
+                    data-qa='start-recording'>
+                    Start Recording
+                </Button>
+            )
         }
     }
 
@@ -78,7 +87,7 @@ class Actions extends Component {
             isVideoInputSupported,
             isInlineRecordingSupported,
             thereWasAnError,
-            isConnecting,
+            isConnecting
         } = this.props
         if (
             (!isInlineRecordingSupported && !isVideoInputSupported) ||
@@ -89,7 +98,9 @@ class Actions extends Component {
         }
         return (
             <div>
-                {this.props.isRunningCountdown && <Countdown countdownTime={this.props.countdownTime} />}
+                {this.props.isRunningCountdown && (
+                    <Countdown countdownTime={this.props.countdownTime} />
+                )}
                 {this.renderTimer()}
                 <ActionsWrapper>
                     {this.renderIsRecording()}
@@ -97,17 +108,16 @@ class Actions extends Component {
                     {this.renderUseVideoInput()}
                 </ActionsWrapper>
             </div>
-        );
+        )
     }
 }
 
-
 export default class VideoRecorder extends React.Component {
     onSuccess = () => {
-        throw new Error("You must define an onSuccess handler.")
+        throw new Error('You must define an onSuccess handler.')
     }
-    onError = (error) => {
-        console.warn("VideoRecorder Error: ", error)
+    onError = error => {
+        console.warn('VideoRecorder Error: ', error)
     }
 
     render() {
@@ -119,14 +129,14 @@ export default class VideoRecorder extends React.Component {
                 isOnInitially={true}
                 isReplayVideoMuted={true}
                 useVideoInput={isIOS && !isSafari}
-                renderActions={(props) => <Actions {...props} />}
+                renderActions={props => <Actions {...props} />}
                 onRecordingComplete={blob =>
-                    cloudinary.uploadVideo(blob)
+                    cloudinary
+                        .uploadVideo(blob)
                         .then(json => handleSuccess(json))
                         .catch(error => handleError(error))
                 }
             />
-        );
+        )
     }
 }
-

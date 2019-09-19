@@ -6,7 +6,7 @@ import React from 'react'
 const ModalLayout = withRouter(props => {
     const [open, setOpen] = React.useState(true)
     return isIOS ? (
-        <div className='hiddenModal'>{props.children}</div>
+        <div className="hiddenModal">{props.children}</div>
     ) : (
         <Dialog
             open={open}

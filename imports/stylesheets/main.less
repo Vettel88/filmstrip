@@ -13,8 +13,9 @@
 }
 
 .hiddenModal {
-  height: 0;
+  display: none;
 }
+
 .FilestackUploadButton {
   background: var(--mdc-theme-primary) !important;
   padding: 12px 24px !important;
@@ -24,4 +25,19 @@
   border-radius: 4px !important;
   width: auto !important;
   cursor: pointer;
+}
+
+.responseFTU {
+  p {
+    padding: 1.5rem 0.5rem 0;
+    text-align: center;
+
+    &:last-child {
+      padding: 1.5rem 0.5rem;
+    }
+  }
+
+  div {
+    text-align: center;
+  }
 }
