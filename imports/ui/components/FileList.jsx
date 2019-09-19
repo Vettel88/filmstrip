@@ -8,6 +8,13 @@ import {
 } from 'rmwc'
 import PropTypes from 'prop-types'
 import React from 'react'
+import styled from 'styled-components'
+
+const NoHeightListItem = styled(ListItem)`
+    max-height: 300px;
+    height: unset !important;
+`
+const imageRegex = new RegExp(/image/)
 
 /**
  * Simple list of files uploaded through Filestack.
@@ -19,24 +26,41 @@ import React from 'react'
 export const FileList = ({ files, onClick, onRemove, ...rest }) => (
     <List twoLine {...rest}>
         {files &&
-            files.map((file, index) => (
-                <ListItem key={file.handle}>
-                    <ListItemText onClick={onClick}>
-                        <ListItemPrimaryText>
-                            {file.filename}
-                        </ListItemPrimaryText>
-                        <ListItemSecondaryText>
-                            {Math.round(file.size / 10000) / 100} MB
-                        </ListItemSecondaryText>
-                    </ListItemText>
-                    {onRemove && (
-                        <ListItemMeta
-                            onClick={e => onRemove(e, file, index)}
-                            icon='clear'
-                        />
-                    )}
-                </ListItem>
-            ))}
+            files.map((file, index) => {
+                const isImage = imageRegex.test(file.mimetype)
+                return (
+                    <NoHeightListItem key={file.handle}>
+                        { isImage ? (
+                            <img
+                                src={file.url}
+                                alt={file.filename}
+                                style={{
+                                    height: 'auto !important',
+                                    width: '200px',
+                                    margin: '0.4rem auto'
+                                }}
+                            />
+                        ) : (
+                            <ListItemText onClick={onClick}>
+                                <ListItemPrimaryText>
+                                    <div style={{paddingBottom: '1rem'}}>
+                                        {file.filename}
+                                    </div>
+                                </ListItemPrimaryText>
+                            </ListItemText>
+                        )}
+                        {onRemove && (
+                            <ListItemMeta
+                                onClick={e => onRemove(e, file, index)}
+                                icon='clear'
+                                style={{
+                                    marginLeft: isImage ? '1rem' : 'auto'
+                                }}
+                            />
+                        )}
+                    </NoHeightListItem>
+                )
+            })}
     </List>
 )
 
