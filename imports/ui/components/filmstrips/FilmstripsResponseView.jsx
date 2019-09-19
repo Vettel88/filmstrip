@@ -132,9 +132,9 @@ const FrameView = ({
                         Links
                     </Typography>
                     <Typography use='body2' tag='p'>
-                        <Link to={currentFrame.link} target='_blank'>
+                        <a href={currentFrame.link} target='_blank'>
                             {currentFrame.link}
-                        </Link>
+                        </a>
                     </Typography>
                 </Card>
             )}
